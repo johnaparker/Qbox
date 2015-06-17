@@ -12,7 +12,7 @@ using namespace std;
 int main(int argc,char* argv[]) {
     double mu = 1;
     const double c0 = 3e8;
-    double dx = 60e-2/5;
+    double dx = 60e-2/100;
     double dt = dx/(2*c0)*mu;
     double L = 120;
     double tf = 1e-6;
@@ -61,10 +61,10 @@ int main(int argc,char* argv[]) {
         for (k=0; k<KE-1; k++) {
             hy[k] = hy[k] + .5*mu*(ex[k] - ex[k+1]);
         }
-        for (k=0; k<KE; k++) {
-            outE << ex[k] << endl;
-            outH << hy[k] << endl;
-        } 
+       // for (k=0; k<KE; k++) {
+       //     outE << ex[k] << endl;
+       //     outH << hy[k] << endl;
+       // } 
         count++;
         if (count >= saveTime) {
             cout << n << "/" << NSTEPS << '\r';

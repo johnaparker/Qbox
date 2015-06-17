@@ -56,7 +56,7 @@ void Field1D::update(double dt) {
         Hy[k] = Hy[k] + 0.5*(Ex[k] - Ex[k+1]);
     }
 
-    write();
+    //write();
 }
 
 void Field1D::run(double time, double dt) {
