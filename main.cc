@@ -5,24 +5,36 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <iomanip>
 
 
 using namespace std;
-#define KE 200
 
 int main(int argc,char* argv[]) {
-    float ex[KE], hy[KE];
+    double mu = 2;
+    const double c0 = 3e8;
+    double dx = 60e-2;
+    double dt = dx/(2*c0)*mu;
+    cout << left;
+    cout << setw(10) << "dt:" << dt << " s" << endl;
+    cout << setw(10) << "dx:" << dx << " m" << endl;
+
+
+    int KE = 200;
+    double ex[KE], hy[KE], epsinv[KE];
     int n,k,kc,ke,NSTEPS;
-    float T;
-    float t0,spread,pulse;
+    double T;
+    double t0,spread,pulse;
 
     ofstream outE("Eout.txt");
     ofstream outH("Hout.txt");
 
-    for (k=1; k < KE; ++k) {
+    for (k=0; k < KE; ++k) {
         ex[k] = 0;
         hy[k] = 0;
+        epsinv[k] = (k < KE/2) ? 1: 1/4.0;
     }
+    double f = 10e6;
 
     kc = KE/2;
     t0 = 40.0;
@@ -33,23 +45,36 @@ int main(int argc,char* argv[]) {
     if (!(ss >> NSTEPS))
         cerr << "Invalid number " << argv[1] << '\n';
 
+    int saveTime = 1000;
+    int count = 0;
     for (n=1; n <= NSTEPS; n++) {
         T += 1;
         for (k=1; k<KE; k++) {
-            ex[k] = ex[k] + 0.5*(hy[k-1]-hy[k]);
+            ex[k] = ex[k] + 0.5*epsinv[k]*(hy[k-1]-hy[k]);
         }
 
         pulse = exp(-.5*(pow((t0-T)/spread,2.0)));
-        ex[kc] = pulse;
+        pulse = sin(2*M_PI*f*dt*T);
+        ex[0] = pulse;
         for (k=0; k<KE-1; k++) {
             hy[k] = hy[k] + .5*(ex[k] - ex[k+1]);
         }
-        for (k=1; k<=KE; k++) {
+        for (k=0; k<KE; k++) {
             outE << ex[k] << endl;
             outH << hy[k] << endl;
+        } 
+        count++;
+        if (count >= saveTime) {
+            cout << n << "/" << NSTEPS << '\r';
+            cout.flush();
+            count = 0;
         }
-        cout << n << "/" << NSTEPS << endl;
     }
+    cout << left;
+    cout << setw(10) << "Total T:" << T*dt << " s" << endl;
+    cout << setw(10) << "L:" << dx*KE << " m" << endl;
+    cout << setw(10) << "Freq:" << f << " Hz" << endl;
+    cout << setw(10) << "lamda:" << c0/f << " m" << endl;
     ostringstream convert;
     convert << NSTEPS;
     string st = convert.str();
@@ -57,7 +82,6 @@ int main(int argc,char* argv[]) {
     convert << KE;
     string sx = convert.str();
     string command = "python process.py " + st + " " + sx; 
-    cout << command << endl;
     
     outE.close();
     outH.close();

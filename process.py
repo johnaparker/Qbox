@@ -28,7 +28,6 @@ Efile = "Eout.txt"
 Hfile = "Hout.txt"
 
 argc = len(sys.argv)
-print(sys.argv)
 if argc == 3:
     st = int(sys.argv[1])
     sx = int(sys.argv[2])
@@ -49,7 +48,7 @@ py.xlim([0,sx])
 py.ylim([-1,1])
 def animate(i):
     line.set_ydata(F.E[i])
-    line2.set_ydata(F.H[i])
+#    line2.set_ydata(F.H[i])
     return line,line2
 
 def init():
