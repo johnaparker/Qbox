@@ -14,10 +14,13 @@ Field1D::Field1D(double length, double dx): L(length), dx(dx) {
     Nx = round(L/dx);
     t = 0;
     tStep = 0;
-    Ex.resize(Nx,0);
-    Hy.resize(Nx,0);
-    epsinv.resize(Nx,1);
+    Ex = new double [Nx];
+    Hy = new double [Nx];
+    epsinv = new double [Nx];
+
     for (int i = 0; i != Nx; i++) {
+        Ex[i] = 0;
+        Hy[i] = 0;
         epsinv[i] = (i < Nx/2) ? 1: 1/4.0;
     }
 

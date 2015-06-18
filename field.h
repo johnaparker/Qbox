@@ -12,7 +12,7 @@ public:
     double dx,L;
     int Nx,tStep;
 
-    std::vector<double> Ex,Hy,epsinv;
+    double *Ex,*Hy,*epsinv;
     double t;
 
     std::ofstream outE,outH;

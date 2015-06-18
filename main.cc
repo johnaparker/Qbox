@@ -10,7 +10,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    double dx = 60e-2/100;
+    double dx = 60e-2/50;
     double dt = dx/(2*c0);
     double L = 120;
     double tf = 1e-6;
