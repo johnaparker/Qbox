@@ -16,23 +16,24 @@ Field1D::Field1D(double length, double dx, double dt): L(length), dx(dx), dt(dt)
     tStep = 0;
     Ex = new double [Nx];
     Hy = new double [Nx];
-    epsinv = new double [Nx];
-    conduc = new double [Nx];
+    Dx = new double [Nx];
+    Ix = new double [Nx];
     ca = new double[Nx];
     cb = new double[Nx];
-    double *eaf = new double[Nx];
-
+    double* eps = new double [Nx];
+    double* conduc = new double [Nx];
     
     for (int i = 0; i != Nx; i++) {
         Ex[i] = 0;
         Hy[i] = 0;
-        epsinv[i] = (i < Nx/2) ? 1: 1/1.0;
+        Dx[i] = 0;
+        Ix[i] = 0;
+        eps[i] = (i < Nx/2) ? 1: 1/1.0;
         conduc[i] = (i < Nx/2) ? 0: .0007;
-        eaf[i] = dt*conduc[i]*epsinv[i]/(2*epsilon);
-        ca[i] = (1 - eaf[i])/(1 + eaf[i]); 
-        cb[i] = 0.5*epsinv[i]/(1+eaf[i]);
+        ca[i] = 1/(eps[i] + conduc[i]*dt/epsilon);
+        cb[i] = conduc[i]*dt/epsilon;
     }
-    delete[] eaf;
+    delete[] eps,conduc;
 
     outE.open("Eout.dat", ios::binary);
     outH.open("Hout.dat", ios::binary);
@@ -55,7 +56,7 @@ void Field1D::pulse(double f) {
     static double sig = 1e-8;
     double p = exp(-0.5*(pow((t-T)/sig,2)));
     //double p = sin(2*M_PI*f*t);
-    Ex[50] += p;
+    Dx[50] += p;
 }
 
 void Field1D::update() {
@@ -63,7 +64,9 @@ void Field1D::update() {
     t += dt;
 
     for (int k=1; k<Nx; k++) {
-        Ex[k] = ca[k]*Ex[k] + 0.5*cb[k]*(Hy[k-1]-Hy[k]);
+        Dx[k] += 0.5*(Hy[k-1]-Hy[k]);
+        Ex[k] = ca[k]*(Dx[k] -Ix[k]);
+        Ix[k] += cb[k]*Ex[k];
     }
 
     pulse(10e6);

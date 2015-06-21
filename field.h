@@ -13,7 +13,7 @@ public:
     double dx,L;
     int Nx,tStep;
 
-    double *Ex,*Hy,*epsinv,*conduc,*ca,*cb;
+    double *Ex,*Dx,*Hy,*Ix,*ca,*cb;
     double dt,t;
 
     std::ofstream outE,outH;
