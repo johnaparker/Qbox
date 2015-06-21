@@ -12,22 +12,18 @@ class field:
         self.H = []
 
     def load(self,Efile,Hfile):
-        Ef = open(Efile)
-        Hf = open(Hfile)
-        x = 0
-        Evals = np.zeros(sx)
-        Hvals = np.zeros(sx)
-        for e,h in zip(Ef,Hf):
-            Evals[x] = float(e)
-            Hvals[x] = float(h)
-            x += 1
-            if x == self.sx:
-                x = 0
-                self.E.append(copy(Evals))
-                self.H.append(copy(Hvals))
+        Ef = open(Efile, 'rb')
+        Hf = open(Hfile, 'rb')
+        E = np.fromfile(Ef)
+        H = np.fromfile(Hf)
 
-Efile = "Eout.txt"
-Hfile = "Hout.txt"
+        tSteps = int(np.floor(len(E)/self.sx))
+        for t in range(tSteps):
+            self.E.append(E[t*self.sx:(t+1)*self.sx])
+            self.H.append(H[t*self.sx:(t+1)*self.sx])
+
+Efile = "Eout.dat"
+Hfile = "Hout.dat"
 
 argc = len(sys.argv)
 if argc == 2:

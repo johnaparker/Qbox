@@ -10,18 +10,18 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    double dx = 60e-2/500;
+    double dx = 60e-2;
     double dt = dx/(2*c0);
     double L = 120;
-    double tf = 1e-7;
+    double tf = 1e-5;
 
-    Field1D test(L,dx);
-    test.run(tf,dt);
+    Field1D test(L,dx,dt);
+    test.run(tf);
 
     ostringstream convert;
     convert << test.Nx;
     string sx = convert.str();
     string command = "python process.py " + sx; 
-    //system(command.c_str());
+    system(command.c_str());
 }
 

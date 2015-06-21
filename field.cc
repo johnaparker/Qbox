@@ -10,28 +10,38 @@
 
 using namespace std;
 
-Field1D::Field1D(double length, double dx): L(length), dx(dx) {
+Field1D::Field1D(double length, double dx, double dt): L(length), dx(dx), dt(dt) {
     Nx = round(L/dx);
     t = 0;
     tStep = 0;
     Ex = new double [Nx];
     Hy = new double [Nx];
     epsinv = new double [Nx];
+    conduc = new double [Nx];
+    ca = new double[Nx];
+    cb = new double[Nx];
+    double *eaf = new double[Nx];
 
+    
     for (int i = 0; i != Nx; i++) {
         Ex[i] = 0;
         Hy[i] = 0;
-        epsinv[i] = (i < Nx/2) ? 1: 1/4.0;
+        epsinv[i] = (i < Nx/2) ? 1: 1/1.0;
+        conduc[i] = (i < Nx/2) ? 0: .0007;
+        eaf[i] = dt*conduc[i]*epsinv[i]/(2*epsilon);
+        ca[i] = (1 - eaf[i])/(1 + eaf[i]); 
+        cb[i] = 0.5*epsinv[i]/(1+eaf[i]);
     }
+    delete[] eaf;
 
-    outE.open("Eout.txt");
-    outH.open("Hout.txt");
+    outE.open("Eout.dat", ios::binary);
+    outH.open("Hout.dat", ios::binary);
 }
 
 void Field1D::write() {
     for (int k=0; k!= Nx; k++) {
-        outE << Ex[k] << endl;
-        outH << Hy[k] << endl;
+        outE.write(reinterpret_cast<char*>(&Ex[k]),sizeof(Ex[k]));
+        outH.write(reinterpret_cast<char*>(&Hy[k]),sizeof(Hy[k]));
     }
 }
 
@@ -41,16 +51,19 @@ void Field1D::display_info() {
 }
 
 void Field1D::pulse(double f) {
-    double p = sin(2*M_PI*f*t);
-    Ex[0] = p;
+    static double T = .1e-6;
+    static double sig = 1e-8;
+    double p = exp(-0.5*(pow((t-T)/sig,2)));
+    //double p = sin(2*M_PI*f*t);
+    Ex[50] += p;
 }
 
-void Field1D::update(double dt) {
+void Field1D::update() {
     tStep += 1;
     t += dt;
 
     for (int k=1; k<Nx; k++) {
-        Ex[k] = Ex[k] + 0.5*epsinv[k]*(Hy[k-1]-Hy[k]);
+        Ex[k] = ca[k]*Ex[k] + 0.5*cb[k]*(Hy[k-1]-Hy[k]);
     }
 
     pulse(10e6);
@@ -58,25 +71,25 @@ void Field1D::update(double dt) {
     for (int k=0; k<Nx-1; k++) {
         Hy[k] = Hy[k] + 0.5*(Ex[k] - Ex[k+1]);
     }
-
-    //write();
 }
 
-void Field1D::run(double time, double dt) {
+void Field1D::run(double time) {
     int count = 0;
-    int saveTime = 1000;
+    int saveTime = 1;
     int totSteps = round(time/dt);
     display_info();
 
     while (t < time) {
-        update(dt);
+        update();
         count ++;
         if (count >= saveTime) {
             cout << tStep << "/" << totSteps << '\r';
             cout.flush();
             count = 0;
+            write();
         } 
     }
+    cout << tStep << "/" << totSteps << endl;
 
     outE.close();
     outH.close();
