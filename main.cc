@@ -22,6 +22,6 @@ int main(int argc, char* argv[]) {
     convert << test.Nx;
     string sx = convert.str();
     string command = "python process.py " + sx; 
-    //system(command.c_str());
+    system(command.c_str());
 }
 
