@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
     double dx = 60e-2;
     double dt = dx/(2*c0);
     double dim[] = {60,60};
-    double tf = 4e-7;
+    double tf = 2e-7;
 
     Field2D test(dim,dx,dt);
     test.run(tf);
