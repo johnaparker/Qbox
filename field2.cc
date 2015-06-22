@@ -15,30 +15,26 @@ Field2D::Field2D(double dim[], double dx, double dt): Lx(dim[0]), Ly(dim[1]), dx
     Ny = round(Ly/dx);
     t = 0;
     tStep = 0;
-    Ez = new double [Nx][Ny];
-    Hx = new double [Nx][Ny];
-    Hy = new double [Nx][Ny];
-    Dz = new double [Nx][Ny];
-    Iz = new double [Nx][Ny];
-    ca = new double[Nx][Ny];
-    cb = new double[Nx][Ny];
-    double* eps = new double [Nx][Ny];
-    double* conduc = new double [Nx][Ny];
+    vector<vector<double> > eps;
+    vector<vector<double> > conduc;
     
     for (int i = 0; i != Nx; i++) {
+        Ez.push_back(vector<double>(Ny,0));
+        Hx.push_back(vector<double>(Ny,0));
+        Hy.push_back(vector<double>(Ny,0));
+        Dz.push_back(vector<double>(Ny,0));
+        Iz.push_back(vector<double>(Ny,0));
+        ca.push_back(vector<double>(Ny,0));
+        cb.push_back(vector<double>(Ny,0));
+        eps.push_back(vector<double>(Ny,0));
+        conduc.push_back(vector<double>(Ny,0));
         for (int j = 0; j != Ny; j++) {
-            Ez[i][j] = 0;
-            Hx[i][j] = 0;
-            Hy[i][j] = 0;
-            Dz[i][j] = 0;
-            Iz[i][j] = 0;
             eps[i][j] = (i < Nx/2) ? 1: 1/1.0;      // FIX
             conduc[i][j] = (i < Nx/2) ? 0: 0;   // FIX
             ca[i][j] = 1/(eps[i][j] + conduc[i][j]*dt/epsilon);
             cb[i][j] = conduc[i][j]*dt/epsilon;
          }
     }
-    delete[] eps,conduc;
 
     outE.open("Eout.dat", ios::binary);
     outH.open("Hout.dat", ios::binary);
@@ -62,11 +58,11 @@ void Field2D::display_info(double tf) {
 }
 
 void Field2D::pulse(double f) {
-    static double T = .1e-6;
+    static double T = 2e-7;
     static double sig = 1e-8;
     double p = exp(-0.5*(pow((t-T)/sig,2)));
     //double p = sin(2*M_PI*f*t);
-    Dz[100][100] += p;
+    Dz[50][50] = p;
 }
 
 void Field2D::update() {

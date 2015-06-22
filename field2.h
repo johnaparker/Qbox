@@ -13,7 +13,7 @@ public:
     double dx,Lx,Ly;
     int Nx,Ny,tStep;
 
-    double *Ez,*Dz,*Hx,*Hy,*Iz,*ca,*cb;
+    std::vector<std::vector<double> > Ez,Dz,Hx,Hy,Iz,ca,cb;
     double dt,t;
 
     std::ofstream outE,outH;
