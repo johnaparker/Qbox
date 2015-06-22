@@ -12,7 +12,7 @@ using namespace std;
 int main(int argc, char* argv[]) {
     double dx = 60e-2;
     double dt = dx/(2*c0);
-    double dim[] = {120,120};
+    double dim[] = {60,60};
     double tf = 1e-7;
 
     Field2D test(dim,dx,dt);
@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
     convert.clear();
     convert << test.Ny;
     string sy = convert.str();
-    string command = "python process2.py " + sx + " " + sy; 
+    string command = "python process.py " + sx + " " + sy; 
     system(command.c_str());
 }
 
