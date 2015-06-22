@@ -1,5 +1,5 @@
-#ifndef GUARD_field_h
-#define GUARD_field_h
+#ifndef GUARD_field2_h
+#define GUARD_field2_h
 
 #include <vector>
 #include <fstream>
@@ -7,20 +7,20 @@
 const double c0 = 3e8;
 const double epsilon = 8.854e-12;
 
-class Field1D {
+class Field2D {
 public:
     double mu;
-    double dx,L;
-    int Nx,tStep;
+    double dx,Lx,Ly;
+    int Nx,Ny,tStep;
 
-    double *Ex,*Dx,*Hy,*Ix,*ca,*cb;
+    double *Ez,*Dz,*Hx,*Hy,*Iz,*ca,*cb;
     double dt,t;
 
     std::ofstream outE,outH;
 public:
-    Field1D(double length, double dl, double dt);
+    Field2D(double *dim, double dl, double dt);
     void write();
-    void display_info();
+    void display_info(double tf);
     void pulse(double f);
     void update();
     void run(double time);    

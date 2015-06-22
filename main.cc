@@ -5,23 +5,27 @@
 #include <sstream>
 #include <string>
 #include <iomanip>
-#include "field.h"
+#include "field2.h"
 
 using namespace std;
 
 int main(int argc, char* argv[]) {
     double dx = 60e-2;
     double dt = dx/(2*c0);
-    double L = 120;
-    double tf = 1e-5;
+    double dim[] = {120,120};
+    double tf = 1e-7;
 
-    Field1D test(L,dx,dt);
+    Field2D test(dim,dx,dt);
     test.run(tf);
 
     ostringstream convert;
     convert << test.Nx;
     string sx = convert.str();
-    string command = "python process.py " + sx; 
+    convert.str("");
+    convert.clear();
+    convert << test.Ny;
+    string sy = convert.str();
+    string command = "python process2.py " + sx + " " + sy; 
     system(command.c_str());
 }
 
