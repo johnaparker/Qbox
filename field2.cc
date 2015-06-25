@@ -34,7 +34,7 @@ Field2D::Field2D(double dim[], double dx, double dt): Lx(dim[0]), Ly(dim[1]), dx
             Dz[i][j] = 0;
             Iz[i][j] = 0;
             eps[i][j] = (i < Nx/2) ? 1: 1/1.0;      // FIX
-            conduc[i][j] = (i < Nx/2) ? 0: 0;   // FIX
+            conduc[i][j] = (j < Nx/2) ? 0: .0003;   // FIX
             ca[i][j] = 1/(eps[i][j] + conduc[i][j]*dt/epsilon);
             cb[i][j] = conduc[i][j]*dt/epsilon;
          }
@@ -62,11 +62,11 @@ void Field2D::display_info(double tf) {
 }
 
 void Field2D::pulse(double f) {
-    static double T = .1e-7;
+    static double T = 0.5e-7;
     static double sig = 1e-8;
-    double p = exp(-0.5*(pow((t-T)/sig,2)));
-    //double p = sin(2*M_PI*f*t);
-    Dz[30][30] += p;
+    double p = 0.2*exp(-0.5*(pow((t-T)/sig,2)));
+    //double p = 0.05*sin(2*M_PI*f*t);
+    Dz[50][30] = p;
 }
 
 void Field2D::update() {
@@ -77,12 +77,17 @@ void Field2D::update() {
         for (int j=1; j<Ny; j++) {
             Dz[i][j] += 0.5*(Hy[i][j]-Hy[i-1][j]
                             -Hx[i][j]+Hx[i][j-1]);
+         }
+    }
+
+    pulse(3e7);
+
+    for (int i=1; i<Nx-1; i++) {
+        for (int j=1; j<Ny-1; j++) {
             Ez[i][j] = ca[i][j]*(Dz[i][j] -Iz[i][j]);
             Iz[i][j] += cb[i][j]*Ez[i][j];
          }
     }
-
-    pulse(10e6);
 
     for (int i=0; i<Nx-1; i++) {
         for (int j=0; j<Ny-1; j++) {

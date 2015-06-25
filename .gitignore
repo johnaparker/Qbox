@@ -1,8 +1,10 @@
 *.txt
+*.swn
 *.swo
 *.out
 *.swp
 *.o
 *.gch
 *.dat
+figs/*
 emag

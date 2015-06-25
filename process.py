@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.animation as animation
 from mpl_toolkits.mplot3d import Axes3D
 from multiprocessing import Pool,Process,Value
+from matplotlib import cm
 import sys
 from copy import copy
 
@@ -50,8 +51,9 @@ def f(a,b,c):
         print(c.value)
         fig = py.figure(i)
         ax = fig.gca(projection='3d')
+        ax.set_zlim(-.05,.05)
         z = F.E[i]
-        surf = ax.plot_surface(x,y,z,rstride=1,cstride=1)
+        surf = ax.plot_surface(x,y,z,rstride=1,cstride=1,linewidth=0.3,cmap=cm.coolwarm)
         py.savefig(r'./figs/fig' + str(i+1).zfill(3) + '.png')
         py.close(i)
         c.value += 1
