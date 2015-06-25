@@ -10,7 +10,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    double dx = 60e-2;
+    double dx = 60e-3;
     double dt = dx/(2*c0);
     double dim[] = {60,60};
     double tf = 2e-7;
@@ -26,6 +26,6 @@ int main(int argc, char* argv[]) {
     convert << test.Ny;
     string sy = convert.str();
     string command = "python process.py " + sx + " " + sy; 
-    system(command.c_str());
+    //system(command.c_str());
 }
 
