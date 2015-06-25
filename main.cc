@@ -10,7 +10,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    double dx = 60e-3;
+    double dx = 20e-2;
     double dt = dx/(2*c0);
     double dim[] = {60,60};
     double tf = 2e-7;
