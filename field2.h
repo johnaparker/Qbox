@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <fstream>
+#include "matrix.h"
 
 const double c0 = 3e8;
 const double epsilon = 8.854e-12;
@@ -13,7 +14,7 @@ public:
     double dx,Lx,Ly;
     int Nx,Ny,tStep;
 
-    double *Ez,*Dz,*Hx,*Hy,*Iz,*ca,*cb;
+    matrix Ez,Dz,Hx,Hy,Iz,ca,cb;
     double dt,t;
 
     std::ofstream outE,outH;

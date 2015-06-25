@@ -1,4 +1,5 @@
 #include "field2.h"
+#include "matrix.h"
 #include <math.h>
 #include <iostream>
 #include <stdlib.h>
@@ -15,15 +16,15 @@ Field2D::Field2D(double dim[], double dx, double dt): Lx(dim[0]), Ly(dim[1]), dx
     Ny = round(Ly/dx);
     t = 0;
     tStep = 0;
-    Ez = new double [Nx][Ny];
-    Hx = new double [Nx][Ny];
-    Hy = new double [Nx][Ny];
-    Dz = new double [Nx][Ny];
-    Iz = new double [Nx][Ny];
-    ca = new double[Nx][Ny];
-    cb = new double[Nx][Ny];
-    double* eps = new double [Nx][Ny];
-    double* conduc = new double [Nx][Ny];
+    Ez = matrix(new double [Nx*Ny], Nx, Ny); 
+    Hx = matrix(new double [Nx*Ny], Nx, Ny);
+    Hy = matrix(new double [Nx*Ny], Nx, Ny);
+    Dz = matrix(new double [Nx*Ny], Nx, Ny);
+    Iz = matrix(new double [Nx*Ny], Nx, Ny);
+    ca = matrix(new double [Nx*Ny], Nx, Ny);
+    cb = matrix(new double [Nx*Ny], Nx, Ny);
+    matrix eps = matrix(new double [Nx*Ny], Nx, Ny);
+    matrix conduc = matrix(new double [Nx*Ny], Nx, Ny);
     
     for (int i = 0; i != Nx; i++) {
         for (int j = 0; j != Ny; j++) {
@@ -38,7 +39,6 @@ Field2D::Field2D(double dim[], double dx, double dt): Lx(dim[0]), Ly(dim[1]), dx
             cb[i][j] = conduc[i][j]*dt/epsilon;
          }
     }
-    delete[] eps,conduc;
 
     outE.open("Eout.dat", ios::binary);
     outH.open("Hout.dat", ios::binary);
@@ -62,11 +62,11 @@ void Field2D::display_info(double tf) {
 }
 
 void Field2D::pulse(double f) {
-    static double T = .1e-6;
+    static double T = .1e-7;
     static double sig = 1e-8;
     double p = exp(-0.5*(pow((t-T)/sig,2)));
     //double p = sin(2*M_PI*f*t);
-    Dz[100][100] += p;
+    Dz[30][30] += p;
 }
 
 void Field2D::update() {
