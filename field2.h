@@ -4,9 +4,7 @@
 #include <vector>
 #include <fstream>
 #include "matrix.h"
-
-const double c0 = 3e8;
-const double epsilon = 8.854e-12;
+#include "field1D/field.h"
 
 struct grid_properties {
     int Nx, Ny;
@@ -17,8 +15,15 @@ struct grid_properties {
     std::vector<int> p1, p2;
 
     grid_properties(int Nx, int Ny, double dx, int pml_thickness):
-        Nx(Nx), Ny(Ny), dx(dx), pml_thickness(pml_thickness) {}
-    tfsf(std::vector<int>, std::vector<int>)
+        Nx(Nx), Ny(Ny), dx(dx), pml_thickness(pml_thickness) {
+        totalFieldScatteredField = false;       
+    }
+
+    void set_tfsf(std::vector<int> p1, std::vector<int> p2){
+        p1 = p1;
+        p2 = p2;
+        totalFieldScatteredField = true;
+    }
 };
 
 class tfsf {
@@ -27,10 +32,10 @@ public:
    int ia,ib,ja,jb;
 
 public:
-    tfsf(grid_properties grid);
+    tfsf(grid_properties grid, double dt);
     tfsf() = default;
-    tfsf(const pml&) = default;
-    tfsf& operator=(const pml&) = default;
+    tfsf(const tfsf&) = default;
+    tfsf& operator=(const tfsf&) = default;
 };
 
 class pml {
@@ -58,10 +63,11 @@ public:
     double dt,t;
 
     pml BC;
+    tfsf *total;
 
     std::ofstream outE,outH;
 public:
-    Field2D(grid_properties grid, double dx, double dt);
+    Field2D(grid_properties grid, double dt);
     void write();
     void display_info(double tf);
     void pulse(double f);

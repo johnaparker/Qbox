@@ -18,13 +18,13 @@ public:
     double dx,L;
     int Nx,tStep;
 
-    double *Ex,*Dx,*Hy,*Ix,*ca,*cb;
+    double *Ez,*Dz,*Hx,*Iz,*ca,*cb;
     double dt,t;
     pmlBoundary pml;
 
     std::ofstream outE,outH;
 public:
-    Field1D(double length, double dl, double dt);
+    Field1D(int Nx, double dl, double dt);
     void write();
     void display_info();
     void pulse(double f);

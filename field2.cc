@@ -11,7 +11,7 @@
 
 using namespace std;
 
-Field2D::Field2D(grid_properties grid, double dx, double dt): Nx(grid.Nx), Ny(grid.Ny), dx(grid.dx), dt(dt) {
+Field2D::Field2D(grid_properties grid, double dt): Nx(grid.Nx), Ny(grid.Ny), dx(grid.dx), dt(dt) {
     Lx = Nx*dx; 
     Ly = Ny*dx; 
     t = 0;
@@ -41,7 +41,12 @@ Field2D::Field2D(grid_properties grid, double dx, double dt): Nx(grid.Nx), Ny(gr
     }
 
     BC = pml(grid); 
-    auto i = 2;
+
+    if (grid.totalFieldScatteredField)
+        total = new tfsf(grid, dt);
+    else
+        total = nullptr;
+
     outE.open("Eout.dat", ios::binary);
     outH.open("Hout.dat", ios::binary);
 }
@@ -73,7 +78,7 @@ void Field2D::pulse(double f) {
 }
 
 void Field2D::update() {
- int Nx, int Ny, int thickness)   tStep += 1;
+    tStep += 1;
     t += dt;
 
     for (int i=1; i<Nx-1; i++) {

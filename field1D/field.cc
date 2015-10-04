@@ -10,14 +10,14 @@
 
 using namespace std;
 
-Field1D::Field1D(double length, double dx, double dt): L(length), dx(dx), dt(dt) {
-    Nx = round(L/dx);
+Field1D::Field1D(int  Nx, double dx, double dt): Nx(Nx), dx(dx), dt(dt) {
+    L = dx*Nx;
     t = 0;
     tStep = 0;
-    Ex = new double [Nx];
-    Hy = new double [Nx];
-    Dx = new double [Nx];
-    Ix = new double [Nx];
+    Ez = new double [Nx];
+    Hx = new double [Nx];
+    Dz = new double [Nx];
+    Iz = new double [Nx];
     ca = new double[Nx];
     cb = new double[Nx];
 
@@ -25,12 +25,12 @@ Field1D::Field1D(double length, double dx, double dt): L(length), dx(dx), dt(dt)
     double* conduc = new double [Nx];
     
     for (int i = 0; i != Nx; i++) {
-        Ex[i] = 0;
-        Hy[i] = 0;
-        Dx[i] = 0;
-        Ix[i] = 0;
+        Ez[i] = 0;
+        Hx[i] = 0;
+        Dz[i] = 0;
+        Iz[i] = 0;
         eps[i] = (i < Nx/2) ? 1: 1/1.0;
-        conduc[i] = (i < Nx/2) ? 0: .0007;
+        conduc[i] = (i < Nx/2) ? 0: .0000;
         ca[i] = 1/(eps[i] + conduc[i]*dt/epsilon);
         cb[i] = conduc[i]*dt/epsilon;
     }
@@ -47,8 +47,8 @@ Field1D::Field1D(double length, double dx, double dt): L(length), dx(dx), dt(dt)
 
 void Field1D::write() {
     for (int k=0; k!= Nx; k++) {
-        outE.write(reinterpret_cast<char*>(&Ex[k]),sizeof(Ex[k]));
-        outH.write(reinterpret_cast<char*>(&Hy[k]),sizeof(Hy[k]));
+        outE.write(reinterpret_cast<char*>(&Ez[k]),sizeof(Ez[k]));
+        outH.write(reinterpret_cast<char*>(&Hx[k]),sizeof(Hx[k]));
     }
 }
 
@@ -62,7 +62,7 @@ void Field1D::pulse(double f) {
     static double sig = 1e-8;
     double p = exp(-0.5*(pow((t-T)/sig,2)));
     //double p = sin(2*M_PI*f*t);
-    Dx[50] += p;
+    Dz[50] += p;
 }
 
 void Field1D::update() {
@@ -70,32 +70,31 @@ void Field1D::update() {
     t += dt;
 
     for (int k=1; k<Nx; k++) {
-        Dx[k] += 0.5*(Hy[k-1]-Hy[k]);
-        Ex[k] = ca[k]*(Dx[k] -Ix[k]);
-        Ix[k] += cb[k]*Ex[k];
+        Dz[k] += 0.5*(Hx[k-1]-Hx[k]);
+        Ez[k] = ca[k]*(Dz[k] -Iz[k]);
+        Iz[k] += cb[k]*Ez[k];
     }
-
-    pulse(10e6);
-
-    for (int k=0; k<Nx-1; k++) {
-        Hy[k] = Hy[k] + 0.5*(Ex[k] - Ex[k+1]);
-    }
-
-    pml.left[1] = pml.left[0];
-    pml.left[0] = Ex[1];
-    Ex[0] = pml.left[1];
     
+    Ez[0] = pml.left[1];
+    pml.left[1] = pml.left[0];
+    pml.left[0] = Ez[1];
+    
+    Ez[Nx-1] = pml.right[1];
     pml.right[1] = pml.right[0];
-    pml.right[0] = Ex[Nx-2];
-    Ex[Nx-1] = pml.right[1];
+    pml.right[0] = Ez[Nx-2];
+    
+    for (int k=0; k<Nx-1; k++) {
+        Hx[k] = Hx[k] + 0.5*(Ez[k] - Ez[k+1]);
+    }
+
 }
 
 void Field1D::run(double time) {
-    int count = 0;
-    int saveTime = 1;
     int totSteps = round(time/dt);
+    int saveTime = 1;
     display_info();
 
+    int count = 0;
     while (t < time) {
         update();
         count ++;

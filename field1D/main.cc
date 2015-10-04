@@ -12,10 +12,10 @@ using namespace std;
 int main(int argc, char* argv[]) {
     double dx = 60e-2;
     double dt = dx/(2*c0);
-    double L = 120;
+    int Nx = 200;
     double tf = 7e-7;
 
-    Field1D test(L,dx,dt);
+    Field1D test(Nx,dx,dt);
     test.run(tf);
 
     ostringstream convert;
