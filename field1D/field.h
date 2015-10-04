@@ -4,8 +4,13 @@
 #include <vector>
 #include <fstream>
 
-const double c0 = 3e8;
+const double c0 = 2.99792458e8;
 const double epsilon = 8.854e-12;
+
+struct pmlBoundary{
+    double *left = new double[2];
+    double *right = new double[2];
+};
 
 class Field1D {
 public:
@@ -15,6 +20,7 @@ public:
 
     double *Ex,*Dx,*Hy,*Ix,*ca,*cb;
     double dt,t;
+    pmlBoundary pml;
 
     std::ofstream outE,outH;
 public:

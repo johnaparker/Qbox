@@ -20,6 +20,7 @@ Field1D::Field1D(double length, double dx, double dt): L(length), dx(dx), dt(dt)
     Ix = new double [Nx];
     ca = new double[Nx];
     cb = new double[Nx];
+
     double* eps = new double [Nx];
     double* conduc = new double [Nx];
     
@@ -33,6 +34,11 @@ Field1D::Field1D(double length, double dx, double dt): L(length), dx(dx), dt(dt)
         ca[i] = 1/(eps[i] + conduc[i]*dt/epsilon);
         cb[i] = conduc[i]*dt/epsilon;
     }
+    pml.left[0] = 0;
+    pml.left[1] = 0;
+    pml.right[0] = 0;
+    pml.right[1] = 0;
+
     delete[] eps,conduc;
 
     outE.open("Eout.dat", ios::binary);
@@ -74,6 +80,14 @@ void Field1D::update() {
     for (int k=0; k<Nx-1; k++) {
         Hy[k] = Hy[k] + 0.5*(Ex[k] - Ex[k+1]);
     }
+
+    pml.left[1] = pml.left[0];
+    pml.left[0] = Ex[1];
+    Ex[0] = pml.left[1];
+    
+    pml.right[1] = pml.right[0];
+    pml.right[0] = Ex[Nx-2];
+    Ex[Nx-1] = pml.right[1];
 }
 
 void Field1D::run(double time) {
