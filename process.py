@@ -5,8 +5,10 @@ import matplotlib.animation as animation
 from mpl_toolkits.mplot3d import Axes3D
 from multiprocessing import Pool,Process,Value
 from matplotlib import cm
+import matplotlib
 import sys
 from copy import copy
+matplotlib.rcParams['contour.negative_linestyle'] = 'solid'
 
 class field:
     def __init__(self,sx,sy):
@@ -49,11 +51,9 @@ z = x*0
 def f(a,b,c):
     for i in range(a,b):
         print(c.value)
-        fig = py.figure(i)
-        ax = fig.gca(projection='3d')
-        ax.set_zlim(-.05,.05)
+        fig = py.figure(i, figsize=(10,10))
         z = F.E[i]
-        surf = ax.plot_surface(x,y,z,rstride=1,cstride=1,linewidth=0.3,cmap=cm.coolwarm)
+        py.contour(z, colors='k', levels = np.linspace(np.amin(z), np.amax(z),20))
         py.savefig(r'./figs/fig' + str(i+1).zfill(3) + '.png')
         py.close(i)
         c.value += 1

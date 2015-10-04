@@ -12,10 +12,11 @@ using namespace std;
 int main(int argc, char* argv[]) {
     double dx = 20e-2;
     double dt = dx/(2*c0);
-    double dim[] = {60,60};
-    double tf = 2e-7;
+    int pml_thickness = 12;
+    grid_properties grid(120,120,dx,pml_thickness);
+    double tf = 300*dt;
 
-    Field2D test(dim,dx,dt);
+    Field2D test(grid,dx,dt);
     test.run(tf);
 
     ostringstream convert;
