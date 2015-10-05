@@ -42,8 +42,9 @@ Field2D::Field2D(grid_properties grid, double dt): Nx(grid.Nx), Ny(grid.Ny), dx(
 
     BC = pml(grid); 
 
-    if (grid.totalFieldScatteredField)
+    if (grid.totalFieldScatteredField) {
         total = new tfsf(grid, dt);
+    } 
     else
         total = nullptr;
 
@@ -80,6 +81,9 @@ void Field2D::pulse(double f) {
 void Field2D::update() {
     tStep += 1;
     t += dt;
+    
+    total->inc->pulse(1);
+    total->inc->update();
 
     for (int i=1; i<Nx-1; i++) {
         for (int j=1; j<Ny-1; j++) {
@@ -88,7 +92,10 @@ void Field2D::update() {
          }
     }
 
-    pulse(3e7);
+    for (int i = total->ia; i <= total->ib; i++) {
+        Dz[i][total->ja] += 0.5*total->inc->Hx[total->ja-1];
+        Dz[i][total->jb] += -0.5*total->inc->Hx[total->jb];
+    }
 
     for (int i=1; i<Nx-1; i++) {
         for (int j=1; j<Ny-1; j++) {
@@ -107,6 +114,15 @@ void Field2D::update() {
             BC.Ihx[i][j] += curl_e;
             Hx[i][j] = BC.fj3[j]*Hx[i][j] + BC.fj2[j]*0.5*curl_e + BC.fi1[i]*BC.Ihx[i][j];
         }
+    }
+
+    for (int i = total->ia; i <= total->ib; i++) {
+        Hx[i][total->ja-1] += 0.5*total->inc->Ez[total->ja];
+        Hx[i][total->jb] += -0.5*total->inc->Ez[total->jb];
+    }
+    for (int j = total->ja; j <= total->jb; j++) {
+        Hy[total->ia-1][j] += -0.5*total->inc->Ez[j];
+        Hy[total->ib][j] += 0.5*total->inc->Ez[j];
     }
 }
 

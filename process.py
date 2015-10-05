@@ -52,8 +52,9 @@ def f(a,b,c):
     for i in range(a,b):
         print(c.value)
         fig = py.figure(i, figsize=(10,10))
+        ax = fig.add_subplot(111,projection = '3d')
         z = F.E[i]
-        py.contour(z, colors='k', levels = np.linspace(np.amin(z), np.amax(z),20))
+        ax.plot_surface(x,y,z,rstride=sx, cstride=sy, alpha=0.3)
         py.savefig(r'./figs/fig' + str(i+1).zfill(3) + '.png')
         py.close(i)
         c.value += 1

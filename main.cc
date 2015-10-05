@@ -14,8 +14,10 @@ int main(int argc, char* argv[]) {
     double dt = dx/(2*c0);
     int pml_thickness = 12;
     grid_properties grid(120,120,dx,pml_thickness);
+    
+    grid.set_tfsf({30,30}, {90,90});
 
-    double tf = 300*dt;
+    double tf = 900*dt;
 
     Field2D test(grid,dt);
     test.run(tf);

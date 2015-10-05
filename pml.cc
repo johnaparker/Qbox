@@ -10,7 +10,7 @@ double compute_pml_val(double d, int thickness, double alpha) {
     return alpha*pow((d+1)/thickness,3);
 }
 
-pml::pml(grid_properties grid): Nx(grid.Nx), Ny(grid.Ny), thickness(thickness) {
+pml::pml(grid_properties grid): Nx(grid.Nx), Ny(grid.Ny), thickness(grid.pml_thickness) {
     thickness -= 2;
 
     Ihx = matrix(new double [Nx*Ny], Nx, Ny); 
@@ -76,4 +76,5 @@ pml::pml(grid_properties grid): Nx(grid.Nx), Ny(grid.Ny), thickness(thickness) {
         gj2[j] = 1/(1+xn1);
         gj3[j] = (1-xn1)/(1+xn1);
     }
+    thickness += 2;
 }

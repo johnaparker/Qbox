@@ -4,7 +4,7 @@
 #include <vector>
 #include <fstream>
 #include "matrix.h"
-#include "field1D/field.h"
+#include "field.h"
 
 struct grid_properties {
     int Nx, Ny;
@@ -19,9 +19,9 @@ struct grid_properties {
         totalFieldScatteredField = false;       
     }
 
-    void set_tfsf(std::vector<int> p1, std::vector<int> p2){
-        p1 = p1;
-        p2 = p2;
+    void set_tfsf(std::vector<int> p1_val, std::vector<int> p2_val){
+        p1 = p1_val;
+        p2 = p2_val;
         totalFieldScatteredField = true;
     }
 };
