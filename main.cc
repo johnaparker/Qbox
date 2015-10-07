@@ -10,14 +10,14 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    double dx = 20e-2;
+    double dx = 50e-2;
     double dt = dx/(2*c0);
     int pml_thickness = 12;
-    grid_properties grid(120,120,dx,pml_thickness);
-    
-    grid.set_tfsf({30,30}, {90,90});
 
-    double tf = 900*dt;
+    grid_properties grid(50,130,dx,pml_thickness);
+    grid.set_tfsf({18,18}, {32,112});
+
+    double tf = 600*dt;
 
     Field2D test(grid,dt);
     test.run(tf);

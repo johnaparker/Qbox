@@ -58,11 +58,11 @@ void Field1D::display_info() {
 }
 
 void Field1D::pulse(double f) {
-    static double T = .1e-6;
+    static double T = 1e-7;
     static double sig = 1e-8;
     double p = exp(-0.5*(pow((t-T)/sig,2)));
     //double p = sin(2*M_PI*f*t);
-    Dz[50] += p;
+    Dz[10] += p;
 }
 
 void Field1D::update() {

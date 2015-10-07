@@ -23,8 +23,8 @@ Field2D::Field2D(grid_properties grid, double dt): Nx(grid.Nx), Ny(grid.Ny), dx(
     Iz = matrix(new double [Nx*Ny], Nx, Ny);
     ca = matrix(new double [Nx*Ny], Nx, Ny);
     cb = matrix(new double [Nx*Ny], Nx, Ny);
-    matrix eps = matrix(new double [Nx*Ny], Nx, Ny);
-    matrix conduc = matrix(new double [Nx*Ny], Nx, Ny);
+    matrix eps = matrix(new double [Nx*Ny], Nx, Ny);       //need to be deallocated
+    matrix conduc = matrix(new double [Nx*Ny], Nx, Ny);    //here too
     
     for (int i = 0; i != Nx; i++) {
         for (int j = 0; j != Ny; j++) {
@@ -34,7 +34,7 @@ Field2D::Field2D(grid_properties grid, double dt): Nx(grid.Nx), Ny(grid.Ny), dx(
             Dz[i][j] = 0;
             Iz[i][j] = 0;
             eps[i][j] = (i < Nx/2) ? 1: 1/1.0;      // FIX
-            conduc[i][j] = (j < Nx/2) ? 0: .0003;   // FIX
+            conduc[i][j] = (j < Nx/2) ? 0: .0000;   // FIX
             ca[i][j] = 1/(eps[i][j] + conduc[i][j]*dt/epsilon);
             cb[i][j] = conduc[i][j]*dt/epsilon;
          }
@@ -82,8 +82,6 @@ void Field2D::update() {
     tStep += 1;
     t += dt;
     
-    total->inc->pulse(1);
-    total->inc->update();
 
     for (int i=1; i<Nx-1; i++) {
         for (int j=1; j<Ny-1; j++) {
@@ -103,6 +101,8 @@ void Field2D::update() {
             Iz[i][j] += cb[i][j]*Ez[i][j];
          }
     }
+    total->inc->pulse(1);
+    total->inc->update();
 
     for (int i=1; i<Nx-1; i++) {
         for (int j=1; j<Ny-1; j++) {

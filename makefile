@@ -8,6 +8,7 @@ all: emag
 
 emag: $(BUILD)/field2.o $(BUILD)/main.o $(BUILD)/matrix.o $(BUILD)/pml.o $(BUILD)/field.o $(BUILD)/tfsf.o
 	$(CXX) -std=c++11 -O2 $(BUILD)/field2.o $(BUILD)/main.o $(BUILD)/matrix.o $(BUILD)/pml.o $(BUILD)/tfsf.o $(BUILD)/field.o -o emag
+	mv *.o $(BUILD)
 
 $(BUILD)/matrix.o: matrix.cc matrix.h
 	$(CXX) $(CXXFLAGS) matrix.cc
