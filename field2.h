@@ -6,7 +6,11 @@
 #include "matrix.h"
 #include "field.h"
 
-struct grid_properties {
+class Field2D;
+
+
+class grid_properties {
+public:
     int Nx, Ny;
     double dx;
     int pml_thickness;
@@ -14,17 +18,14 @@ struct grid_properties {
     bool totalFieldScatteredField;
     std::vector<int> p1, p2;
 
-    grid_properties(int Nx, int Ny, double dx, int pml_thickness):
-        Nx(Nx), Ny(Ny), dx(dx), pml_thickness(pml_thickness) {
-        totalFieldScatteredField = false;       
-    }
-
-    void set_tfsf(std::vector<int> p1_val, std::vector<int> p2_val){
-        p1 = p1_val;
-        p2 = p2_val;
-        totalFieldScatteredField = true;
-    }
+public:
+    grid_properties(int Nx, int Ny, double dx, int pml_thickness);
+    void set_tfsf(std::vector<int> p1_val, std::vector<int> p2_val);
+    void set_tfsf(int xbuff, int ybuff);
+    void set_tfsf(int buff);
 };
+
+
 
 class tfsf {
 public:
@@ -36,7 +37,13 @@ public:
     tfsf() = default;
     tfsf(const tfsf&) = default;
     tfsf& operator=(const tfsf&) = default;
+
+    void pulse();
+    void updateD(Field2D* f);
+    void updateH(Field2D* f);
 };
+
+
 
 class pml {
 public:
@@ -52,6 +59,8 @@ public:
     pml(const pml&) = default;
     pml& operator=(const pml&) = default;
 };
+
+
 
 class Field2D {
 public:

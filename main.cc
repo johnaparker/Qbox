@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     int pml_thickness = 12;
 
     grid_properties grid(50,130,dx,pml_thickness);
-    grid.set_tfsf({18,18}, {32,112});
+    grid.set_tfsf(18,38);
 
     double tf = 600*dt;
 

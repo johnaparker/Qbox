@@ -42,9 +42,8 @@ Field2D::Field2D(grid_properties grid, double dt): Nx(grid.Nx), Ny(grid.Ny), dx(
 
     BC = pml(grid); 
 
-    if (grid.totalFieldScatteredField) {
+    if (grid.totalFieldScatteredField) 
         total = new tfsf(grid, dt);
-    } 
     else
         total = nullptr;
 
@@ -90,10 +89,8 @@ void Field2D::update() {
          }
     }
 
-    for (int i = total->ia; i <= total->ib; i++) {
-        Dz[i][total->ja] += 0.5*total->inc->Hx[total->ja-1];
-        Dz[i][total->jb] += -0.5*total->inc->Hx[total->jb];
-    }
+    if (total) 
+        total->updateD(this);
 
     for (int i=1; i<Nx-1; i++) {
         for (int j=1; j<Ny-1; j++) {
@@ -101,8 +98,9 @@ void Field2D::update() {
             Iz[i][j] += cb[i][j]*Ez[i][j];
          }
     }
-    total->inc->pulse(1);
-    total->inc->update();
+
+    if (total) 
+        total->pulse();
 
     for (int i=1; i<Nx-1; i++) {
         for (int j=1; j<Ny-1; j++) {
@@ -116,14 +114,8 @@ void Field2D::update() {
         }
     }
 
-    for (int i = total->ia; i <= total->ib; i++) {
-        Hx[i][total->ja-1] += 0.5*total->inc->Ez[total->ja];
-        Hx[i][total->jb] += -0.5*total->inc->Ez[total->jb];
-    }
-    for (int j = total->ja; j <= total->jb; j++) {
-        Hy[total->ia-1][j] += -0.5*total->inc->Ez[j];
-        Hy[total->ib][j] += 0.5*total->inc->Ez[j];
-    }
+    if (total) 
+        total->updateH(this);
 }
 
 void Field2D::run(double time) {
@@ -146,4 +138,30 @@ void Field2D::run(double time) {
 
     outE.close();
     outH.close();
+}
+
+
+
+
+
+
+grid_properties::grid_properties(int Nx, int Ny, double dx, int pml_thickness):
+        Nx(Nx), Ny(Ny), dx(dx), pml_thickness(pml_thickness) {
+            totalFieldScatteredField = false;       
+}
+
+void grid_properties::set_tfsf(vector<int> p1_val, vector<int> p2_val){
+    p1 = p1_val;
+    p2 = p2_val;
+    totalFieldScatteredField = true;
+}
+
+void grid_properties::set_tfsf(int xbuff, int ybuff){
+    vector<int> p1_val = {xbuff, ybuff};
+    vector<int> p2_val = {Nx-xbuff, Ny-ybuff};
+    set_tfsf(p1_val, p2_val);
+}
+
+void grid_properties::set_tfsf(int buff){
+    set_tfsf(buff, buff);
 }
