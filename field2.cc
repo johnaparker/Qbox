@@ -105,6 +105,7 @@ void Field2D::update() {
          }
     }
 
+    //this can possibly be moved to the previous if statement
     if (total) 
         total->pulse();
 
