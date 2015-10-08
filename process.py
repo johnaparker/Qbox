@@ -48,13 +48,14 @@ y = np.arange(sy)
 x,y = np.meshgrid(y,x)
 
 def f(a,b,c):
-    for i in range(a,b,50):
+    for i in range(a,b,1):
         print(c.value)
         fig = py.figure(i, figsize=(10,10))
-        ax = fig.add_subplot(111,projection = '3d')
-        ax.set_zlim(bottom=0, top = 1)
+        #ax = fig.add_subplot(111,projection = '3d')
+        #ax.set_zlim(bottom=0, top = 1)
         z = F.E[i]
-        ax.plot_surface(x,y,z,rstride=1, cstride=1, alpha=0.3)
+        #ax.plot_surface(x,y,z,rstride=1, cstride=1, alpha=0.3)
+        py.imshow(z,cmap = py.cm.bwr, vmin=-1, vmax=1)
         py.savefig(r'./figs/fig' + str(i+1).zfill(3) + '.png')
         py.close(i)
         c.value += 1

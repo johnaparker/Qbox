@@ -4,9 +4,11 @@
 #include <vector>
 #include <fstream>
 #include "matrix.h"
+#include "object.h"
 #include "field.h"
 
 class Field2D;
+
 
 
 class grid_properties {
@@ -49,7 +51,7 @@ class pml {
 public:
     double *fi1,*fi2,*fi3,*fj1,*fj2,*fj3;
     double *gi2,*gi3,*gj2,*gj3;
-    matrix Ihx, Ihy;
+    matrix<double> Ihx, Ihy;
     int Nx, Ny;
     int thickness;
 
@@ -68,7 +70,9 @@ public:
     double dx,Lx,Ly;
     int Nx,Ny,tStep;
 
-    matrix Ez,Dz,Hx,Hy,Iz,ca,cb;
+    matrix<double> Ez,Dz,Hx,Hy,Iz,ca,cb;
+    matrix<object*> obj;
+    std::vector<object*> obj_list;
     double dt,t;
 
     pml BC;
@@ -83,6 +87,7 @@ public:
     void update();
     void run(double time);    
 
+    void insert(object &new_object);
 };   
 
 #endif

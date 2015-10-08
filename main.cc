@@ -14,12 +14,18 @@ int main(int argc, char* argv[]) {
     double dt = dx/(2*c0);
     int pml_thickness = 12;
 
-    grid_properties grid(50,130,dx,pml_thickness);
-    grid.set_tfsf(18,38);
+    grid_properties grid(80,120,dx,pml_thickness);
+    //grid.set_tfsf(12, 12);
+    grid.set_tfsf({12,12},{68,119});
 
     double tf = 600*dt;
 
     Field2D test(grid,dt);
+    
+    rectangle r({0,99}, {80,120});
+    r.set_eps(3);
+    test.insert(r);
+
     test.run(tf);
 
     ostringstream convert;

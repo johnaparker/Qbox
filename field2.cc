@@ -1,5 +1,6 @@
 #include "field2.h"
 #include "matrix.h"
+#include "object.h"
 #include <math.h>
 #include <iostream>
 #include <stdlib.h>
@@ -16,15 +17,18 @@ Field2D::Field2D(grid_properties grid, double dt): Nx(grid.Nx), Ny(grid.Ny), dx(
     Ly = Ny*dx; 
     t = 0;
     tStep = 0;
-    Ez = matrix(new double [Nx*Ny], Nx, Ny); 
-    Hx = matrix(new double [Nx*Ny], Nx, Ny);
-    Hy = matrix(new double [Nx*Ny], Nx, Ny);
-    Dz = matrix(new double [Nx*Ny], Nx, Ny);
-    Iz = matrix(new double [Nx*Ny], Nx, Ny);
-    ca = matrix(new double [Nx*Ny], Nx, Ny);
-    cb = matrix(new double [Nx*Ny], Nx, Ny);
-    matrix eps = matrix(new double [Nx*Ny], Nx, Ny);       //need to be deallocated
-    matrix conduc = matrix(new double [Nx*Ny], Nx, Ny);    //here too
+    Ez = matrix<double>(new double [Nx*Ny], Nx, Ny); 
+    Hx = matrix<double>(new double [Nx*Ny], Nx, Ny);
+    Hy = matrix<double>(new double [Nx*Ny], Nx, Ny);
+    Dz = matrix<double>(new double [Nx*Ny], Nx, Ny);
+    Iz = matrix<double>(new double [Nx*Ny], Nx, Ny);
+    ca = matrix<double>(new double [Nx*Ny], Nx, Ny);
+    cb = matrix<double>(new double [Nx*Ny], Nx, Ny);
+    matrix<double> eps(new double [Nx*Ny], Nx, Ny);       //need to be deallocated
+    matrix<double> conduc(new double [Nx*Ny], Nx, Ny);    //here too
+
+    obj  = matrix<object*>(new object* [Nx*Ny], Nx, Ny); 
+    obj_list = {new medium()};
     
     for (int i = 0; i != Nx; i++) {
         for (int j = 0; j != Ny; j++) {
@@ -33,10 +37,11 @@ Field2D::Field2D(grid_properties grid, double dt): Nx(grid.Nx), Ny(grid.Ny), dx(
             Hy[i][j] = 0;
             Dz[i][j] = 0;
             Iz[i][j] = 0;
-            eps[i][j] = (i < Nx/2) ? 1: 1/1.0;      // FIX
-            conduc[i][j] = (j < Nx/2) ? 0: .0000;   // FIX
+            eps[i][j] = obj_list[0]->eps;      
+            conduc[i][j] = obj_list[0]->conduc; 
             ca[i][j] = 1/(eps[i][j] + conduc[i][j]*dt/epsilon);
             cb[i][j] = conduc[i][j]*dt/epsilon;
+            obj[i][j] = obj_list[0];
          }
     }
 
@@ -46,6 +51,7 @@ Field2D::Field2D(grid_properties grid, double dt): Nx(grid.Nx), Ny(grid.Ny), dx(
         total = new tfsf(grid, dt);
     else
         total = nullptr;
+
 
     outE.open("Eout.dat", ios::binary);
     outH.open("Hout.dat", ios::binary);
@@ -141,7 +147,23 @@ void Field2D::run(double time) {
 }
 
 
+void Field2D::insert(object &new_object) {
+    obj_list.push_back(&new_object);
+    double eps = new_object.eps;
+    double conduc = new_object.conduc;
 
+    for (int i = 0; i != Nx; i++) {
+        for (int j = 0; j != Ny; j++) {
+            if (new_object.inside(i,j)) {
+                obj[i][j] = &new_object;
+                obj[i][j] = &new_object;
+                    
+                ca[i][j] = 1/(eps + conduc*dt/epsilon);
+                cb[i][j] = conduc*dt/epsilon;
+            }
+        }
+    }
+}
 
 
 
