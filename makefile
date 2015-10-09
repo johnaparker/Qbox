@@ -6,8 +6,8 @@ CXXFLAGS = -std=c++11 -O2 -I $(DIR1D) -c
 
 all: emag
 
-emag: $(BUILD)/field2.o $(BUILD)/main.o $(BUILD)/pml.o $(BUILD)/field.o $(BUILD)/tfsf.o $(BUILD)/object.o
-	$(CXX) -std=c++11 -O2 $(BUILD)/field2.o $(BUILD)/main.o $(BUILD)/pml.o $(BUILD)/tfsf.o $(BUILD)/field.o $(BUILD)/object.o -o emag
+emag: $(BUILD)/field2.o $(BUILD)/main.o $(BUILD)/pml.o $(BUILD)/field.o $(BUILD)/tfsf.o $(BUILD)/object.o $(BUILD)/source.o
+	$(CXX) -std=c++11 -O2 $(BUILD)/field2.o $(BUILD)/main.o $(BUILD)/pml.o $(BUILD)/tfsf.o $(BUILD)/field.o $(BUILD)/object.o $(BUILD)/source.o -o emag
 	mv *.o $(BUILD)
 
 $(BUILD)/field2.o: field2.cc field2.h 
@@ -17,6 +17,10 @@ $(BUILD)/field2.o: field2.cc field2.h
 $(BUILD)/object.o: object.cc object.h
 	$(CXX) $(CXXFLAGS) object.cc 
 	mv object.o $(BUILD)
+
+$(BUILD)/source.o: source.cc source.h
+	$(CXX) $(CXXFLAGS) source.cc 
+	mv source.o $(BUILD)
 
 $(BUILD)/field.o: field1D/field.cc field1D/field.h
 	$(CXX) $(CXXFLAGS) field1D/field.cc

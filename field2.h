@@ -3,11 +3,13 @@
 
 #include <vector>
 #include <fstream>
+#include "field.h"
 #include "matrix.h"
 #include "object.h"
-#include "field.h"
+#include "source.h"
 
 class Field2D;
+class source;
 
 
 
@@ -73,6 +75,7 @@ public:
     matrix<double> Ez,Dz,Hx,Hy,Iz,ca,cb;
     matrix<object*> obj;
     std::vector<object*> obj_list;
+    std::vector<source*> source_list;
     double dt,t;
 
     pml BC;
@@ -87,7 +90,8 @@ public:
     void update();
     void run(double time);    
 
-    void insert(object &new_object);
+    void add_object(object &new_object);
+    void add_source(source &new_source);
 };   
 
 #endif

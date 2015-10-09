@@ -2,27 +2,28 @@
 #define GUARD_source_h
 
 #include <vector>
-#include <fstream>
-#include "matrix.h"
-#include "object.h"
-#include "field.h"
+#include "field2.h"
 
 //Think about whether this is the best way to do sources
 //Also think about how to add TFSF into these sources
 //Lastly, the best way to couple these sources with the field class.
 
-
+class Field2D;
 
 class source {
 public:
+    Field2D *F;
+    double *t;
+public:
     source();
-    virtual void pulse(); 
+    void set_F(Field2D *F);
+    virtual void pulse() {}; 
 };
 
 class continuous_point_source: public source {
 public:
     int x, y;
-    double f;
+    double freq;
 public:
     continuous_point_source(int x, int y, double f);
     void pulse();
@@ -40,9 +41,9 @@ public:
 class custom_point_source: public source {
 public:
     int x, y;
-    double (*f)(double);
+    double (*time_func)(double);
 public:
-    custom_point_source(int x, int y, double (*f)(double));
+    custom_point_source(int x, int y, double (*time_func)(double));
     void pulse();
 };
 

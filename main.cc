@@ -8,6 +8,7 @@
 #include "field2.h"
 
 using namespace std;
+double c = 3e8;
 
 int main(int argc, char* argv[]) {
     double dx = 50e-2;
@@ -16,16 +17,21 @@ int main(int argc, char* argv[]) {
 
     grid_properties grid(80,120,dx,pml_thickness);
     //grid.set_tfsf(12, 12);
-    grid.set_tfsf({12,12},{68,119});
+    //grid.set_tfsf({12,12},{68,119});
 
     double tf = 600*dt;
 
     Field2D test(grid,dt);
     
-    rectangle r({0,99}, {80,120});
-    r.set_eps(3);
-    test.insert(r);
+    rectangle r({30,0}, {40,80});
+    r.set_eps(10);
+    test.add_object(r);
+    rectangle r2({30,70}, {80,80});
+    r2.set_eps(10);
+    test.add_object(r2);
 
+    continuous_point_source s1(35,30,c/(15*dx));
+    test.add_source(s1);
     test.run(tf);
 
     ostringstream convert;

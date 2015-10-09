@@ -87,6 +87,9 @@ void Field2D::update() {
     tStep += 1;
     t += dt;
     
+    for (const auto &s : source_list) {
+        s->pulse();
+    } 
 
     for (int i=1; i<Nx-1; i++) {
         for (int j=1; j<Ny-1; j++) {
@@ -104,6 +107,7 @@ void Field2D::update() {
             Iz[i][j] += cb[i][j]*Ez[i][j];
          }
     }
+
 
     //this can possibly be moved to the previous if statement
     if (total) 
@@ -148,7 +152,7 @@ void Field2D::run(double time) {
 }
 
 
-void Field2D::insert(object &new_object) {
+void Field2D::add_object(object &new_object) {
     obj_list.push_back(&new_object);
     double eps = new_object.eps;
     double conduc = new_object.conduc;
@@ -166,7 +170,10 @@ void Field2D::insert(object &new_object) {
     }
 }
 
-
+void Field2D::add_source(source &new_source) {
+    new_source.set_F(this);
+    source_list.push_back(&new_source);
+}
 
 grid_properties::grid_properties(int Nx, int Ny, double dx, int pml_thickness):
         Nx(Nx), Ny(Ny), dx(dx), pml_thickness(pml_thickness) {
