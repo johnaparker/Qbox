@@ -1,6 +1,8 @@
 #ifndef GUARD_matrix_h
 #define GUARD_matrix_h
 
+//this should be benchmarked
+
 template <class T>
 class matrix {
 public:

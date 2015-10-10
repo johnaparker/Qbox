@@ -20,19 +20,19 @@ void source::set_F(Field2D *field) {
 
 continuous_point_source::continuous_point_source(int x, int y, double freq): x(x), y(y), freq(freq) {};
 void continuous_point_source::pulse() {
-    F->Dz[x][y] += sin(2*M_PI*freq*(*t));
+    F->Ez[x][y] += sin(2*M_PI*freq*(*t));
 }
 
 gaussian_point_source::gaussian_point_source(int x, int y, double T0, double sig):
     x(x), y(y),T0(T0), sig(sig) {};
 void gaussian_point_source::pulse() {
-    F->Dz[x][y] += exp(-0.5*(pow((*t-T0)/sig,2)));
+    F->Ez[x][y] += exp(-0.5*(pow((*t-T0)/sig,2)));
 }
 
 custom_point_source::custom_point_source(int x, int y, double (*time_func)(double)):
     x(x), y(y), time_func(time_func) {};
 void custom_point_source::pulse() {
-    F->Dz[x][y] += time_func(*t);
+    F->Ez[x][y] += time_func(*t);
 }
     
 continuous_line_source::continuous_line_source(vector<int> p1, vector<int> p2, double freq): p1(p1), p2(p2), freq(freq) {};
@@ -50,9 +50,9 @@ void continuous_line_source::pulse() {
     }
     for (int i = start; i != end; i++) {
         if (vertical)
-            F->Hx[p1[0]][i] += sin(2*M_PI*freq*(*t));
+            F->Ez[p1[0]][i] += sin(2*M_PI*freq*(*t));
         else
-            F->Hx[i][p2[0]] += sin(2*M_PI*freq*(*t));
+            F->Ez[i][p2[1]] += sin(2*M_PI*freq*(*t));
     }
 }
 

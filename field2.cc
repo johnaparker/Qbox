@@ -87,9 +87,6 @@ void Field2D::update() {
     tStep += 1;
     t += dt;
     
-    for (const auto &s : source_list) {
-        s->pulse();
-    } 
 
     for (int i=1; i<Nx-1; i++) {
         for (int j=1; j<Ny-1; j++) {
@@ -108,6 +105,9 @@ void Field2D::update() {
          }
     }
 
+    for (const auto &s : source_list) {
+        s->pulse();
+    } 
 
     //this can possibly be moved to the previous if statement
     if (total) 
@@ -128,6 +128,8 @@ void Field2D::update() {
     if (total) 
         total->updateH(this);
 }
+
+//make running step by step a little easier.
 
 void Field2D::run(double time) {
     int count = 0;

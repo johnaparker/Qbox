@@ -3,8 +3,6 @@
 
 #include <vector>
 
-//add a class that accepts a function pointer to determine the object
-
 class object {
 public:
     double eps;

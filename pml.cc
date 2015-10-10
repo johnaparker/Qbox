@@ -6,6 +6,10 @@
 
 using namespace std;
 
+//make this more memory efficient
+//consider changing it to "grid.add_pml(thickness)"
+//Perhaphs allow pml of varying thickness on each side.
+
 double compute_pml_val(double d, int thickness, double alpha) {
     return alpha*pow((d+1)/thickness,3);
 }

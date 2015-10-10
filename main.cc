@@ -9,6 +9,7 @@
 
 
 //make a universal resolution
+//move towards specifying actual spatial values, not indices.
 
 using namespace std;
 double c = 3e8;
@@ -22,7 +23,7 @@ int main(int argc, char* argv[]) {
     //grid.set_tfsf(12, 12);
     //grid.set_tfsf({12,12},{68,119});
 
-    double tf = 800*dt;
+    double tf = 2400*dt;
 
     Field2D test(grid,dt);
     
@@ -33,18 +34,8 @@ int main(int argc, char* argv[]) {
     r2.set_eps(12);
     test.add_object(r2);
 
-    continuous_line_source s1({30,12},{40,12},c/(6.67*10*dx));
+    continuous_line_source s1({30,12},{40,12},c/(66.7*dx));
     test.add_source(s1);
     test.run(tf);
-
-    ostringstream convert;
-    convert << test.Nx;
-    string sx = convert.str();
-    convert.str("");
-    convert.clear();
-    convert << test.Ny;
-    string sy = convert.str();
-    string command = "python process.py " + sx + " " + sy; 
-    //system(command.c_str());
 }
 

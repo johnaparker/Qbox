@@ -4,6 +4,9 @@
 
 using namespace std;
 
+//separate into geometry and material classes as needed
+//support for mobility
+
 object::object() {
     eps = 1;
     conduc = 0;
