@@ -61,7 +61,7 @@ def f(a,b,c):
         c.value += 1
 
 proc = []
-cores = 4
+cores = 8
 steps = len(F.E) 
 size = int(np.floor(steps/cores))
 c = Value('i', 0)

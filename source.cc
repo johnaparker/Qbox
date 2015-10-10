@@ -5,6 +5,9 @@
 using namespace std;
 
 //generalization: allow Ex,Hx,Hy, etc. excitations
+//add TFSF support
+//reduce code copying
+//best way to orient the line
 
 source::source() {
     F = nullptr;
@@ -32,3 +35,33 @@ void custom_point_source::pulse() {
     F->Dz[x][y] += time_func(*t);
 }
     
+continuous_line_source::continuous_line_source(vector<int> p1, vector<int> p2, double freq): p1(p1), p2(p2), freq(freq) {};
+void continuous_line_source::pulse() {
+    int start, end;
+    bool vertical = false;
+    if (p1[0] == p2[0]) {
+        start = p1[1];
+        end = p2[1];
+        vertical = true;
+    }
+    else if (p1[1] == p2[1]) {
+        start = p1[0];
+        end = p2[0];
+    }
+    for (int i = start; i != end; i++) {
+        if (vertical)
+            F->Hx[p1[0]][i] += sin(2*M_PI*freq*(*t));
+        else
+            F->Hx[i][p2[0]] += sin(2*M_PI*freq*(*t));
+    }
+}
+
+gaussian_line_source::gaussian_line_source(vector<int> p1, vector<int> p2, double T0, double sig):
+    p1(p1), p2(p2),T0(T0), sig(sig) {};
+void gaussian_line_source::pulse() {
+}
+
+custom_line_source::custom_line_source(vector<int> p1, vector<int> p2, double (*time_func)(double)):
+    p1(p1), p2(p2), time_func(time_func) {};
+void custom_line_source::pulse() {
+}
