@@ -8,6 +8,7 @@
 #include "field2.h"
 
 
+//make a header file for every cc file
 //make a universal resolution
 //move towards specifying actual spatial values, not indices.
 

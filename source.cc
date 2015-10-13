@@ -5,6 +5,7 @@
 using namespace std;
 
 //generalization: allow Ex,Hx,Hy, etc. excitations
+//          look into this using an enum
 //add TFSF support
 //reduce code copying
 //best way to orient the line
