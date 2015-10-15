@@ -8,6 +8,8 @@ using namespace std;
 //          look into this using an enum
 //add TFSF support
 //reduce code copying
+//  maybe have line/point classes inherent from source, and then further class inherent from these
+//  and use functions for time profiles
 //best way to orient the line
 
 source::source() {
