@@ -31,7 +31,11 @@ int main() {
     hsize_t offset[2] = {0,0};
     hsize_t dims1[2] = {3,3};
     fspace1.selectHyperslab(H5S_SELECT_SET, dims1, offset);
-    double data1[3][3] = {{1,1,1}, {1,1,1}, {1,1,1}};
+    //double data1[3][3] = {{1,1,1}, {1,1,1}, {1,1,1}};
+    double *data1 = new double[9];
+    for (int i = 0; i != 9; i++) {
+        data1[i] = 1;
+    }
     dataset.write(data1, PredType::NATIVE_DOUBLE, mspace1, fspace1); 
 
     size[0] = 5;
