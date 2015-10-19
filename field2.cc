@@ -83,6 +83,7 @@ void Field2D::pulse(double f) {
     Dz[35][30] = p;
 }
 
+//inside each for loop: make a call to an external function that makes the necessary update: vacuum, material, pml
 void Field2D::update() {
     tStep += 1;
     t += dt;
