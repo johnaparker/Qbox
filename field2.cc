@@ -24,8 +24,6 @@ Field2D::Field2D(grid_properties grid, double dt): Nx(grid.Nx), Ny(grid.Ny), dx(
     Iz = matrix<double>(new double [Nx*Ny], Nx, Ny);
     ca = matrix<double>(new double [Nx*Ny], Nx, Ny);
     cb = matrix<double>(new double [Nx*Ny], Nx, Ny);
-    matrix<double> eps(new double [Nx*Ny], Nx, Ny);       //need to be deallocated
-    matrix<double> conduc(new double [Nx*Ny], Nx, Ny);    //here too
 
     obj  = matrix<object*>(new object* [Nx*Ny], Nx, Ny); 
     obj_list = {new medium()};
@@ -37,10 +35,10 @@ Field2D::Field2D(grid_properties grid, double dt): Nx(grid.Nx), Ny(grid.Ny), dx(
             Hy[i][j] = 0;
             Dz[i][j] = 0;
             Iz[i][j] = 0;
-            eps[i][j] = obj_list[0]->eps;      
-            conduc[i][j] = obj_list[0]->conduc; 
-            ca[i][j] = 1/(eps[i][j] + conduc[i][j]*dt/epsilon);
-            cb[i][j] = conduc[i][j]*dt/epsilon;
+            double eps = obj_list[0]->eps;      
+            double conduc = obj_list[0]->conduc; 
+            ca[i][j] = 1/(eps + conduc*dt/epsilon);
+            cb[i][j] = conduc*dt/epsilon;
             obj[i][j] = obj_list[0];
          }
     }
