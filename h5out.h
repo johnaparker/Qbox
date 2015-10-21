@@ -4,10 +4,12 @@
 #include <map>
 
 //support for matrix class
+//consider writing it so that only time dim is extendable
 
 class node {
 public:
     int rank;
+    double fill_value;
     H5::hsize_t *dims, *maxdims;
     H5::DataSpace dataspace;  //I don't think this is necessary
     H5::H5std_string name;
