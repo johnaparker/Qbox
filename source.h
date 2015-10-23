@@ -7,6 +7,8 @@
 //Think about whether this is the best way to do sources
 //Also think about how to add TFSF into these sources
 //Lastly, the best way to couple these sources with the field class.
+//
+//Definitely consider functions external to classes doing some of the work
 
 class Field2D;
 
