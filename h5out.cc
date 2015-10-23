@@ -1,54 +1,62 @@
 #include "h5out.h"
 #include <vector>
-#include "matrix"
+#include "matrix.h"
 
 
 using namespace std;
 using namespace H5;
 
-//For all code: consider when to pass by reference
 
-node::node(H5std_string name, H5File & head, vector<hsize_t> size, vector<hsize_t> maxsize):name(name) {
+node::node(H5std_string name, H5File & head, vector<hsize_t> size, bool extendable):
+                                                  name(name), extendable(extendable) {
     rank = size.size();
-    fill_value = 0;
+    double fill_value = 0;
     dims = new hsize_t[rank];
-    maxdims = new hsize_t[rank];
+    hsize_t *maxdims = new hsize_t[rank];
     hsize_t *chunk_dims = new hsize_t[rank];
     for (int i = 0; i != rank; i++) {
         dims[i] = size[i];
-        maxdims[i] = maxsize[i];
-        chunk_dims[i] = data[i];
+        maxdims[i] = size[i];
+        chunk_dims[i] = size[i];               //check different chunking
     }
+    if (extendable)
+        maxdims[rank-1] = H5S_UNLIMITED;
 
     DSetCreatPropList cparms;
     cparms.setChunk(rank, chunk_dims);
     cparms.setFillValue(PredType::NATIVE_DOUBLE, &fill_value);
     
-    dataspace = mspace(rank, dims, maxdims);
-    dataset = head.createDataSet(name, PredType::NATIVE_DOUBLE, mspace, cparms);
+    dataspace = DataSpace(rank, dims, maxdims);
+    selected = dataspace;
+    dataset = head.createDataSet(name, PredType::NATIVE_DOUBLE, dataspace, cparms);
 
-    extendable = true;  //obviously, fix this
+    delete[] maxdims;
+    delete[] chunk_dims;
 }
 
-void node::extend(vector<hsize_t> size) {
+void node::extend(int amount) {
     if (extendable) {
-        hsize_t *dsize = &size[0];
-        dataset.extend(dsize);
-        for (int i = 0; i != rank; i++) {
-            dims[i] = dsize[i];
-        }
+        dims[rank-1] += amount;
+        dataset.extend(dims);
     }
 }
 
-//actually, add a new variable: the selected dataspace
-//in write, we need both (look into this)
 void node::select(vector<hsize_t> size, vector<hsize_t> offset) {
     hsize_t *dsize = &size[0];
     hsize_t *doffset = &offset[0];
     selected = dataset.getSpace();
-    selected.selectHyperslab(H5_SELECT_SET, dsize, doffset); 
+    selected.selectHyperslab(H5S_SELECT_SET, dsize, doffset); 
 }
 
+void node::select() {
+    vector<hsize_t> size(&dims[0], &dims[rank]);
+    vector<hsize_t> offset(rank,0);
+    if (extendable) {
+        size[rank-1] = 1;
+        offset[rank-1] = dims[rank-1]-1;
+    }
+    select(size, offset);
+}
 
 void node::write(double *data) {
     dataset.write(data, PredType::NATIVE_DOUBLE, dataspace, selected);
@@ -60,37 +68,33 @@ bool node::isExtendable() {
     
 
 h5out::h5out(H5std_string filename): filename(filename) {
-    nodes = {};
     outFile = H5File(filename, H5F_ACC_TRUNC);
 }
 
-//this shouldn't take maxsize, but rather a bool expandable
-void h5out::create_node(H5std_string node_name, vector<hsize_t> size, vector<hsize_t> maxsize) {
-    node newNode(node_name, size, maxsize);
+void h5out::create_node(H5std_string node_name, vector<hsize_t> size, bool extendable) {
+    if (extendable)
+        size.push_back(1);
+    node newNode(node_name, outFile, size, extendable);
     nodes[node_name] = newNode;
+    first_write[node_name] = true;
 }
 
-//node class should be friended for this
-//this shouldn't take size, but rather a bool expandable
-void write_to_node(H5std_string name, double *data, vector<hsize_t> size) {
-    int rank = nodes[node_name].rank;
-    //check to see if this is the first time writing
-    if (nodes[node_name].isExtendable()) {
-        vector<hsize_t> extend_size(&nodes[node_name].dims[0], &nodes[node_name].dims[rank-1]); 
-        extend_size[rank-1] += 1;
-        nodes[node_name].extend(extend_size);
-    }
+void h5out::create_node(H5std_string node_name, matrix<double> & data, bool extendable) {
+    vector<hsize_t> size(data.get_Nx(), data.get_Ny());
+    create_node(node_name, size, extendable);
+    write_to_node(node_name, data); 
+}
 
-    vector<hsize_t> offset(rank, 0);
-    offset[rank-1] = nodes[node_name].dims[rank-1] - 1;
-    nodes[node_name].select(size, iffset);
-
+void h5out::write_to_node(H5std_string node_name, double *data) {
+    if (!first_write[node_name])
+        nodes[node_name].extend();
+    else (first_write[node_name] = false);
+    nodes[node_name].select();
     nodes[node_name].write(data);
 }
 
-//this shouldn't take size, but rather a bool expandable
-void write_to_node(H5std_string name, matrix & data, vector<hsize_t> size) {
-    write_to_node(name, data.data, size);
+void h5out::write_to_node(H5std_string name, matrix<double> & data) {
+    write_to_node(name, data.data());
 }
 
 

@@ -1,26 +1,24 @@
-#include "H5Cpp.h"
+#include <H5Cpp.h>
 #include "matrix.h"
 #include <vector>
 #include <map>
 
-//support for matrix class
-//consider writing it so that only time dim is extendable
-
 class node {
 public:
+    H5std_string name;
     int rank;
-    double fill_value;
-    H5::hsize_t *dims, *maxdims;
+    hsize_t *dims;
     H5::DataSpace dataspace;  //I don't think this is necessary
     H5::DataSpace selected;
-    H5::H5std_string name;
     H5::DataSet dataset;
 
     bool extendable;
 public:
-    node(H5::H5std_string name, gH5::H5File & head, std::vector<H5::hsize_t> size, std::vector<H5::hsize_t> maxsize);
-    void extend(std::vector<H5::hsize_t> size);
-    void select(std::vector<H5::hsize_t> size, std::vector<H5::hsize_t> offset);
+    node(H5std_string name, H5::H5File & head, std::vector<hsize_t> size, bool extendable = true);
+    node() = default;
+    void extend(int amount = 1);
+    void select(std::vector<hsize_t> size, std::vector<hsize_t> offset);
+    void select();
     void write(double *data);
     bool isExtendable();
 };
@@ -28,13 +26,15 @@ public:
 class h5out {
 public:
     H5::H5File outFile;
-    H5::H5std_string file_name;
+    H5std_string filename;
     std::map<H5std_string, node> nodes;
+    std::map<H5std_string, bool> first_write;
 public:
-    h5out(H5::H5std_string filename);
-    void create_node(H5::H5std_string node_name, std::vector<H5::hsize_t> size, std::vector<H5::hsize_t> maxsize);
-    void write_to_node(H5::H5std_string, double *data, std::vector<H5::hsize_t> size);
-    void write_to_node(H5::H5std_string, matrix & data, std::vector<H5::hsize_t> size);
+    h5out(H5std_string filename);
+    void create_node(H5std_string node_name, std::vector<hsize_t> size, bool extendable = true);
+    void create_node(H5std_string node_name, matrix<double> & data, bool extendable = true);
+    void write_to_node(H5std_string node_name, double *data);
+    void write_to_node(H5std_string node_name, matrix<double> & data);
 };
 
 

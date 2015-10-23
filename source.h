@@ -8,6 +8,8 @@
 //Also think about how to add TFSF into these sources
 //Lastly, the best way to couple these sources with the field class.
 
+//use "=0" on virtual base, and add virtual destructor
+
 class Field2D;
 
 class source {
