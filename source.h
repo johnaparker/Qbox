@@ -10,6 +10,8 @@
 //
 //Definitely consider functions external to classes doing some of the work
 
+//use "=0" on virtual base, and add virtual destructor
+
 class Field2D;
 
 class source {

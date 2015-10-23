@@ -11,31 +11,35 @@ int main() {
     const int NX = 5;
     const int NY = 5;
     
-    hsize_t dims[2] = {3,3};
+    hsize_t dims[2] = {3,0};
     hsize_t maxdims[2] = {H5S_UNLIMITED, H5S_UNLIMITED};
     DataSpace mspace1(rank, dims, maxdims);
 
     H5File file(file_name, H5F_ACC_TRUNC);
 
     DSetCreatPropList cparms;
-    hsize_t chunk_dims[2] = {3,1};
+    hsize_t *chunk_dims = new hsize_t[2];
+    chunk_dims[0] = 3;
+    chunk_dims[1] = 1;
     cparms.setChunk(rank, chunk_dims);
     double fill_val = 0;
     cparms.setFillValue(PredType::NATIVE_DOUBLE, &fill_val);
 
+    delete chunk_dims;
     DataSet dataset = file.createDataSet(dataset_name, PredType::NATIVE_DOUBLE, mspace1, cparms);
-    hsize_t size[2] = {3,3};
+    hsize_t size[2] = {4,4};
     dataset.extend(size);
 
     DataSpace fspace1 = dataset.getSpace();
     hsize_t offset[2] = {0,0};
-    hsize_t dims1[2] = {3,3};
+    hsize_t dims1[2] = {4,4};
     fspace1.selectHyperslab(H5S_SELECT_SET, dims1, offset);
     //double data1[3][3] = {{1,1,1}, {1,1,1}, {1,1,1}};
-    double *data1 = new double[9];
-    for (int i = 0; i != 9; i++) {
+    double *data1 = new double[16];
+    for (int i = 0; i != 16; i++) {
         data1[i] = 1;
     }
+    mspace1 = DataSpace(rank,dims1,maxdims);
     dataset.write(data1, PredType::NATIVE_DOUBLE, mspace1, fspace1); 
 
     size[0] = 5;
