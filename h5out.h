@@ -1,3 +1,6 @@
+#ifndef GUARD_h5out_h
+#define GUARD_h5out_h
+
 #include <H5Cpp.h>
 #include "matrix.h"
 #include <vector>
@@ -31,13 +34,14 @@ public:
     std::map<H5std_string, bool> first_write;
 public:
     h5out(H5std_string filename);
+    h5out() = default;
     void create_node(H5std_string node_name, std::vector<hsize_t> size, bool extendable = true);
     void create_node(H5std_string node_name, matrix<double> & data, bool extendable = true);
     void write_to_node(H5std_string node_name, double *data);
     void write_to_node(H5std_string node_name, matrix<double> & data);
 };
 
-
+#endif
 
     
         

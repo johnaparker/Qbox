@@ -1,6 +1,7 @@
 #include "field2.h"
 #include "matrix.h"
 #include "object.h"
+#include "h5out.h"
 #include <math.h>
 #include <iostream>
 #include <stdlib.h>
@@ -50,19 +51,12 @@ Field2D::Field2D(grid_properties grid, double dt): Nx(grid.Nx), Ny(grid.Ny), dx(
     else
         total = nullptr;
 
-
-    outE.open("Eout.dat", ios::binary);
-    outH.open("Hout.dat", ios::binary);
+    outFile = h5out("out.h5");
+    outFile.create_node("Ez", {Nx, Ny});
 }
 
 void Field2D::write() {
-    static int th = BC.thickness;
-    for (int i = th; i!= Nx-th; i++) {
-        for (int j=th; j!= Ny-th; j++) {
-            outE.write(reinterpret_cast<char*>(&Ez[i][j]),sizeof(Ez[i][j]));
-            //outH.write(reinterpret_cast<char*>(&Hy[k]),sizeof(Hy[k]));
-        }
-    }
+    outFile.write_to_node("Ez", Ez);
 }
 
 void Field2D::display_info(double tf) {
@@ -136,7 +130,7 @@ void Field2D::run(double time) {
     int totSteps = round(time/dt);
     display_info(time);
 
-    while (t < time) {
+    while (tStep !=  totSteps) {
         update();
         count ++;
         if (count >= saveTime) {
@@ -147,9 +141,6 @@ void Field2D::run(double time) {
         } 
     }
     cout << tStep << "/" << totSteps << endl;
-
-    outE.close();
-    outH.close();
 }
 
 

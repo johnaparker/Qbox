@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     //grid.set_tfsf(12, 12);
     //grid.set_tfsf({12,12},{68,119});
 
-    double tf = 2400*dt;
+    double tf = 50*dt;
 
     Field2D test(grid,dt);
     

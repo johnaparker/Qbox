@@ -7,11 +7,10 @@
 #include "matrix.h"
 #include "object.h"
 #include "source.h"
+#include "h5out.h"
 
 class Field2D;
 class source;
-
-
 
 class grid_properties {
 public:
@@ -81,7 +80,7 @@ public:
     pml BC;
     tfsf *total;
 
-    std::ofstream outE,outH;
+    h5out outFile;
 public:
     Field2D(grid_properties grid, double dt);
     void write();

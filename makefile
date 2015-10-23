@@ -1,4 +1,4 @@
-CXX = g++
+CXX = h5c++
 DIR1D = ./field1D
 BUILD = ./build
 CXXFLAGS = -std=c++11 -O2 -I $(DIR1D) -c
@@ -6,8 +6,8 @@ CXXFLAGS = -std=c++11 -O2 -I $(DIR1D) -c
 
 all: emag
 
-emag: $(BUILD)/field2.o $(BUILD)/main.o $(BUILD)/pml.o $(BUILD)/field.o $(BUILD)/tfsf.o $(BUILD)/object.o $(BUILD)/source.o
-	$(CXX) -std=c++11 -O2 $(BUILD)/field2.o $(BUILD)/main.o $(BUILD)/pml.o $(BUILD)/tfsf.o $(BUILD)/field.o $(BUILD)/object.o $(BUILD)/source.o -o emag
+emag: $(BUILD)/field2.o $(BUILD)/main.o $(BUILD)/pml.o $(BUILD)/field.o $(BUILD)/tfsf.o $(BUILD)/object.o $(BUILD)/source.o $(BUILD)/h5out.o
+	$(CXX) -std=c++11 -O2 $(BUILD)/field2.o $(BUILD)/main.o $(BUILD)/pml.o $(BUILD)/tfsf.o $(BUILD)/field.o $(BUILD)/object.o $(BUILD)/source.o $(BUILD)/h5out.o -o emag
 	mv *.o $(BUILD)
 
 $(BUILD)/field2.o: field2.cc field2.h 
@@ -37,6 +37,10 @@ $(BUILD)/pml.o: pml.cc field2.h
 $(BUILD)/tfsf.o: tfsf.cc field1D/field.h
 	$(CXX) $(CXXFLAGS) tfsf.cc
 	mv tfsf.o $(BUILD)
+
+$(BUILD)/h5out.o: h5out.cc
+	$(CXX) $(CXXFLAGS) h5out.cc
+	mv h5out.o $(BUILD)
 
 clean:
 	rm $(BUILD)/*.o
