@@ -10,8 +10,10 @@
 #include <string>
 #include <iomanip>
 #include <vector>
+#include <string>
 
 using namespace std;
+
 
 Field2D::Field2D(grid_properties grid, double dt): Nx(grid.Nx), Ny(grid.Ny), dx(grid.dx), dt(dt) {
     Lx = Nx*dx; 
@@ -50,29 +52,36 @@ Field2D::Field2D(grid_properties grid, double dt): Nx(grid.Nx), Ny(grid.Ny), dx(
         total = new tfsf(grid, dt);
     else
         total = nullptr;
+    field_components = {{"Ez", &Ez}, {"Hx", &Hx}, {"Hy", &Hy}};
 
-    outFile = h5out("out.h5");
-    outFile.create_node("Ez", {Nx, Ny});
+    display_info();
 }
 
-void Field2D::write() {
-    outFile.write_to_node("Ez", Ez);
+void Field2D::write(string filename, const string nodename) {
+    if (outFiles.count(filename) == 0)
+        outFiles[filename] = h5out(filename);
+    if (!outFiles[filename].contains(nodename))
+        outFiles[filename].create_node(nodename, {Nx,Ny});
+    if (field_components.count(nodename))
+        outFiles[filename].write_to_node(nodename, *field_components[nodename]);
+    cout << "Step: " << tStep << '\r';
+    cout.flush();
 }
 
-void Field2D::display_info(double tf) {
+void Field2D::writeE(string filename) {
+    write(filename, "Ez");
+}
+
+void Field2D::writeH(string filename) {
+    write(filename, "Hx");
+    write(filename, "Hy");
+}
+
+void Field2D::display_info() {
     cout << setw(10) << "dx:" << dx << " m" << endl;
     cout << setw(10) << "Lx:" << dx*Nx << " m" << endl;
     cout << setw(10) << "Ly:" << dx*Ny << " m" << endl;
     cout << setw(10) << "dt:" << dt << " s" << endl;
-    cout << setw(10) << "Tf:" << tf << " s" << endl;
-}
-
-void Field2D::pulse(double f) {
-    static double T = 0.5e-7;
-    static double sig = 1e-8;
-    //double p = 0.2*exp(-0.5*(pow((t-T)/sig,2)));
-    double p = 0.05*sin(2*M_PI*f*t);
-    Dz[35][30] = p;
 }
 
 //inside each for loop: make a call to an external function that makes the necessary update: vacuum, material, pml
@@ -122,28 +131,6 @@ void Field2D::update() {
         total->updateH(this);
 }
 
-//make running step by step a little easier.
-
-void Field2D::run(double time) {
-    int count = 0;
-    int saveTime = 1;
-    int totSteps = round(time/dt);
-    display_info(time);
-
-    while (tStep !=  totSteps) {
-        update();
-        count ++;
-        if (count >= saveTime) {
-            cout << tStep << "/" << totSteps << '\r';
-            cout.flush();
-            count = 0;
-            write();
-        } 
-    }
-    cout << tStep << "/" << totSteps << endl;
-}
-
-
 void Field2D::add_object(object &new_object) {
     obj_list.push_back(&new_object);
     double eps = new_object.eps;
@@ -187,3 +174,8 @@ void grid_properties::set_tfsf(int xbuff, int ybuff){
 void grid_properties::set_tfsf(int buff){
     set_tfsf(buff, buff);
 }
+
+
+
+
+

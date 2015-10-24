@@ -24,7 +24,6 @@ int main(int argc, char* argv[]) {
     //grid.set_tfsf(12, 12);
     //grid.set_tfsf({12,12},{68,119});
 
-    double tf = 50*dt;
 
     Field2D test(grid,dt);
     
@@ -37,6 +36,10 @@ int main(int argc, char* argv[]) {
 
     continuous_line_source s1({30,12},{40,12},c/(66.7*dx));
     test.add_source(s1);
-    test.run(tf);
+
+    for (int i = 0; i != 1200; i++) {
+        test.update();
+        test.writeE("out.h5");
+    }
 }
 

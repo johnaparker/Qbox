@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <fstream>
+#include <string>
+#include <map>
 #include "field.h"
 #include "matrix.h"
 #include "object.h"
@@ -11,6 +13,8 @@
 
 class Field2D;
 class source;
+
+enum component {Ez, Hx, Hy};
 
 class grid_properties {
 public:
@@ -80,17 +84,19 @@ public:
     pml BC;
     tfsf *total;
 
-    h5out outFile;
+    std::map<std::string, h5out> outFiles;
+    std::map<std::string, matrix<double>* > field_components;
 public:
     Field2D(grid_properties grid, double dt);
-    void write();
-    void display_info(double tf);
-    void pulse(double f);
+    void display_info();
     void update();
-    void run(double time);    
 
     void add_object(object &new_object);
     void add_source(source &new_source);
+
+    void write(std::string filename, std::string nodename);
+    void writeE(std::string filename);
+    void writeH(std::string filename);
 };   
 
 #endif

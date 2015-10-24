@@ -71,16 +71,19 @@ h5out::h5out(H5std_string filename): filename(filename) {
     outFile = H5File(filename, H5F_ACC_TRUNC);
 }
 
-void h5out::create_node(H5std_string node_name, vector<hsize_t> size, bool extendable) {
+void h5out::create_node(H5std_string node_name, vector<int> size, bool extendable) {
     if (extendable)
         size.push_back(1);
-    node newNode(node_name, outFile, size, extendable);
+    vector<hsize_t> dsize;
+    for (auto const & s: size)
+        dsize.push_back((long long unsigned int) s);
+    node newNode(node_name, outFile, dsize, extendable);
     nodes[node_name] = newNode;
     first_write[node_name] = true;
 }
 
 void h5out::create_node(H5std_string node_name, matrix<double> & data, bool extendable) {
-    vector<hsize_t> size(data.get_Nx(), data.get_Ny());
+    vector<int> size(data.get_Nx(), data.get_Ny());
     create_node(node_name, size, extendable);
     write_to_node(node_name, data); 
 }
@@ -97,4 +100,6 @@ void h5out::write_to_node(H5std_string name, matrix<double> & data) {
     write_to_node(name, data.data());
 }
 
-
+bool h5out::contains(H5std_string node_name) {
+    return nodes.count(node_name);
+}

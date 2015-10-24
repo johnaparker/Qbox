@@ -35,10 +35,11 @@ public:
 public:
     h5out(H5std_string filename);
     h5out() = default;
-    void create_node(H5std_string node_name, std::vector<hsize_t> size, bool extendable = true);
+    void create_node(H5std_string node_name, std::vector<int> size, bool extendable = true);
     void create_node(H5std_string node_name, matrix<double> & data, bool extendable = true);
     void write_to_node(H5std_string node_name, double *data);
     void write_to_node(H5std_string node_name, matrix<double> & data);
+    bool contains(H5std_string node_name);
 };
 
 #endif
