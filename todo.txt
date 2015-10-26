@@ -1,0 +1,20 @@
+
+For all code: consider when to pass by reference
+            : add destructors, etc.
+
+Consider using an enum for output or doing output with a separate class
+
+
+
+Output objects
+
+Enclose everything within a namespace
+Cleanup makefile and dependencies; get it to not have to recompile
+
+
+
+
+
+
+Strange error with _DEFAULT_SOURCE not being defined
+    How to compile program with g++ and linking instead
