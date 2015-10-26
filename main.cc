@@ -1,3 +1,4 @@
+#include "field2.h"
 #include <math.h>
 #include <iostream>
 #include <stdlib.h>
@@ -5,7 +6,6 @@
 #include <sstream>
 #include <string>
 #include <iomanip>
-#include "field2.h"
 
 
 //make a header file for every cc file
