@@ -78,7 +78,7 @@ void surface_monitor::update() {
             E = (prevE[i] + F->Ez[a][b])/2;
             H = ((*Hfield)[a][b] + (*Hfield)[a][b-1])/2;
         }
-        prevE[i] = F->Ez[a][b]/2;
+        prevE[i] = F->Ez[a][b];
 
         for (int j = 0; j != N; j++) {
             rE[i][j] += E*cos(2*M_PI*freq[j]*F->t);
