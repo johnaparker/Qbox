@@ -19,12 +19,12 @@ public:
 public:
     monitor() = default;
     monitor(std::string name, double *freq, int N): name(name), freq(freq), N(N) {};
-    void set_F(Field2D *newF);
+    virtual void set_F(Field2D *newF);
     virtual void update() {};
-    virtual void output() {};
 };
 
 //add friendship to Field2D
+//note that this computes flux in the +x/y direction, but could be smarter to do p/m
 class surface_monitor: public monitor {
 public:
     std::vector<int> p1, p2;
@@ -35,9 +35,22 @@ public:
     surface_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double *freq, int N);
     surface_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double fmin, double fmax, int N);
     surface_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double f);
+    surface_monitor() = default;
     void update();
     void write(std::string filename, bool extendable = false);
 };
+
+class box_monitor: public monitor {
+public:
+    surface_monitor monitors[4];
+public:
+    box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double *freq, int N);
+    box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double fmin, double fmax, int N);
+    box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double f);
+    void update();
+    void write(std::string filename, bool extendable = false);
+};
+
 
 
 #endif

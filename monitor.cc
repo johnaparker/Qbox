@@ -105,4 +105,51 @@ void surface_monitor::write(string filename, bool extendable) {
     delete[] S;
 }
 
+//none of this below actually works
+//Consider the following: box_monitor doesn't call surface_monitor, but the code used in surface_monitor
+//         can be externalized so that both can use it
+//For corners, first study using 4 surface_monitors directly
+
+box_monitor::box_monitor(string name, vector<int> p1, vector<int> p2, double *freq, int N):
+                monitor(name, freq, N) {
+    monitors = new surface_monitor[4];
+    monitors[0] = surface_monitor(name + "_1", p1, {p2[0], p1[1]}, freq, N);
+    monitors[1] = surface_monitor(name + "_2", {p2[0], p1[1]}, p2, freq, N);
+    monitors[2] = surface_monitor(name + "_3", {p1[1], p2[0]}, p2, freq, N);
+    monitors[3] = surface_monitor(name + "_4", p1, {p1[1], p2[0]}, freq, N);
+}
+
+box_monitor::box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double fmin, double fmax, int N):
+            box_monitor(name, p1 p2, nullptr, N) {
+    freq = new double[N];
+    for (int i = 0; i != N; i ++) {
+        freq[i] = fmin + (fmax-fmin)/(N-1.0)*i;
+    }
+}
+
+box_monitor::box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double f);
+            box_monitor(name, p1 p2, nullptr, 1) {
+    freq = new double[1];
+    freq[0] = f;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
