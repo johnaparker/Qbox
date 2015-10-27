@@ -64,7 +64,7 @@ void surface_monitor::update() {
         Hfield = &F->Hy;
 
     int a = p1[0];
-    int b = p2[0];
+    int b = p1[1];
     double E, H;
     //this if check could be done outside the for loop somehow
     for (int i = 0; i != length; i++) {

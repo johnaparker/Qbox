@@ -25,6 +25,7 @@ public:
 
 //add friendship to Field2D
 //note that this computes flux in the +x/y direction, but could be smarter to do p/m
+//or get E/B values from base class
 class surface_monitor: public monitor {
 public:
     std::vector<int> p1, p2;
