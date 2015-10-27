@@ -11,7 +11,7 @@ Output objects
 Enclose everything within a namespace
 Cleanup makefile and dependencies; get it to not have to recompile
 
-
+Currently, field class maintains outFiles list and manages output files/nodes. This should be done by a seperate class.
 
 
 

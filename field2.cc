@@ -77,6 +77,14 @@ void Field2D::writeH(string filename) {
     write(filename, "Hy");
 }
 
+void Field2D::write_monitor(string filename, string nodename, double* data, int N, bool extendable) {
+    if (outFiles.count(filename) == 0)
+        outFiles[filename] = h5out(filename);
+    if (!outFiles[filename].contains(nodename))
+        outFiles[filename].create_node(nodename, {N}, extendable);
+    outFiles[filename].write_to_node(nodename, data);
+}
+
 void Field2D::display_info() {
     cout << setw(10) << "dx:" << dx << " m" << endl;
     cout << setw(10) << "Lx:" << dx*Nx << " m" << endl;
@@ -110,6 +118,10 @@ void Field2D::update() {
     for (const auto &s : source_list) {
         s->pulse();
     } 
+
+    for (const auto &m : monitor_list) {
+        m->update();
+    }
 
     //this can possibly be moved to the previous if statement
     if (total) 
@@ -153,6 +165,11 @@ void Field2D::add_source(source &new_source) {
     new_source.set_F(this);
     source_list.push_back(&new_source);
 }
+
+void Field2D::add_monitor(monitor &new_monitor) {
+    new_monitor.set_F(this);
+    monitor_list.push_back(&new_monitor);
+} 
 
 grid_properties::grid_properties(int Nx, int Ny, double dx, int pml_thickness):
         Nx(Nx), Ny(Ny), dx(dx), pml_thickness(pml_thickness) {

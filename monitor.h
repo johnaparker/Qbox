@@ -6,6 +6,7 @@
 #include "matrix.h"
 #include "field2.h"
 
+class Field2D;
 
 //technically, these are DFT monitors. Normal monitor can exist too.
 class monitor {
@@ -14,9 +15,11 @@ public:
     int N;
     double *freq;
     double *prevE;
-    Field2D *F                    //to be set when call add_monitor in fields
+    Field2D *F;
 public:
-    monitor() {};
+    monitor() = default;
+    monitor(std::string name, double *freq, int N): name(name), freq(freq), N(N) {};
+    void set_F(Field2D *newF);
     virtual void update() {};
     virtual void output() {};
 };
@@ -29,11 +32,11 @@ public:
     int dir;
     int length;
 public:
-    surface_monitor(std::string name, std::vector<double> p1, std::vector<double> p2, double *freq, int N);
-    surface_monitor(std::string name, std::vector<double> p1, std::vector<double> p2, double fmin, double fmax, int N);
-    surface_monitor(std::string name, std::vector<double> p1, std::vector<double> p2, double f);
+    surface_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double *freq, int N);
+    surface_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double fmin, double fmax, int N);
+    surface_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double f);
     void update();
-    void write(std::string filename);
+    void write(std::string filename, bool extendable = false);
 };
 
 

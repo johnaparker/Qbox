@@ -13,11 +13,12 @@
 #include "object.h"
 #include "source.h"
 #include "h5out.h"
+#include "monitor.h"
 
 class Field2D;
 class source;
+class monitor;
 
-enum component {Ez, Hx, Hy};
 
 class grid_properties {
 public:
@@ -82,6 +83,7 @@ public:
     matrix<object*> obj;
     std::vector<object*> obj_list;
     std::vector<source*> source_list;
+    std::vector<monitor*> monitor_list;
     double dt,t;
 
     pml BC;
@@ -96,8 +98,10 @@ public:
 
     void add_object(object &new_object);
     void add_source(source &new_source);
+    void add_monitor(monitor &new_monitor);
 
     void write(std::string filename, std::string nodename);
+    void write_monitor(std::string filename, std::string nodename, double *data, int N, bool extendable = false);
     void writeE(std::string filename);
     void writeH(std::string filename);
 };   

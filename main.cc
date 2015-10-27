@@ -33,13 +33,18 @@ int main(int argc, char* argv[]) {
     rectangle r2({30,70}, {200,80});
     r2.set_eps(12);
     test.add_object(r2);
+    
+    double f = c/(66.7*dx);
+    surface_monitor m1("m1",{30,18}, {40,18}, f/2, 2*f, 1000); 
+    test.add_monitor(m1);
 
-    continuous_line_source s1({30,12},{40,12},c/(66.7*dx));
+    continuous_line_source s1({30,12},{40,12},f);
     test.add_source(s1);
 
-    for (int i = 0; i != 1200; i++) {
+    for (int i = 0; i != 4200; i++) {
         test.update();
         test.writeE("out.h5");
     }
+    m1.write("out.h5");
 }
 

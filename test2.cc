@@ -1,20 +1,13 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
-
-enum field {Ex, Ey, Ez};
-
-string select(field E) {
-    switch(E) {
-        case Ex: return "Ex";
-        case Ey: return "Ey";
-        case Ez: return "Ez";
-    }
-}
-
+#include "h5out.h"
 
 int main() {
-    cout << select(Ey) << endl;
+    h5out file("test.h5");
+    file.create_node("a", {10}, false);
+    double *data = new double[10];
+    for (int i = 0; i != 10; i++)
+        data[i] =1;
+    file.write_to_node("a", data);
 }
-
