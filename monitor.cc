@@ -17,6 +17,10 @@ int get_direction(vector<int> p1, vector<int> p2) {
         return 2;
 }
 
+void monitor::set_freq(double *new_freq) {
+    freq = new_freq;
+}
+
 void monitor::set_F(Field2D *newF) {
     F = newF;
 }
@@ -89,8 +93,7 @@ void surface_monitor::update() {
     }
 }
 
-void surface_monitor::write(string filename, bool extendable) {
-    double *S = new double[N];
+void surface_monitor::compute_flux(double *S) {
     for (int i = 0; i != N; i++) 
         S[i] = 0;
 
@@ -100,19 +103,19 @@ void surface_monitor::write(string filename, bool extendable) {
         }
         S[j] *= F->dx;
     }
+}
 
+void surface_monitor::write(string filename, bool extendable) {
+    double *S = new double[N];
+    compute_flux(S);
     F->write_monitor(filename, name, S, N, extendable); 
     delete[] S;
 }
 
-//none of this below actually works
-//Consider the following: box_monitor doesn't call surface_monitor, but the code used in surface_monitor
-//         can be externalized so that both can use it
-//For corners, first study using 4 surface_monitors directly
+
 
 box_monitor::box_monitor(string name, vector<int> p1, vector<int> p2, double *freq, int N):
                 monitor(name, freq, N) {
-    monitors = new surface_monitor[4];
     monitors[0] = surface_monitor(name + "_1", p1, {p2[0], p1[1]}, freq, N);
     monitors[1] = surface_monitor(name + "_2", {p2[0], p1[1]}, p2, freq, N);
     monitors[2] = surface_monitor(name + "_3", {p1[1], p2[0]}, p2, freq, N);
@@ -120,21 +123,65 @@ box_monitor::box_monitor(string name, vector<int> p1, vector<int> p2, double *fr
 }
 
 box_monitor::box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double fmin, double fmax, int N):
-            box_monitor(name, p1 p2, nullptr, N) {
+            box_monitor(name, p1, p2, nullptr, N) {
     freq = new double[N];
     for (int i = 0; i != N; i ++) {
         freq[i] = fmin + (fmax-fmin)/(N-1.0)*i;
     }
+    set_freq(freq);
 }
 
-box_monitor::box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double f);
-            box_monitor(name, p1 p2, nullptr, 1) {
+box_monitor::box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double f):
+            box_monitor(name, p1, p2, nullptr, 1) {
     freq = new double[1];
     freq[0] = f;
+    set_freq(freq);
 }
 
+void box_monitor::set_freq(double *new_freq) {
+    monitor::set_freq(new_freq);
+    for (int i = 0; i != 4; i++) 
+        monitors[i].set_freq(new_freq);
+}
 
+void box_monitor::set_F(Field2D *newF) {
+    monitor::set_F(newF);
+    for (int i = 0; i != 4; i++) 
+        monitors[i].set_F(newF);
+}
 
+void box_monitor::update() {
+    for (int i = 0; i != 4; i++) 
+        monitors[i].update();
+}
+
+void box_monitor::compute_flux(double *S) {
+    double sign_values[] = {1, 1, -1, -1};
+    double *Sm = new double[N];
+    for (int i = 0; i != N; i++) {
+        S[i] = 0;
+        Sm[i] = 0;
+    }
+
+    for (int i = 0; i != 4; i++) {
+        monitors[i].compute_flux(Sm);
+        for (int j = 0; j != N; j++)
+            S[j] += sign_values[i]*Sm[j];
+    }
+    delete[] Sm;
+}
+
+void box_monitor::write(string filename, bool extendable) {
+    double *S = new double[N];
+    compute_flux(S);
+    F->write_monitor(filename, name, S, N, extendable); 
+    delete[] S;
+}
+
+void box_monitor::write_sides(string filename, bool extendable) {
+    for (int i = 0; i != 4; i++) 
+        monitors[i].write(filename, extendable);
+}
 
 
 

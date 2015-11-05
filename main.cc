@@ -20,25 +20,19 @@ int main(int argc, char* argv[]) {
     double dt = dx/(2*c0);
     int pml_thickness = 12;
 
-    grid_properties grid(200,200,dx,pml_thickness);
+    grid_properties grid(120,120,dx,pml_thickness);
     //grid.set_tfsf(12, 12);
     //grid.set_tfsf({12,12},{68,119});
 
 
     Field2D test(grid,dt);
     
-    rectangle r({30,0}, {40,80});
-    r.set_eps(12);
-    test.add_object(r);
-    rectangle r2({30,70}, {200,80});
-    r2.set_eps(12);
-    test.add_object(r2);
     
     double f = c/(66.7*dx);
-    surface_monitor m1("m1",{30,18}, {40,18}, f/2, 2*f, 1000); 
+    box_monitor m1("m1",{30,30}, {90,90}, 0, 5*f, 100); 
     test.add_monitor(m1);
 
-    continuous_line_source s1({30,12},{40,12},f);
+    gaussian_point_source s1(60, 95, 1e-7, 1e-8);
     test.add_source(s1);
 
     for (int i = 0; i != 4200; i++) {
@@ -46,5 +40,6 @@ int main(int argc, char* argv[]) {
         test.writeE("out.h5");
     }
     m1.write("out.h5");
+    m1.write_sides("out.h5");
 }
 

@@ -19,6 +19,7 @@ public:
 public:
     monitor() = default;
     monitor(std::string name, double *freq, int N): name(name), freq(freq), N(N) {};
+    virtual void set_freq(double *new_freq);
     virtual void set_F(Field2D *newF);
     virtual void update() {};
 };
@@ -38,6 +39,7 @@ public:
     surface_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double f);
     surface_monitor() = default;
     void update();
+    void compute_flux(double *S);
     void write(std::string filename, bool extendable = false);
 };
 
@@ -48,8 +50,13 @@ public:
     box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double *freq, int N);
     box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double fmin, double fmax, int N);
     box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double f);
+    box_monitor() = default;
+    void set_freq(double *new_freq);
+    void set_F(Field2D *newF);
     void update();
+    void compute_flux(double *S);
     void write(std::string filename, bool extendable = false);
+    void write_sides(std::string filename, bool extendable = false);
 };
 
 
