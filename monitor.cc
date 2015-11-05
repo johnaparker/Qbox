@@ -75,7 +75,7 @@ void surface_monitor::update() {
         if (dir == 0) {
             a = p1[0] + i;
             E = (prevE[i] + F->Ez[a][b])/2;
-            H = ((*Hfield)[a][b] + (*Hfield)[a-1][b-1])/2;
+            H = ((*Hfield)[a][b] + (*Hfield)[a-1][b])/2;
         }
         else if (dir == 1) {
             b = p1[1] + i;
