@@ -118,10 +118,10 @@ void Field2D::update() {
     for (const auto &s : source_list) {
         s->pulse();
     } 
-
     for (const auto &m : monitor_list) {
         m->update();
     }
+
 
     //this can possibly be moved to the previous if statement
     if (total) 
@@ -141,6 +141,7 @@ void Field2D::update() {
 
     if (total) 
         total->updateH(this);
+    
 }
 
 void Field2D::add_object(object &new_object) {

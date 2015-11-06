@@ -14,7 +14,7 @@ public:
     std::string name;             //to call output from main
     int N;
     double *freq;
-    double *prevE;
+    double *prevH;
     Field2D *F;
 public:
     monitor() = default;
@@ -33,6 +33,8 @@ public:
     matrix<double> rE, iE, rH, iH;
     int dir;
     int length;
+    //move these into base class. Find out a way to not compute 4x
+    double *sinf, *cosf;
 public:
     surface_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double *freq, int N);
     surface_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double fmin, double fmax, int N);

@@ -27,15 +27,17 @@ void monitor::set_F(Field2D *newF) {
 
 surface_monitor::surface_monitor(string name, vector<int> p1, vector<int> p2, double *freq, int N): monitor(name,freq,N), p1(p1), p2(p2) {
     F = nullptr;
+    cosf = new double[N];
+    sinf = new double[N];
     dir = get_direction(p1, p2);
-    length = p2[dir] - p1[dir] + 1;
-    prevE = new double[length];
+    length = p2[dir] - p1[dir];
+    prevH = new double[length];
     rE = matrix<double>(new double[N*length], length, N);
     iE = matrix<double>(new double[N*length], length, N);
     rH = matrix<double>(new double[N*length], length, N);
     iH = matrix<double>(new double[N*length], length, N);
     for (int i = 0; i != length; i++) {
-        prevE[i] = 0;
+        prevH[i] = 0;
         for (int j = 0; j!= N; j++) {
             rE[i][j] = 0;
             iE[i][j] = 0;
@@ -70,25 +72,33 @@ void surface_monitor::update() {
     int a = p1[0];
     int b = p1[1];
     double E, H;
+    for (int j = 0; j != N; j++) {
+        cosf[j] = cos(2*M_PI*freq[j]*F->t);
+        sinf[j] = sin(2*M_PI*freq[j]*F->t);
+    }
     //this if check could be done outside the for loop somehow
     for (int i = 0; i != length; i++) {
         if (dir == 0) {
             a = p1[0] + i;
-            E = (prevE[i] + F->Ez[a][b])/2;
-            H = ((*Hfield)[a][b] + (*Hfield)[a-1][b])/2;
+            H = (*Hfield)[a][b];
+            E = (F->Ez[a][b] + F->Ez[a+1][b])/2;
+            E = (prevH[i] + E)/2;
+            prevH[i] = 2*E - prevH[i];
         }
         else if (dir == 1) {
             b = p1[1] + i;
-            E = (prevE[i] + F->Ez[a][b])/2;
-            H = ((*Hfield)[a][b] + (*Hfield)[a][b-1])/2;
+            H = (*Hfield)[a][b];
+            E = (F->Ez[a][b] + F->Ez[a][b+1])/2;
+            E = (prevH[i] + E)/2;
+            prevH[i] = 2*E - prevH[i];
         }
-        prevE[i] = F->Ez[a][b];
 
         for (int j = 0; j != N; j++) {
-            rE[i][j] += E*cos(2*M_PI*freq[j]*F->t);
-            iE[i][j] += E*sin(2*M_PI*freq[j]*F->t);
-            rH[i][j] += H*cos(2*M_PI*freq[j]*F->t);
-            iH[i][j] += H*sin(2*M_PI*freq[j]*F->t);
+            //HERE: STORE sin(f) and cos(f) seperately to reduce calls
+            rE[i][j] += E*cosf[j];
+            iE[i][j] += E*sinf[j];
+            rH[i][j] += H*cosf[j];
+            iH[i][j] += H*sinf[j];
         }
     }
 }
