@@ -15,11 +15,10 @@
 using namespace std;
 
 
-Field2D::Field2D(grid_properties grid, double dt): Nx(grid.Nx), Ny(grid.Ny), dx(grid.dx), dt(dt) {
-    Lx = Nx*dx; 
-    Ly = Ny*dx; 
+Field2D::Field2D(grid_properties grid): grid(grid), Nx(grid.Nx), Ny(grid.Ny), dx(grid.dx), Lx(grid.Lx), Ly(grid.Ly) {
     t = 0;
     tStep = 0;
+    dt = dx/(2*c0);
     Ez = matrix<double>(new double [Nx*Ny], Nx, Ny); 
     Hx = matrix<double>(new double [Nx*Ny], Nx, Ny);
     Hy = matrix<double>(new double [Nx*Ny], Nx, Ny);
@@ -151,7 +150,8 @@ void Field2D::add_object(object &new_object) {
 
     for (int i = 0; i != Nx; i++) {
         for (int j = 0; j != Ny; j++) {
-            if (new_object.inside(i,j)) {
+            vector<double> p = {i,j};
+            if (new_object.inside(p)) {
                 obj[i][j] = &new_object;
                 obj[i][j] = &new_object;
                     
@@ -172,25 +172,40 @@ void Field2D::add_monitor(monitor &new_monitor) {
     monitor_list.push_back(&new_monitor);
 } 
 
-grid_properties::grid_properties(int Nx, int Ny, double dx, int pml_thickness):
-        Nx(Nx), Ny(Ny), dx(dx), pml_thickness(pml_thickness) {
-            totalFieldScatteredField = false;       
+grid_properties::grid_properties(double Lx_in, double Ly_in, double res, int pml_thickness):
+        res(res), pml_thickness(pml_thickness) {
+    Nx = floor(Lx_in*res);
+    Ny = floor(Ly_in*res);
+    dx = 1/res;
+    Lx = Nx*dx;
+    Ly = Ny*dx;
+    totalFieldScatteredField = false;       
 }
 
-void grid_properties::set_tfsf(vector<int> p1_val, vector<int> p2_val){
-    p1 = p1_val;
-    p2 = p2_val;
+void grid_properties::set_tfsf(vector<double> p1_val, vector<double> p2_val){
+    p1 = convertToGrid(p1_val);
+    p2 = convertToGrid(p2_val);
     totalFieldScatteredField = true;
 }
 
-void grid_properties::set_tfsf(int xbuff, int ybuff){
-    vector<int> p1_val = {xbuff, ybuff};
-    vector<int> p2_val = {Nx-xbuff, Ny-ybuff};
+void grid_properties::set_tfsf(double xbuff, double ybuff){
+    vector<double> p1_val = {xbuff, ybuff};
+    vector<double> p2_val = {Lx-xbuff, Ly-ybuff};
     set_tfsf(p1_val, p2_val);
 }
 
-void grid_properties::set_tfsf(int buff){
+void grid_properties::set_tfsf(double buff){
     set_tfsf(buff, buff);
+}
+
+vector<int> grid_properties::convertToGrid(vector<double> p) {
+    vector<int> pi = {round(p[0]), round(p[1])};
+    return pi;
+}
+
+vector<double> grid_properties::convertToReal(vector<int> pi) {
+    vector<double> p = {pi[0]*dx, pi[1]*dx};
+    return p;
 }
 
 

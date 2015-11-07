@@ -23,7 +23,7 @@ void object::set_conduc(double c) {
 
 medium::medium() {};
 
-bool medium::inside(double x, double y) {
+bool medium::inside(vector<double> p) {
     return true;
 }
 
@@ -31,8 +31,8 @@ bool medium::inside(double x, double y) {
 
 cylinder::cylinder(double x, double y, double r): x(x), y(y), r(r) {};
 
-bool cylinder::inside(double xp, double yp){
-    if (pow(xp-x,2) + pow(yp-y,2) < pow(r,2))
+bool cylinder::inside(vector<double> p){
+    if (pow(p[0]-x,2) + pow(p[1]-y,2) < pow(r,2))
        return true;
     else return false; 
 }
@@ -40,8 +40,8 @@ bool cylinder::inside(double xp, double yp){
 
 rectangle::rectangle(vector<double> pa, vector<double> pb): pa(pa), pb(pb) {};
 
-bool rectangle::inside(double xp, double yp) {
-    if (xp < pa[0] or xp > pb[0] or yp < pa[1] or yp > pb[1]) 
+bool rectangle::inside(vector<double> p) {
+    if (p[0] < pa[0] or p[0] > pb[0] or p[1] < pa[1] or p[1] > pb[1]) 
         return false;
     else return true;
 }

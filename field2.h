@@ -23,6 +23,8 @@ class monitor;
 class grid_properties {
 public:
     int Nx, Ny;
+    double Lx, Ly;
+    double res;
     double dx;
     int pml_thickness;
     
@@ -30,10 +32,12 @@ public:
     std::vector<int> p1, p2;
 
 public:
-    grid_properties(int Nx, int Ny, double dx, int pml_thickness);
-    void set_tfsf(std::vector<int> p1_val, std::vector<int> p2_val);
-    void set_tfsf(int xbuff, int ybuff);
-    void set_tfsf(int buff);
+    grid_properties(double Lx_in, double Ly_in, double res, int pml_thickness);
+    void set_tfsf(std::vector<double> p1_val, std::vector<double> p2_val);
+    void set_tfsf(double xbuff, double ybuff);
+    void set_tfsf(double buff);
+    std::vector<int> convertToGrid(std::vector<double> p);
+    std::vector<double> convertToReal(std::vector<int> pi);
 };
 
 
@@ -78,6 +82,7 @@ public:
     double mu;
     double dx,Lx,Ly;
     int Nx,Ny,tStep;
+    grid_properties grid;
 
     matrix<double> Ez,Dz,Hx,Hy,Iz,ca,cb;
     matrix<object*> obj;
@@ -92,7 +97,7 @@ public:
     std::map<std::string, h5out> outFiles;
     std::map<std::string, matrix<double>* > field_components;
 public:
-    Field2D(grid_properties grid, double dt);
+    Field2D(grid_properties grid);
     void display_info();
     void update();
 

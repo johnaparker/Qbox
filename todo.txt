@@ -9,12 +9,14 @@ Consider using an enum for output or doing output with a separate class
 Output objects
 
 Enclose everything within a namespace
-Cleanup makefile and dependencies; get it to not have to recompile
+Cleanup makefile and dependencies
 
 Currently, field class maintains outFiles list and manages output files/nodes. This should be done by a seperate class.
 
+Monitor does not handle a single point well - add support for this
+
+Solve the pause at the end of the program (problem caused by H5)
 
 
+How to compile program with g++ and linking instead
 
-Strange error with _DEFAULT_SOURCE not being defined
-    How to compile program with g++ and linking instead
