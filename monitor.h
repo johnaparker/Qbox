@@ -14,7 +14,7 @@ public:
     std::string name;             //to call output from main
     int N;
     double *freq;
-    double *prevH;
+    double *prevE;
     Field2D *F;
 public:
     monitor() = default;

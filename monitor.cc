@@ -31,13 +31,13 @@ surface_monitor::surface_monitor(string name, vector<int> p1, vector<int> p2, do
     sinf = new double[N];
     dir = get_direction(p1, p2);
     length = p2[dir] - p1[dir];
-    prevH = new double[length];
+    prevE = new double[length+1];
     rE = matrix<double>(new double[N*length], length, N);
     iE = matrix<double>(new double[N*length], length, N);
     rH = matrix<double>(new double[N*length], length, N);
     iH = matrix<double>(new double[N*length], length, N);
     for (int i = 0; i != length; i++) {
-        prevH[i] = 0;
+        prevE[i] = 0;
         for (int j = 0; j!= N; j++) {
             rE[i][j] = 0;
             iE[i][j] = 0;
@@ -45,6 +45,7 @@ surface_monitor::surface_monitor(string name, vector<int> p1, vector<int> p2, do
             iH[i][j] = 0;
         }
     }
+    prevE[length] = 0;
 }
 
 surface_monitor::surface_monitor(string name, vector<int> p1, vector<int> p2, double fmin, double fmax, int N): 
@@ -80,18 +81,19 @@ void surface_monitor::update() {
     for (int i = 0; i != length; i++) {
         if (dir == 0) {
             a = p1[0] + i;
-            H = (*Hfield)[a][b];
-            E = (F->Ez[a][b] + F->Ez[a+1][b])/2;
-            E = (prevH[i] + E)/2;
-            prevH[i] = 2*E - prevH[i];
+            H = ((*Hfield)[a][b] + (*Hfield)[a][b-1]
+                    + (*Hfield)[a+1][b] + (*Hfield)[a+1][b-1])/4;
+            E = (F->Ez[a][b] + F->Ez[a+1][b]
+                    + prevE[i] + prevE[i+1])/4;
         }
         else if (dir == 1) {
             b = p1[1] + i;
-            H = (*Hfield)[a][b];
-            E = (F->Ez[a][b] + F->Ez[a][b+1])/2;
-            E = (prevH[i] + E)/2;
-            prevH[i] = 2*E - prevH[i];
+            H = ((*Hfield)[a][b] + (*Hfield)[a-1][b]
+                    + (*Hfield)[a][b+1] + (*Hfield)[a-1][b+1])/4;
+            E = (F->Ez[a][b] + F->Ez[a][b+1]
+                    + prevE[i] + prevE[i+1])/4;
         }
+        prevE[i] = F->Ez[a][b];
 
         for (int j = 0; j != N; j++) {
             //HERE: STORE sin(f) and cos(f) seperately to reduce calls
@@ -101,6 +103,11 @@ void surface_monitor::update() {
             iH[i][j] += H*sinf[j];
         }
     }
+    if (dir == 0)
+        a += 1;
+    else
+        b += 1;
+    prevE[length] = F->Ez[a][b];
 }
 
 void surface_monitor::compute_flux(double *S) {
