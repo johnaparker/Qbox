@@ -17,7 +17,7 @@ double c = 3e8;
 
 int main(int argc, char* argv[]) {
     int pml_thickness = 12;
-    double resolution = 1;
+    int resolution = 1;
 
     grid_properties grid(120,120,resolution,pml_thickness);
     //grid.set_tfsf(12, 12);

@@ -150,7 +150,8 @@ void Field2D::add_object(object &new_object) {
 
     for (int i = 0; i != Nx; i++) {
         for (int j = 0; j != Ny; j++) {
-            vector<double> p = {i,j};
+            vector<int> pi = {i,j};
+            vector<int> p = grid.convertToReal(pi);
             if (new_object.inside(p)) {
                 obj[i][j] = &new_object;
                 obj[i][j] = &new_object;
@@ -172,39 +173,37 @@ void Field2D::add_monitor(monitor &new_monitor) {
     monitor_list.push_back(&new_monitor);
 } 
 
-grid_properties::grid_properties(double Lx_in, double Ly_in, double res, int pml_thickness):
-        res(res), pml_thickness(pml_thickness) {
-    Nx = floor(Lx_in*res);
-    Ny = floor(Ly_in*res);
+grid_properties::grid_properties(int Lx, int Ly, int res, int pml_thickness):
+        Lx(Lx), Ly(Ly), res(res), pml_thickness(pml_thickness) {
+    Nx = Lx*res;
+    Ny = Ly*res;
     dx = 1/res;
-    Lx = Nx*dx;
-    Ly = Ny*dx;
     totalFieldScatteredField = false;       
 }
 
-void grid_properties::set_tfsf(vector<double> p1_val, vector<double> p2_val){
+void grid_properties::set_tfsf(vector<int> p1_val, vector<int> p2_val){
     p1 = convertToGrid(p1_val);
     p2 = convertToGrid(p2_val);
     totalFieldScatteredField = true;
 }
 
-void grid_properties::set_tfsf(double xbuff, double ybuff){
-    vector<double> p1_val = {xbuff, ybuff};
-    vector<double> p2_val = {Lx-xbuff, Ly-ybuff};
+void grid_properties::set_tfsf(int xbuff, int ybuff){
+    vector<int> p1_val = {xbuff, ybuff};
+    vector<int> p2_val = {Lx-xbuff, Ly-ybuff};
     set_tfsf(p1_val, p2_val);
 }
 
-void grid_properties::set_tfsf(double buff){
+void grid_properties::set_tfsf(int buff){
     set_tfsf(buff, buff);
 }
 
-vector<int> grid_properties::convertToGrid(vector<double> p) {
-    vector<int> pi = {round(p[0]), round(p[1])};
+vector<int> grid_properties::convertToGrid(vector<int> p) {
+    vector<int> pi = {p[0]*res, p[1]*res};
     return pi;
 }
 
-vector<double> grid_properties::convertToReal(vector<int> pi) {
-    vector<double> p = {pi[0]*dx, pi[1]*dx};
+vector<int> grid_properties::convertToReal(vector<int> pi) {
+    vector<int> p = {pi[0]/res, pi[1]/res};
     return p;
 }
 

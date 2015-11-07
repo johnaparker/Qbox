@@ -9,7 +9,7 @@ public:
     double conduc;
 public:
     object();
-    virtual bool inside(std::vector<double> p) {};
+    virtual bool inside(std::vector<int> p) {};
     void set_eps(double e);
     void set_conduc(double c);
 };
@@ -18,7 +18,7 @@ public:
 class medium: public object {
 public:
     medium();
-    bool inside(std::vector<double> p);
+    bool inside(std::vector<int> p);
 };
 
 
@@ -27,7 +27,7 @@ public:
     double x,y,r;
 public:
     cylinder(double x, double y, double r);
-    bool inside(std::vector<double> p);
+    bool inside(std::vector<int> p);
 };
 
 class rectangle: public object {
@@ -35,7 +35,7 @@ public:
     std::vector<double> pa, pb;
 public:
     rectangle(std::vector<double> pa, std::vector<double> pb);
-    bool inside(std::vector<double> p);
+    bool inside(std::vector<int> p);
 };
 
 

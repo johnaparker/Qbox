@@ -25,7 +25,7 @@ void monitor::set_F(Field2D *newF) {
     F = newF;
 }
 
-surface_monitor::surface_monitor(string name, vector<double> p1d, vector<double> p2d, double *freq, int N): monitor(name,freq,N), p1d(p1d), p2d(p2d) {
+surface_monitor::surface_monitor(string name, vector<int> p1, vector<int> p2, double *freq, int N): monitor(name,freq,N), p1(p1), p2(p2) {
     F = nullptr;
     cosf = new double[N];
     sinf = new double[N];
@@ -34,26 +34,26 @@ surface_monitor::surface_monitor(string name, vector<double> p1d, vector<double>
     prevE = nullptr;
 }
 
-surface_monitor::surface_monitor(string name, vector<double> p1d, vector<double> p2d, double fmin, double fmax, int N): 
-            surface_monitor(name, p1d, p2d, nullptr, N) {
+surface_monitor::surface_monitor(string name, vector<int> p1, vector<int> p2, double fmin, double fmax, int N): 
+            surface_monitor(name, p1, p2, nullptr, N) {
     freq = new double[N];
     for (int i = 0; i != N; i ++) {
         freq[i] = fmin + (fmax-fmin)/(N-1.0)*i;
     }
 }
 
-surface_monitor::surface_monitor(string name, vector<double> p1d, vector<double> p2d, double f): 
-            surface_monitor(name, p1d, p2d, nullptr, 1) {
+surface_monitor::surface_monitor(string name, vector<int> p1, vector<int> p2, double f): 
+            surface_monitor(name, p1, p2, nullptr, 1) {
     freq = new double[1];
     freq[0] = f;
 }
 
 void surface_monitor::set_F(Field2D *newF) {
     monitor::set_F(newF);
-    p1 = (F->grid).convertToGrid(p1d);
-    p2 = (F->grid).convertToGrid(p2d);
-    dir = get_direction(p1, p2);
-    length = p2[dir] - p1[dir];
+    p1g = (F->grid).convertToGrid(p1);
+    p2g = (F->grid).convertToGrid(p2);
+    dir = get_direction(p1g, p2g);
+    length = p2g[dir] - p1g[dir];
     prevE = new double[length+1];
     rE = matrix<double>(new double[N*length], length, N);
     iE = matrix<double>(new double[N*length], length, N);
@@ -78,8 +78,8 @@ void surface_monitor::update() {
     if (dir == 1)
         Hfield = &F->Hy;
 
-    int a = p1[0];
-    int b = p1[1];
+    int a = p1g[0];
+    int b = p1g[1];
     double E, H;
     for (int j = 0; j != N; j++) {
         cosf[j] = cos(2*M_PI*freq[j]*F->t);
@@ -88,14 +88,14 @@ void surface_monitor::update() {
     //this if check could be done outside the for loop somehow
     for (int i = 0; i != length; i++) {
         if (dir == 0) {
-            a = p1[0] + i;
+            a = p1g[0] + i;
             H = ((*Hfield)[a][b] + (*Hfield)[a][b-1]
                     + (*Hfield)[a+1][b] + (*Hfield)[a+1][b-1])/4;
             E = (F->Ez[a][b] + F->Ez[a+1][b]
                     + prevE[i] + prevE[i+1])/4;
         }
         else if (dir == 1) {
-            b = p1[1] + i;
+            b = p1g[1] + i;
             H = ((*Hfield)[a][b] + (*Hfield)[a-1][b]
                     + (*Hfield)[a][b+1] + (*Hfield)[a-1][b+1])/4;
             E = (F->Ez[a][b] + F->Ez[a][b+1]
@@ -138,7 +138,7 @@ void surface_monitor::write(string filename, bool extendable) {
 
 
 
-box_monitor::box_monitor(string name, vector<double> p1, vector<double> p2, double *freq, int N):
+box_monitor::box_monitor(string name, vector<int> p1, vector<int> p2, double *freq, int N):
                 monitor(name, freq, N) {
     monitors[0] = surface_monitor(name + "_1", p1, {p2[0], p1[1]}, freq, N);
     monitors[1] = surface_monitor(name + "_2", {p2[0], p1[1]}, p2, freq, N);
@@ -146,7 +146,7 @@ box_monitor::box_monitor(string name, vector<double> p1, vector<double> p2, doub
     monitors[3] = surface_monitor(name + "_4", p1, {p1[1], p2[0]}, freq, N);
 }
 
-box_monitor::box_monitor(std::string name, std::vector<double> p1, std::vector<double> p2, double fmin, double fmax, int N):
+box_monitor::box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double fmin, double fmax, int N):
             box_monitor(name, p1, p2, nullptr, N) {
     freq = new double[N];
     for (int i = 0; i != N; i ++) {
@@ -155,7 +155,7 @@ box_monitor::box_monitor(std::string name, std::vector<double> p1, std::vector<d
     set_freq(freq);
 }
 
-box_monitor::box_monitor(std::string name, std::vector<double> p1, std::vector<double> p2, double f):
+box_monitor::box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double f):
             box_monitor(name, p1, p2, nullptr, 1) {
     freq = new double[1];
     freq[0] = f;
