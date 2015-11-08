@@ -18,7 +18,7 @@ using namespace std;
 Field2D::Field2D(grid_properties grid): grid(grid), Nx(grid.Nx), Ny(grid.Ny), dx(grid.dx), Lx(grid.Lx), Ly(grid.Ly) {
     t = 0;
     tStep = 0;
-    dt = dx/(2*c0);
+    dt = dx/2.0;
     Ez = matrix<double>(new double [Nx*Ny], Nx, Ny); 
     Hx = matrix<double>(new double [Nx*Ny], Nx, Ny);
     Hy = matrix<double>(new double [Nx*Ny], Nx, Ny);
@@ -177,7 +177,7 @@ grid_properties::grid_properties(int Lx, int Ly, int res, int pml_thickness):
         Lx(Lx), Ly(Ly), res(res), pml_thickness(pml_thickness) {
     Nx = Lx*res;
     Ny = Ly*res;
-    dx = 1/res;
+    dx = 1.0/res;
     totalFieldScatteredField = false;       
 }
 

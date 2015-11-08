@@ -2,6 +2,7 @@
 #include "field2.h"
 #include <math.h>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -35,7 +36,7 @@ gaussian_point_source::gaussian_point_source(vector<int> p, double T0, double si
     p(p), T0(T0), sig(sig) {};
 void gaussian_point_source::pulse() {
     static vector<int> pi = (F->grid).convertToGrid(p);
-    F->Ez[pi[0]][pi[1]] += exp(-0.5*(pow((*t-T0)/sig,2)));
+    F->Ez[pi[0]][pi[1]] += (F->grid).res*exp(-0.5*(pow((*t-T0)/sig,2)));
 }
 
 custom_point_source::custom_point_source(vector<int> p, double (*time_func)(double)):
