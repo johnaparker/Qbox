@@ -4,44 +4,46 @@
 #include <vector>
 #include "field2.h"
 
-//Think about whether this is the best way to do sources
-//Also think about how to add TFSF into these sources
-//Lastly, the best way to couple these sources with the field class.
-//
-//Definitely consider functions external to classes doing some of the work
+//*** Think about whether this is the best way to do sources
+//*** Also think about how to add TFSF into these sources
+//*** Lastly, the best way to couple these sources with the field class.
 
-//use "=0" on virtual base, and add virtual destructor
-//
-//Point source = line source default with one point?
+//*** Definitely consider functions external to classes doing some of the work
+//*** use "=0" on virtual base, and add virtual destructor
+
+//*** Point source = line source default with one point?
 
 class Field2D;
 
+//source base class
 class source {
 public:
-    Field2D *F;
-    double *t;
-public:
     source();
-    void set_F(Field2D *F);
-    virtual void pulse() {}; 
+    void set_F(Field2D *F);   //set field ownership
+    virtual void pulse() {};  //add the source to the fields
+
+public:
+    Field2D *F;    //field owner reference
+    double *t;     //current time (from F)
 };
+
 
 class continuous_point_source: public source {
 public:
-    std::vector<int> p;
-    double freq;
-public:
     continuous_point_source(std::vector<int> p, double f);
     void pulse();
+public:
+    std::vector<int> p;    //vector position
+    double freq;           //frequency
 };
 
 class gaussian_point_source: public source {
 public:
-    std::vector<int> p;
-    double T0, sig;
-public:
     gaussian_point_source(std::vector<int> p, double T0, double sig);
     void pulse();
+public:
+    std::vector<int> p;    //vector position
+    double T0, sig;        //temporal center, width
 };
 
 class custom_point_source: public source {
