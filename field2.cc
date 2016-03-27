@@ -19,15 +19,15 @@ Field2D::Field2D(grid_properties grid): grid(grid), Nx(grid.Nx), Ny(grid.Ny), dx
     t = 0;
     tStep = 0;
     dt = dx/2.0;
-    Ez = matrix<double>(new double [Nx*Ny], Nx, Ny); 
-    Hx = matrix<double>(new double [Nx*Ny], Nx, Ny);
-    Hy = matrix<double>(new double [Nx*Ny], Nx, Ny);
-    Dz = matrix<double>(new double [Nx*Ny], Nx, Ny);
-    Iz = matrix<double>(new double [Nx*Ny], Nx, Ny);
-    ca = matrix<double>(new double [Nx*Ny], Nx, Ny);
-    cb = matrix<double>(new double [Nx*Ny], Nx, Ny);
+    Ez = matrix<double>(Nx, Ny); 
+    Hx = matrix<double>(Nx, Ny);
+    Hy = matrix<double>(Nx, Ny);
+    Dz = matrix<double>(Nx, Ny);
+    Iz = matrix<double>(Nx, Ny);
+    ca = matrix<double>(Nx, Ny);
+    cb = matrix<double>(Nx, Ny);
 
-    obj  = matrix<object*>(new object* [Nx*Ny], Nx, Ny); 
+    obj  = matrix<object*>(Nx, Ny); 
     obj_list = {new medium()};
     
     for (int i = 0; i != Nx; i++) {

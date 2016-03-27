@@ -17,8 +17,8 @@ double compute_pml_val(double d, int thickness, double alpha) {
 pml::pml(grid_properties grid): Nx(grid.Nx), Ny(grid.Ny), thickness(grid.pml_thickness) {
     thickness -= 2;
 
-    Ihx = matrix<double>(new double [Nx*Ny], Nx, Ny); 
-    Ihy = matrix<double>(new double [Nx*Ny], Nx, Ny);
+    Ihx = matrix<double>(Nx, Ny); 
+    Ihy = matrix<double>(Nx, Ny);
 
     fi1 = new double[Nx];
     fi2 = new double[Nx];

@@ -1,7 +1,7 @@
 CXX = h5c++
 DIR1D = ./field1D
 BUILD = ./build
-CXXFLAGS = -std=c++11 -O2 -I $(DIR1D)  -c
+CXXFLAGS = -std=c++11  -I $(DIR1D)  -c
 
 
 all: emag
