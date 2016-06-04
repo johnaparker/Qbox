@@ -16,7 +16,7 @@ using namespace std;
 
 
 Field2D::Field2D(grid_properties grid): grid(grid), Nx(grid.Nx), Ny(grid.Ny), dx(grid.dx), Lx(grid.Lx), Ly(grid.Ly) {
-    t = 0;
+    t = 1;
     tStep = 0;
     dt = dx/2.0;
     Ez = matrix<double>(Nx, Ny); 
