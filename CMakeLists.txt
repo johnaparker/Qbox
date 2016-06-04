@@ -10,14 +10,21 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
 include_directories(include)
  
 #However, the file(GLOB...) allows for wildcard additions:
-file(GLOB SOURCES "src/*.cc")
+file(GLOB SOURCES "src/*.cpp")
 file(GLOB HEADERS "include/*.h")
  
 #Generate the shared library from the sources
 add_library(apine SHARED ${SOURCES})
  
+#Build executable
+set (PROJECT_LINK_LIBS libapine.so hdf5_cpp)
+link_directories( build )
+add_executable(emag main.cc)
+target_link_libraries(emag ${PROJECT_LINK_LIBS} )
+
 #Set the location for library installation -- i.e., /usr/lib in this case
 # not really necessary in this example. Use "sudo make install" to apply
 install(TARGETS apine DESTINATION lib)
 install(FILES ${HEADERS} DESTINATION include/apine)
+install(FILES include/apine.h DESTINATION include)
 
