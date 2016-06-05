@@ -8,8 +8,6 @@ Consider using an enum for output or doing output with a separate class
 
 Output objects
 
-Enclose everything within a namespace
-
 Currently, field class maintains outFiles list and manages output files/nodes. This should be done by a seperate class.
 
 Monitor does not handle a single point well - add support for this

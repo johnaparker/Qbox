@@ -8,20 +8,24 @@
 #include <fstream>
 #include <string>
 #include <map>
-#include "field.h"
 #include "matrix.h"
 #include "object.h"
 #include "source.h"
-#include "h5out.h"
 #include "monitor.h"
+#include "surface_monitor.h"
+#include "box_monitor.h"
+#include "pml.h"
+#include "tfsf.h"
 
+#include "h5out.h"
+#include "field.h"
 
 
 namespace apine {
 
     class Field2D;
     class source;
-    class monitor;
+    class tfsf;
 
     //grid class that controls length, resolution, and boundary of the grid
     class grid_properties {
@@ -50,47 +54,6 @@ namespace apine {
         std::vector<int> p1, p2;            //Vector positions of TFSF corners 
     };
 
-
-    //TFSF object created by the grid_properties class
-    class tfsf {
-    public:
-        //*** This class needs rule of 3 (or Zero)
-        tfsf(grid_properties grid, double dt);
-        tfsf() = default;
-        tfsf(const tfsf&) = default;
-        tfsf& operator=(const tfsf&) = default;
-
-        void pulse();               //update the source to 1D sim
-        void updateD(Field2D* f);   //update the D field in 1D sim
-        void updateH(Field2D* f);   //update the H field in 1D sim
-
-    public:
-       //*** Smart poiter here, and Field1D needs proper destructor
-       Field1D *inc;       //A 1D field simulation to produce perfect plane wave
-       int ia,ib,ja,jb;    //position  of corners
-    };
-
-
-    //PML boundary object
-    class pml {
-    public:
-        //*** This class needs rule of 3 (or Zero)
-        pml(grid_properties grid);
-        pml() = default;
-        pml(const pml&) = default;
-        pml& operator=(const pml&) = default;
-
-    public:
-        //*** Smart Pointers
-        //PML array and matrix properties
-        double *fi1,*fi2,*fi3,*fj1,*fj2,*fj3;
-        double *gi2,*gi3,*gj2,*gj3;
-        matrix<double> Ihx, Ihy;
-
-        //PML dimensions
-        int Nx, Ny;      //Nx, Ny of boundary_parameters
-        int thickness;   //# of cells for thickness
-    };
 
 
     //Field object that does all of the work

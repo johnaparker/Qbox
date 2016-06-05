@@ -13,9 +13,9 @@ This is useful for data of fixed size being written to repeatedly.
 #define GUARD_h5out_h
 
 #include <H5Cpp.h>
-#include "matrix.h"
 #include <vector>
 #include <map>
+#include "matrix.h"
 
 namespace apine {
 

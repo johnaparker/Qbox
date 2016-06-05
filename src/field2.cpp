@@ -1,7 +1,3 @@
-#include "field2.h"
-#include "matrix.h"
-#include "object.h"
-#include "h5out.h"
 #include <math.h>
 #include <iostream>
 #include <stdlib.h>
@@ -11,6 +7,12 @@
 #include <iomanip>
 #include <vector>
 #include <string>
+#include "field2.h"
+#include "field.h"
+#include "matrix.h"
+#include "object.h"
+#include "h5out.h"
+#include "tfsf.h"
 
 using namespace std;
 
