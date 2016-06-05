@@ -1,9 +1,25 @@
-*.swn
-*.swo
+//swap files
+*.sw?
+
+//out files
 *.out
-*.swp
-*.o
-*.gch
 *.dat
+
+//object files
+*.o
+
+//figures
 figs/*
+
+//executables
 emag
+a.out
+
+//build directory
+build/
+
+//tags
+tags
+
+*.gch
+

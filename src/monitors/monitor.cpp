@@ -5,8 +5,8 @@
 #include "matrix.h"
 #include "field2.h"
 #include "h5out.h"
-#include "monitor.h"
-#include "freq.h"
+#include "monitors/monitor.h"
+#include "monitors/freq.h"
 
 using namespace std;
 

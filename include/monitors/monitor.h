@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include "matrix.h"
+#include "../matrix.h"
 #include "freq.h"
 
 

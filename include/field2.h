@@ -11,9 +11,9 @@
 #include "matrix.h"
 #include "object.h"
 #include "source.h"
-#include "monitor.h"
-#include "surface_monitor.h"
-#include "box_monitor.h"
+#include "monitors/monitor.h"
+#include "monitors/surface_monitor.h"
+#include "monitors/box_monitor.h"
 #include "pml.h"
 #include "tfsf.h"
 

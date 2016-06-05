@@ -5,8 +5,8 @@
 #include "matrix.h"
 #include "field2.h"
 #include "h5out.h"
-#include "monitor.h"
-#include "box_monitor.h"
+#include "monitors/monitor.h"
+#include "monitors/box_monitor.h"
 
 using namespace std;
 

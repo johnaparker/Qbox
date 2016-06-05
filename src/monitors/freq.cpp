@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <math.h>
-#include "freq.h"
+#include "monitors/freq.h"
 
 using namespace std;
 

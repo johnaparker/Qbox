@@ -5,7 +5,7 @@
 #include "matrix.h"
 #include "field2.h"
 #include "h5out.h"
-#include "surface_monitor.h"
+#include "monitors/surface_monitor.h"
 
 using namespace std;
 
