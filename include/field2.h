@@ -9,16 +9,14 @@
 #include <string>
 #include <map>
 #include "matrix.h"
-#include "object.h"
-#include "source.h"
+#include "sources/source.h"
+#include "objects/object.h"
+#include "objects/medium.h"
 #include "monitors/monitor.h"
-#include "monitors/surface_monitor.h"
-#include "monitors/box_monitor.h"
 #include "pml.h"
 #include "tfsf.h"
-
 #include "h5out.h"
-#include "field.h"
+
 
 
 namespace apine {

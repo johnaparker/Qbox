@@ -10,7 +10,7 @@
 #include "field2.h"
 #include "field.h"
 #include "matrix.h"
-#include "object.h"
+#include "objects/object.h"
 #include "h5out.h"
 #include "tfsf.h"
 
