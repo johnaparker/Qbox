@@ -18,5 +18,5 @@ Solve the pause at the end of the program (problem caused by H5)
 
 
 Follow Rule: 1 Class per CPP file, 1 header file per CPP file
-
+    (also change .h for .hpp)
 

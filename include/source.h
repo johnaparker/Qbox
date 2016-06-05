@@ -13,74 +13,78 @@
 
 //*** Point source = line source default with one point?
 
-class Field2D;
 
-//source base class
-class source {
-public:
-    source();
-    void set_F(Field2D *F);   //set field ownership
-    virtual void pulse() {};  //add the source to the fields
+namespace apine {
 
-public:
-    Field2D *F;    //field owner reference
-    double *t;     //current time (from F)
-};
+    class Field2D;
 
+    //source base class
+    class source {
+    public:
+        source();
+        void set_F(Field2D *F);   //set field ownership
+        virtual void pulse() {};  //add the source to the fields
 
-class continuous_point_source: public source {
-public:
-    continuous_point_source(std::vector<int> p, double f);
-    void pulse();
-public:
-    std::vector<int> p;    //vector position
-    double freq;           //frequency
-};
-
-class gaussian_point_source: public source {
-public:
-    gaussian_point_source(std::vector<int> p, double T0, double sig);
-    void pulse();
-public:
-    std::vector<int> p;    //vector position
-    double T0, sig;        //temporal center, width
-};
-
-class custom_point_source: public source {
-public:
-    std::vector<int> p;
-    double (*time_func)(double);
-public:
-    custom_point_source(std::vector<int> p, double (*time_func)(double));
-    void pulse();
-};
+    public:
+        Field2D *F;    //field owner reference
+        double *t;     //current time (from F)
+    };
 
 
-class continuous_line_source: public source {
-public:
-    std::vector<int> p1, p2;
-    double freq;
-public:
-    continuous_line_source(std::vector<int> p1, std::vector<int> p2, double f);
-    void pulse();
-};
+    class continuous_point_source: public source {
+    public:
+        continuous_point_source(std::vector<int> p, double f);
+        void pulse();
+    public:
+        std::vector<int> p;    //vector position
+        double freq;           //frequency
+    };
 
-class gaussian_line_source: public source {
-public:
-    std::vector<int> p1, p2;
-    double T0, sig;
-public:
-    gaussian_line_source(std::vector<int> p1, std::vector<int> p2, double T0, double sig);
-    void pulse();
-};
+    class gaussian_point_source: public source {
+    public:
+        gaussian_point_source(std::vector<int> p, double T0, double sig);
+        void pulse();
+    public:
+        std::vector<int> p;    //vector position
+        double T0, sig;        //temporal center, width
+    };
 
-class custom_line_source: public source {
-public:
-    std::vector<int> p1, p2;
-    double (*time_func)(double);
-public:
-    custom_line_source(std::vector<int> p1, std::vector<int> p2, double (*time_func)(double));
-    void pulse();
-};
+    class custom_point_source: public source {
+    public:
+        std::vector<int> p;
+        double (*time_func)(double);
+    public:
+        custom_point_source(std::vector<int> p, double (*time_func)(double));
+        void pulse();
+    };
+
+
+    class continuous_line_source: public source {
+    public:
+        std::vector<int> p1, p2;
+        double freq;
+    public:
+        continuous_line_source(std::vector<int> p1, std::vector<int> p2, double f);
+        void pulse();
+    };
+
+    class gaussian_line_source: public source {
+    public:
+        std::vector<int> p1, p2;
+        double T0, sig;
+    public:
+        gaussian_line_source(std::vector<int> p1, std::vector<int> p2, double T0, double sig);
+        void pulse();
+    };
+
+    class custom_line_source: public source {
+    public:
+        std::vector<int> p1, p2;
+        double (*time_func)(double);
+    public:
+        custom_line_source(std::vector<int> p1, std::vector<int> p2, double (*time_func)(double));
+        void pulse();
+    };
+}
 
 #endif

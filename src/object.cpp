@@ -7,41 +7,44 @@ using namespace std;
 //separate into geometry and material classes as needed
 //support for mobility
 
-object::object() {
-    eps = 1;
-    conduc = 0;
-}
+namespace apine {
 
-void object::set_eps(double e) {
-    eps = e;
-}
-void object::set_conduc(double c) {
-    conduc = c;
-}
+    object::object() {
+        eps = 1;
+        conduc = 0;
+    }
 
-
-
-medium::medium() {};
-
-bool medium::inside(vector<int> p) {
-    return true;
-}
+    void object::set_eps(double e) {
+        eps = e;
+    }
+    void object::set_conduc(double c) {
+        conduc = c;
+    }
 
 
 
-cylinder::cylinder(double x, double y, double r): x(x), y(y), r(r) {};
+    medium::medium() {};
 
-bool cylinder::inside(vector<int> p){
-    if (pow(p[0]-x,2) + pow(p[1]-y,2) < pow(r,2))
-       return true;
-    else return false; 
-}
+    bool medium::inside(vector<int> p) {
+        return true;
+    }
 
 
-rectangle::rectangle(vector<double> pa, vector<double> pb): pa(pa), pb(pb) {};
 
-bool rectangle::inside(vector<int> p) {
-    if (p[0] < pa[0] or p[0] > pb[0] or p[1] < pa[1] or p[1] > pb[1]) 
-        return false;
-    else return true;
+    cylinder::cylinder(double x, double y, double r): x(x), y(y), r(r) {};
+
+    bool cylinder::inside(vector<int> p){
+        if (pow(p[0]-x,2) + pow(p[1]-y,2) < pow(r,2))
+           return true;
+        else return false; 
+    }
+
+
+    rectangle::rectangle(vector<double> pa, vector<double> pb): pa(pa), pb(pb) {};
+
+    bool rectangle::inside(vector<int> p) {
+        if (p[0] < pa[0] or p[0] > pb[0] or p[1] < pa[1] or p[1] > pb[1]) 
+            return false;
+        else return true;
+    }
 }
