@@ -4,7 +4,7 @@
 #include <vector>
 #include <fstream>
 
-namespace apine {
+namespace qbox {
     const double c0 = 2.99792458e8;
     const double epsilon = 8.854e-12;
 

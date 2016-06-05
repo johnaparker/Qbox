@@ -4,7 +4,7 @@
 #include <vector>
 #include "source.h"
 
-namespace apine {
+namespace qbox {
     class continuous_point_source: public source {
     public:
         continuous_point_source(std::vector<int> p, double f);

@@ -17,7 +17,7 @@ This is useful for data of fixed size being written to repeatedly.
 #include <map>
 #include "matrix.h"
 
-namespace apine {
+namespace qbox {
 
     //*** Rule of Three
     class node {

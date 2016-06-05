@@ -4,7 +4,7 @@
 #include <vector>
 #include "source.h"
 
-namespace apine {
+namespace qbox {
     class continuous_line_source: public source {
     public:
         std::vector<int> p1, p2;

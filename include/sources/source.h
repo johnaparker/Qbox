@@ -13,7 +13,7 @@
 //*** Point source = line source default with one point?
 
 
-namespace apine {
+namespace qbox {
 
     class Field2D;
 

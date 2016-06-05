@@ -10,7 +10,7 @@ using namespace std;
 
 //best way to implement this into sources. 
 
-namespace apine {
+namespace qbox {
 
     tfsf::tfsf(grid_properties grid, double dt) {
         ia = grid.p1[0];

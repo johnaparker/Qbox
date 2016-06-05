@@ -18,3 +18,11 @@ Solve the pause at the end of the program (problem caused by H5)
 Follow Rule: 1 Class per CPP file, 1 header file per CPP file
     (also change .h for .hpp)
 
+
+Eliminate unnecessary includes 
+Replace using namespace std; with indivisual usings
+
+Separte classes in:
+    field1.h
+    field2.h
+    h5out.h (and maybe move this into its own library, along with matrix)

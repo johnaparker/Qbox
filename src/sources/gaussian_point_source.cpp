@@ -5,7 +5,7 @@
 
 using namespace std;
 
-namespace apine {
+namespace qbox {
 
     gaussian_point_source::gaussian_point_source(vector<int> p, double T0, double sig):
         p(p), T0(T0), sig(sig) {};

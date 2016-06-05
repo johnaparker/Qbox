@@ -4,7 +4,7 @@
 #include <vector>
 #include "source.h"
 
-namespace apine {
+namespace qbox {
     class custom_point_source: public source {
     public:
         std::vector<int> p;

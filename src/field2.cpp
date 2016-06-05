@@ -16,7 +16,7 @@
 
 using namespace std;
 
-namespace apine {
+namespace qbox {
 
     Field2D::Field2D(grid_properties grid): grid(grid), Nx(grid.Nx), Ny(grid.Ny), dx(grid.dx), Lx(grid.Lx), Ly(grid.Ly) {
         t = 1;

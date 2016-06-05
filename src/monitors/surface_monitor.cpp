@@ -10,7 +10,7 @@
 using namespace std;
 
 
-namespace apine {
+namespace qbox {
     surface_monitor::surface_monitor(string name, vector<int> p1, vector<int> p2, shared_ptr<freq_data> freq, int N): monitor(name,freq,N), p1(p1), p2(p2), dir(0), length(0) {
         F = nullptr;
         prevE = nullptr;

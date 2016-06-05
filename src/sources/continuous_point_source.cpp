@@ -5,7 +5,7 @@
 
 using namespace std;
 
-namespace apine {
+namespace qbox {
 
     continuous_point_source::continuous_point_source(vector<int> p, double freq): p(p), freq(freq) {};
 

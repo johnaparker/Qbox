@@ -1,4 +1,4 @@
-Apine
+Qbox
 ==============
 
 
@@ -6,4 +6,4 @@ Apine
 
 License
 --------------
-Apine is licensed under the terms of the MIT license.
+Qbox is licensed under the terms of the MIT license.

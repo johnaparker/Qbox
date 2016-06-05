@@ -4,7 +4,7 @@
 
 using namespace std;
 
-namespace apine {
+namespace qbox {
 
     rectangle::rectangle(vector<double> pa, vector<double> pb): pa(pa), pb(pb) {};
 

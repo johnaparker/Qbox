@@ -10,7 +10,7 @@ using namespace std;
 //consider changing it to "grid.add_pml(thickness)"
 //Perhaphs allow pml of varying thickness on each side.
 
-namespace apine {
+namespace qbox {
 
     double compute_pml_val(double d, int thickness, double alpha) {
         return alpha*pow((d+1)/thickness,3);

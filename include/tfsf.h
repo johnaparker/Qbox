@@ -1,7 +1,7 @@
 #ifndef GUARD_tfsf_h
 #define GUARD_tfsf_h
 
-namespace apine {
+namespace qbox {
 
     class Field1D;
     class Field2D;

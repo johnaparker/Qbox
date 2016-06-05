@@ -4,7 +4,7 @@
 #include <vector>
 #include "object.h"
 
-namespace apine {
+namespace qbox {
 
     //cylinder object
     class cylinder: public object {

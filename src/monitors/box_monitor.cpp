@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace apine {
+namespace qbox {
     box_monitor::box_monitor(string name, vector<int> p1, vector<int> p2, shared_ptr<freq_data> freq_in, int N):
                     monitor(name, freq_in, N) {
         

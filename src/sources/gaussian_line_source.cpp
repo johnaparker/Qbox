@@ -5,7 +5,7 @@
 
 using namespace std;
 
-namespace apine {
+namespace qbox {
 
     gaussian_line_source::gaussian_line_source(vector<int> p1, vector<int> p2, double T0, double sig):
         p1(p1), p2(p2),T0(T0), sig(sig) {};

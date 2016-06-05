@@ -4,7 +4,7 @@
 
 using namespace std;
 
-namespace apine {
+namespace qbox {
 
     freq_data::freq_data(): t(0), freq(nullptr), cosf(nullptr), sinf(nullptr), N(0) {}
 

@@ -12,7 +12,7 @@ using namespace std;
 
 
 
-namespace apine {
+namespace qbox {
 
     void monitor::set_freq(shared_ptr<freq_data> new_freq) {
         //freq = unique_ptr<double[]> (new double(*new_freq));

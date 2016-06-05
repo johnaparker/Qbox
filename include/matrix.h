@@ -13,7 +13,7 @@ Data can be accessed using M[x][y]
 
 //this should be benchmarked
 
-namespace apine {
+namespace qbox {
 
     template <class T>
     class matrix {

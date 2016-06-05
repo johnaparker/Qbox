@@ -6,7 +6,7 @@
 using namespace std;
 using namespace H5;
 
-namespace apine {
+namespace qbox {
 
     node::node(H5std_string name, H5File & head, vector<hsize_t> size, bool extendable):
                                                       name(name), extendable(extendable) {

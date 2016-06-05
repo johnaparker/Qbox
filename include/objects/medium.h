@@ -4,7 +4,7 @@
 #include <vector>
 #include "object.h"
 
-namespace apine {
+namespace qbox {
     //medium object: special object for background medium
     class medium: public object {
     public:

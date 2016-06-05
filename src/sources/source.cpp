@@ -17,7 +17,7 @@ using namespace std;
 //Allow amplitude specfications; allow gradual turn on for sine
 //For Gaussian, get rid of T0, in favor of starting it at specified time
 
-namespace apine {
+namespace qbox {
 
     source::source() {
         F = nullptr;

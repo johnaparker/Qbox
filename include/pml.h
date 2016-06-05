@@ -3,7 +3,7 @@
 
 #include "matrix.h"
 
-namespace apine {
+namespace qbox {
     class grid_properties;
 
     //PML boundary object

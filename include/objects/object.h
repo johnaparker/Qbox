@@ -3,7 +3,7 @@
 
 #include <vector>
 
-namespace apine {
+namespace qbox {
     //object base class
     class object {
     public:

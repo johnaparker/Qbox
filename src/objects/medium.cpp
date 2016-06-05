@@ -4,7 +4,7 @@
 
 using namespace std;
 
-namespace apine {
+namespace qbox {
     medium::medium() {};
 
     bool medium::inside(vector<int> p) {

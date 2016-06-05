@@ -4,7 +4,7 @@
 #include <vector>
 #include "source.h"
 
-namespace apine {
+namespace qbox {
     class gaussian_point_source: public source {
     public:
         gaussian_point_source(std::vector<int> p, double T0, double sig);

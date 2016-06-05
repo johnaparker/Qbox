@@ -5,7 +5,7 @@
 
 using namespace std;
 
-namespace apine {
+namespace qbox {
 
     custom_point_source::custom_point_source(vector<int> p, double (*time_func)(double)):
         p(p), time_func(time_func) {};

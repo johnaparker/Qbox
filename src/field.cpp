@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace apine {
+namespace qbox {
     Field1D::Field1D(int  Nx, double dx, double dt): Nx(Nx), dx(dx), dt(dt) {
         L = dx*Nx;
         t = 0;

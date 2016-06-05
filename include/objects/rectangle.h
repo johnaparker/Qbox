@@ -4,7 +4,7 @@
 #include <vector>
 #include "object.h"
 
-namespace apine {
+namespace qbox {
     //rectangle object
     class rectangle: public object {
     public:

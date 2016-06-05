@@ -8,7 +8,7 @@
 #include "monitor.h"
 #include "surface_monitor.h"
 
-namespace apine {
+namespace qbox {
 
     class Field2D;
 

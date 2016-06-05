@@ -5,7 +5,7 @@
 
 using namespace std;
 
-namespace apine {
+namespace qbox {
 
     continuous_line_source::continuous_line_source(vector<int> p1, vector<int> p2, double freq): p1(p1), p2(p2), freq(freq) {};
 

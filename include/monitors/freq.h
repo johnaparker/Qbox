@@ -1,7 +1,7 @@
 #ifndef GUARD_freq_h
 #define GUARD_freq_h
 
-namespace apine {
+namespace qbox {
 
     class Field2D;
 
