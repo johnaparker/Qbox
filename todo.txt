@@ -20,9 +20,12 @@ Follow Rule: 1 Class per CPP file, 1 header file per CPP file
 
 
 Eliminate unnecessary includes 
+    a) May be possible to move them from .h into .cpp, and simply forward declare in .h
 Replace using namespace std; with indivisual usings
 
 Separte classes in:
     field1.h
     field2.h
     h5out.h (and maybe move this into its own library, along with matrix)
+
+

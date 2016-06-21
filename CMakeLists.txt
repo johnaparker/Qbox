@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.5.2)
 project(Qbox)
 set(CMAKE_BUILD_TYPE Release)
+enable_testing()
  
 #Compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -22,7 +23,7 @@ add_library(qbox SHARED ${SOURCES})
 #Build executable
 set (PROJECT_LINK_LIBS libqbox.so hdf5_cpp)
 link_directories( build )
-add_executable(emag main.cc)
+add_executable(emag tests/main.cpp)
 target_link_libraries(emag ${PROJECT_LINK_LIBS} )
 
 #Set the location for library installation
@@ -33,3 +34,7 @@ install(FILES ${OBJECTS_HEADERS} DESTINATION include/qbox/objects)
 install(FILES ${SOURCES_HEADERS} DESTINATION include/qbox/sources)
 install(FILES include/qbox.h DESTINATION include)
 
+#Tests
+add_executable(simple tests/simple.cpp)
+target_link_libraries(simple ${PROJECT_LINK_LIBS} )
+add_test(SimpleRun emag)

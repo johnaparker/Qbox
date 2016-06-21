@@ -64,12 +64,14 @@ namespace qbox {
     }
 
     void swap(freq_data& first, freq_data& second) {
-        std::swap(first.freq, second.freq); 
-        std::swap(first.sinf, second.sinf); 
-        std::swap(first.cosf, second.cosf); 
+        using std::swap;
 
-        std::swap(first.N, second.N); 
-        std::swap(first.t, second.t); 
+        swap(first.freq, second.freq); 
+        swap(first.sinf, second.sinf); 
+        swap(first.cosf, second.cosf); 
+
+        swap(first.N, second.N); 
+        swap(first.t, second.t); 
     }
 
     freq_data& freq_data::operator= (freq_data rhs) {
