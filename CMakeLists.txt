@@ -11,6 +11,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
 find_library(h5_lib hdf5_cpp)
 if(NOT h5_lib)
     message(FATAL_ERROR "hdf5 library not found")
+else()
+    message(STATUS "hdf5 library found")
 endif()
 
 #Include the headers
@@ -27,7 +29,7 @@ file(GLOB SOURCES_HEADERS "include/sources/*.h")
 add_library(qbox SHARED ${SOURCES})
  
 #Build executable
-set (PROJECT_LINK_LIBS libqbox.so ${h5_lib})
+set (PROJECT_LINK_LIBS qbox ${h5_lib})
 link_directories( build )
 add_executable(emag tests/main.cpp)
 target_link_libraries(emag ${PROJECT_LINK_LIBS} )
