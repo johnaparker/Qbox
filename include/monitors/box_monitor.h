@@ -30,7 +30,7 @@ namespace qbox {
         void set_freq(std::shared_ptr<freq_data> new_freq);
         void set_F(Field2D *newF);
         void update();
-        void compute_flux(double *S);
+        std::unique_ptr<double[]> compute_flux() const;
         void write(std::string filename, bool extendable = false);
 
         void write_sides(std::string filename, bool extendable = false);  //call write for all surface_monitors

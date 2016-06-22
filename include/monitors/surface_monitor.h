@@ -33,7 +33,7 @@ namespace qbox {
         void update();   //update the DFT matrices
         void set_F(Field2D *newF);    //set ownership
         //*** smart pointer here for S probably
-        void compute_flux(double *S); //compute flux though face
+        std::unique_ptr<double[]> compute_flux() const; //compute flux though face
         //*** should be through IO class. See field2.h
         void write(std::string filename, bool extendable = false);   //write to filename. Extendable=True means to append, and not overwrite
 

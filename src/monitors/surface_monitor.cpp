@@ -94,7 +94,8 @@ namespace qbox {
         prevE[length] = F->Ez[a][b];
     }
 
-    void surface_monitor::compute_flux(double *S) {
+    unique_ptr<double[]> surface_monitor::compute_flux() const {
+        auto S = make_unique<double[]>(N);
         for (int i = 0; i != N; i++) 
             S[i] = 0;
 
@@ -104,13 +105,12 @@ namespace qbox {
             }
             S[j] *= F->dx;
         }
+        return S;
     }
 
     void surface_monitor::write(string filename, bool extendable) {
-        double *S = new double[N];
-        compute_flux(S);
-        F->write_monitor(filename, name, S, N, extendable); 
-        delete[] S;
+        auto S = compute_flux();
+        F->write_monitor(filename, name, S.get(), N, extendable); 
     }
 }
 

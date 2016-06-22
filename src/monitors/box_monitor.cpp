@@ -49,28 +49,24 @@ namespace qbox {
             monitors[i].update();
     }
 
-    void box_monitor::compute_flux(double *S) {
+    unique_ptr<double[]> box_monitor::compute_flux() const {
         double sign_values[] = {1, 1, -1, -1};
-        double *Sm = new double[N];
+        auto S = make_unique<double[]>(N);
         for (int i = 0; i != N; i++) {
             S[i] = 0;
-            Sm[i] = 0;
         }
 
         for (int i = 0; i != 4; i++) {
-            monitors[i].compute_flux(Sm);
+            auto Sm = monitors[i].compute_flux();
             for (int j = 0; j != N; j++)
                 S[j] += sign_values[i]*Sm[j];
         }
-        delete[] Sm;
+        return S;
     }
 
     void box_monitor::write(string filename, bool extendable) {
-        //*** S needs to be a smart pointer
-        double *S = new double[N];
-        compute_flux(S);
-        F->write_monitor(filename, name, S, N, extendable); 
-        delete[] S;
+        auto S = compute_flux();
+        F->write_monitor(filename, name, S.get(), N, extendable); 
     }
 
     void box_monitor::write_sides(string filename, bool extendable) {

@@ -35,17 +35,17 @@ namespace qbox {
             //}
         };
 
-        T* operator[](int index) {return mData.get()+index*Ny;}
+        T* operator[](int index) const{return mData.get()+index*Ny;}
 
         T get(int i, int j) const{return mData.get()[i*Ny+j];}
 
         T* data() {
             return mData.get();
         }
-        int get_Nx() {
+        int get_Nx() const {
             return Nx;
         }
-        int get_Ny() {
+        int get_Ny() const {
             return Ny;
         }
 
