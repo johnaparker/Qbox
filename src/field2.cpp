@@ -61,14 +61,14 @@ namespace qbox {
     }
 
     void Field2D::write(string filename, const string nodename) {
+        clocks.start("HDF5 Output");
         if (outFiles.count(filename) == 0)
             outFiles[filename] = h5out(filename);
         if (!outFiles[filename].contains(nodename))
             outFiles[filename].create_node(nodename, {Nx,Ny});
         if (field_components.count(nodename))
             outFiles[filename].write_to_node(nodename, *field_components[nodename]);
-        cout << "Step: " << tStep << '\r';
-        cout.flush();
+        clocks.stop("HDF5 Output");
     }
 
     void Field2D::writeE(string filename) {
@@ -81,11 +81,13 @@ namespace qbox {
     }
 
     void Field2D::write_monitor(string filename, string nodename, double* data, int N, bool extendable) {
+        clocks.start("HDF5 Output");
         if (outFiles.count(filename) == 0)
             outFiles[filename] = h5out(filename);
         if (!outFiles[filename].contains(nodename))
             outFiles[filename].create_node(nodename, {N}, extendable);
         outFiles[filename].write_to_node(nodename, data);
+        clocks.start("HDF5 Output");
     }
 
     void Field2D::display_info() {
@@ -100,7 +102,7 @@ namespace qbox {
         tStep += 1;
         t += dt;
         
-
+        clocks.start("Time Stepping");
         for (int i=1; i<Nx-1; i++) {
             for (int j=1; j<Ny-1; j++) {
                 Dz[i][j] = BC->gi3[i]*BC->gj3[j]*Dz[i][j] + 
@@ -121,11 +123,16 @@ namespace qbox {
         for (const auto &s : source_list) {
             s->pulse();
         } 
+        clocks.stop("Time Stepping");
+
+        clocks.start("Fourier Transforming");
         for (const auto &m : monitor_list) {
             m->update();
         }
+        clocks.stop("Fourier Transforming");
 
 
+        clocks.start("Time Stepping");
         //this can possibly be moved to the previous if statement
         if (total) 
             total->pulse();
@@ -144,6 +151,7 @@ namespace qbox {
 
         if (total) 
             total->updateH(this);
+        clocks.stop("Time Stepping");
         
     }
 

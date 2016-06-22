@@ -1,13 +1,10 @@
 #include <qbox.h>
 #include <iostream>
-#include <chrono>
-#include <ctime>
 
 using namespace std;
 using namespace qbox;
 
 int main() {
-    chrono::time_point<chrono::system_clock> start, end;
     int pml_thickness = 12;
     int res = 2;
 
@@ -31,16 +28,10 @@ int main() {
     //continuous_point_source s1({60,72}, 1/20);
     test.add_source(s1);
 
-    start = chrono::system_clock::now();
-    for (int i = 0; i != 10; i++) {
+    for (int i = 0; i != 1000; i++) {
         test.update();
         test.writeE("out.h5");
     }
-    end = chrono::system_clock::now();
-    chrono::duration<double> elapsed_seconds = end-start;
     m1.write("out.h5", false);
     m1.write_sides("out.h5", true);
-
-    cout << "Time of Loop: " << elapsed_seconds.count() << "s" << endl;
-
 }

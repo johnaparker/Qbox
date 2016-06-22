@@ -17,6 +17,7 @@
 #include "pml.h"
 #include "tfsf.h"
 #include "h5out.h"
+#include "timer.h"
 
 
 
@@ -108,6 +109,7 @@ namespace qbox {
         //*** Enum here? 
         //map of field names to matrix pointer data
         std::map<std::string, matrix<double>* > field_components;
+        timers clocks;
     };   
 }
 
