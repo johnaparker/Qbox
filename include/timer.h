@@ -4,6 +4,10 @@
 #include <string>
 
 namespace qbox {
+    enum class clock_name {
+        fourier,looping,hdf5
+    };
+
 
     class timer {
     public:
@@ -21,11 +25,13 @@ namespace qbox {
     public:
         timers();
         ~timers();
-        void start(std::string);
-        void stop(std::string);
+        void start(clock_name);
+        void stop(clock_name);
         void display() const;
+    private:
+        std::string clock_string_name(clock_name name) const;
 
     private:
-        std::map<std::string, timer> time_map;
+        std::map<clock_name, timer> time_map;
     };
 }

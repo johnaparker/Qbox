@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5.2)
 project(Qbox)
-set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Debug)
 enable_testing()
  
 #Compiler flags
