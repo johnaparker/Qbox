@@ -10,8 +10,8 @@ namespace qbox {
     class cylinder: public object {
     public:
         cylinder(double x, double y, double r);
-        bool inside(std::vector<int> p);
-    public:
+        bool inside(std::vector<int> p) const override;
+    private:
         //*** should be vec
         double x,y,r;   //x,y position and radius r
     };

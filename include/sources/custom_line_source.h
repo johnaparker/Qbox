@@ -7,11 +7,11 @@
 namespace qbox {
     class custom_line_source: public source {
     public:
-        std::vector<int> p1, p2;
-        double (*time_func)(double);
-    public:
         custom_line_source(std::vector<int> p1, std::vector<int> p2, double (*time_func)(double));
         void pulse();
+    private:
+        std::vector<int> p1, p2;
+        double (*time_func)(double);
     };
 }
 

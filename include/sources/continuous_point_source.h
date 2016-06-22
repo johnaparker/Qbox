@@ -9,7 +9,7 @@ namespace qbox {
     public:
         continuous_point_source(std::vector<int> p, double f);
         void pulse();
-    public:
+    private:
         std::vector<int> p;    //vector position
         double freq;           //frequency
     };

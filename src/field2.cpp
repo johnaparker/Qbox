@@ -31,7 +31,8 @@ namespace qbox {
         cb = matrix<double>(Nx, Ny);
 
         obj  = matrix<object*>(Nx, Ny); 
-        obj_list = {new medium()};
+        background = make_unique<medium>();
+        obj_list = {background.get()};
         
         for (int i = 0; i != Nx; i++) {
             for (int j = 0; j != Ny; j++) {
@@ -48,10 +49,10 @@ namespace qbox {
              }
         }
 
-        BC = pml(grid); 
+        BC = make_unique<pml>(grid); 
 
         if (grid.totalFieldScatteredField) 
-            total = new tfsf(grid, dt);
+            total = make_unique<tfsf>(grid, dt);
         else
             total = nullptr;
         field_components = {{"Ez", &Ez}, {"Hx", &Hx}, {"Hy", &Hy}};
@@ -102,8 +103,8 @@ namespace qbox {
 
         for (int i=1; i<Nx-1; i++) {
             for (int j=1; j<Ny-1; j++) {
-                Dz[i][j] = BC.gi3[i]*BC.gj3[j]*Dz[i][j] + 
-                    BC.gi2[i]*BC.gj2[j]*0.5*(Hy[i][j]-Hy[i-1][j] - Hx[i][j]+Hx[i][j-1]);
+                Dz[i][j] = BC->gi3[i]*BC->gj3[j]*Dz[i][j] + 
+                    BC->gi2[i]*BC->gj2[j]*0.5*(Hy[i][j]-Hy[i-1][j] - Hx[i][j]+Hx[i][j-1]);
              }
         }
 
@@ -132,12 +133,12 @@ namespace qbox {
         for (int i=1; i<Nx-1; i++) {
             for (int j=1; j<Ny-1; j++) {
                 double curl_e = Ez[i+1][j] - Ez[i][j];
-                BC.Ihy[i][j] += curl_e;
-                Hy[i][j] = BC.fi3[i]*Hy[i][j] + BC.fi2[i]*0.5*curl_e + BC.fj1[j]*BC.Ihy[i][j];
+                BC->Ihy[i][j] += curl_e;
+                Hy[i][j] = BC->fi3[i]*Hy[i][j] + BC->fi2[i]*0.5*curl_e + BC->fj1[j]*BC->Ihy[i][j];
                 
                 curl_e = Ez[i][j] - Ez[i][j+1];
-                BC.Ihx[i][j] += curl_e;
-                Hx[i][j] = BC.fj3[j]*Hx[i][j] + BC.fj2[j]*0.5*curl_e + BC.fi1[i]*BC.Ihx[i][j];
+                BC->Ihx[i][j] += curl_e;
+                Hx[i][j] = BC->fj3[j]*Hx[i][j] + BC->fj2[j]*0.5*curl_e + BC->fi1[i]*BC->Ihx[i][j];
             }
         }
 

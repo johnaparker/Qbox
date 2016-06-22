@@ -28,4 +28,7 @@ Separte classes in:
     field2.h
     h5out.h (and maybe move this into its own library, along with matrix)
 
+Data members need to be made private and/or protected
+    When doing so, consider design choices in regards to get/set functions
 
+Create time class to time different things

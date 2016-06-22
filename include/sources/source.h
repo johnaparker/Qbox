@@ -12,6 +12,8 @@
 
 //*** Point source = line source default with one point?
 
+//***the virtual function should be an amplitude call, pulse should be
+//   non-virtual, and *F should be private
 
 namespace qbox {
 
@@ -22,9 +24,9 @@ namespace qbox {
     public:
         source();
         void set_F(Field2D *F);   //set field ownership
-        virtual void pulse() {};  //add the source to the fields
+        virtual void pulse() = 0;  //add the source to the fields
 
-    public:
+    protected:
         Field2D *F;    //field owner reference
         double *t;     //current time (from F)
     };

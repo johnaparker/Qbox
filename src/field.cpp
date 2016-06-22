@@ -40,7 +40,8 @@ namespace qbox {
         pml.right[0] = 0;
         pml.right[1] = 0;
 
-        delete[] eps,conduc;
+        delete[] eps;
+        delete[] conduc;
 
         outE.open("Eout.dat", ios::binary);
         outH.open("Hout.dat", ios::binary);
@@ -61,7 +62,7 @@ namespace qbox {
     void Field1D::pulse(double f) {
         static double T = 1e-7;
         static double sig = 1e-8;
-        double p = exp(-0.5*(pow((t-T)/sig,2)));
+        double p = f*exp(-0.5*(pow((t-T)/sig,2)));
         //double p = sin(2*M_PI*f*t);
         Dz[10] += p;
     }

@@ -12,7 +12,7 @@ namespace qbox {
                                                       name(name), extendable(extendable) {
         rank = size.size();
         double fill_value = 0;
-        dims = new hsize_t[rank];
+        dims = make_unique<hsize_t[]>(rank);
         hsize_t *maxdims = new hsize_t[rank];
         hsize_t *chunk_dims = new hsize_t[rank];
         for (int i = 0; i != rank; i++) {
@@ -27,7 +27,7 @@ namespace qbox {
         cparms.setChunk(rank, chunk_dims);
         cparms.setFillValue(PredType::NATIVE_DOUBLE, &fill_value);
         
-        dataspace = DataSpace(rank, dims, maxdims);
+        dataspace = DataSpace(rank, dims.get(), maxdims);
         selected = dataspace;
         dataset = head.createDataSet(name, PredType::NATIVE_DOUBLE, dataspace, cparms);
 
@@ -38,7 +38,7 @@ namespace qbox {
     void node::extend(int amount) {
         if (extendable) {
             dims[rank-1] += amount;
-            dataset.extend(dims);
+            dataset.extend(dims.get());
         }
     }
 
@@ -78,8 +78,7 @@ namespace qbox {
         vector<hsize_t> dsize;
         for (auto const & s: size)
             dsize.push_back((long long unsigned int) s);
-        node newNode(node_name, outFile, dsize, extendable);
-        nodes[node_name] = newNode;
+        nodes[node_name] = node(node_name, outFile, dsize, extendable);
         first_write[node_name] = true;
     }
 

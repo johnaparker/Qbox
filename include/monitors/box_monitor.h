@@ -35,7 +35,7 @@ namespace qbox {
 
         void write_sides(std::string filename, bool extendable = false);  //call write for all surface_monitors
 
-    public:
+    private:
         surface_monitor monitors[4];    //4 surface monitors
     };
 }

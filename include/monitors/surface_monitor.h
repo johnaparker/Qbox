@@ -37,7 +37,7 @@ namespace qbox {
         //*** should be through IO class. See field2.h
         void write(std::string filename, bool extendable = false);   //write to filename. Extendable=True means to append, and not overwrite
 
-    public:
+    private:
         std::vector<int> p1g, p2g;        //grid points corners
         std::vector<int> p1, p2;          //physical corners
         matrix<double> rE, iE, rH, iH;    //DFT matrices

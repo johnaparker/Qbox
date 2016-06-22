@@ -66,6 +66,7 @@ namespace qbox {
     }
 
     void box_monitor::write(string filename, bool extendable) {
+        //*** S needs to be a smart pointer
         double *S = new double[N];
         compute_flux(S);
         F->write_monitor(filename, name, S, N, extendable); 

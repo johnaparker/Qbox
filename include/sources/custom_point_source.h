@@ -7,11 +7,11 @@
 namespace qbox {
     class custom_point_source: public source {
     public:
-        std::vector<int> p;
-        double (*time_func)(double);
-    public:
         custom_point_source(std::vector<int> p, double (*time_func)(double));
         void pulse();
+    private:
+        std::vector<int> p;
+        double (*time_func)(double);
     };
 }
 

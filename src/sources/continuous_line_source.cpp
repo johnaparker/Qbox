@@ -13,7 +13,7 @@ namespace qbox {
         static vector<int> p1i = (F->grid).convertToGrid(p1);
         static vector<int> p2i = (F->grid).convertToGrid(p2);
 
-        int start, end;
+        int start = 0, end = 0;
         bool vertical = false;
         if (p1i[0] == p2i[0]) {
             start = p1i[1];

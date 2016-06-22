@@ -31,10 +31,10 @@ namespace qbox {
         double get_sinf(int i) {return sinf[i];}
 
     private:
-        double *freq;  //freq array
-        double *cosf, *sinf;  //sin(ft), cos(ft) array
         int N;   //size of arrays
         double t;   //current time
+        double *freq;  //freq array
+        double *cosf, *sinf;  //sin(ft), cos(ft) array
     };
 }
 

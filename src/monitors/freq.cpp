@@ -6,27 +6,8 @@ using namespace std;
 
 namespace qbox {
 
-    freq_data::freq_data(): t(0), freq(nullptr), cosf(nullptr), sinf(nullptr), N(0) {}
+    freq_data::freq_data(): N(0), t(0), freq(nullptr), cosf(nullptr), sinf(nullptr) {}
 
-    freq_data::freq_data(double f): N(N), t(0) {
-        freq = new double[1];
-        cosf = new double[1];
-        sinf = new double[1];
-        freq[0] = f;
-        cosf[0] = 1;
-        sinf[0] = 0;
-    }
-
-    freq_data::freq_data(double fmin, double fmax, int N): N(N), t(0) {
-        freq = new double[N];
-        cosf = new double[N];
-        sinf = new double[N];
-        for (int i = 0; i != N; i ++) {
-            freq[i] = fmin + (fmax-fmin)/(N-1.0)*i;
-            cosf[i] = 1;
-            sinf[i] = 1;
-        }
-    }
 
     freq_data::freq_data(double* freq_in, int N): N(N), t(0) {
         freq = new double[N];
@@ -38,6 +19,20 @@ namespace qbox {
             sinf[i] = 0;
         }
     }
+
+    freq_data::freq_data(double fmin, double fmax, int N): N(N), t(0) {
+        freq = new double[N];
+        cosf = new double[N];
+        sinf = new double[N];
+        double d_freq = (fmax-fmin)/(N-1) ? N != 1 : 0;
+        for (int i = 0; i != N; i ++) {
+            freq[i] = fmin + d_freq*i;
+            cosf[i] = 1;
+            sinf[i] = 0;
+        }
+    }
+
+    freq_data::freq_data(double f): freq_data(f,f,1) {}
 
     freq_data::~freq_data() {
         delete[] freq;
@@ -109,6 +104,7 @@ namespace qbox {
             rhs.sinf = nullptr;
             rhs.cosf = nullptr;
         }
+        return *this;
     }
 
     void freq_data::update(double tnew) {

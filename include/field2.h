@@ -8,6 +8,7 @@
 #include <fstream>
 #include <string>
 #include <map>
+#include <memory>
 #include "matrix.h"
 #include "sources/source.h"
 #include "objects/object.h"
@@ -29,6 +30,7 @@ namespace qbox {
     class grid_properties {
     public:
         grid_properties(int Lx, int Ly, int res, int pml_thickness);
+        grid_properties() = default;
 
         //functions to set TFSF
         void set_tfsf(std::vector<int> p1_val, std::vector<int> p2_val);  //direct corner specification
@@ -41,15 +43,14 @@ namespace qbox {
         std::vector<int> convertToReal(std::vector<int> pi);    //take grid pi into real
 
     public:
-        int Nx, Ny;          //Number of grid cells in x,y direction
-        int Lx, Ly;          //Actual length in x,y direction
-        int res;             //grid resolution (points per 1 Lx unit); Nx = Lx*res
-        double dx;           //Actual length between grid points; dx = 1/res, Nx*dx = Lx
-        int pml_thickness;   //The thickness of the pml in # of grid cells
-        
-        //*** This should be a separate (boundary) class, and p1,p2 should volumes
         bool totalFieldScatteredField;      //True if TFSF is in use
+        int Lx, Ly;          //Actual length in x,y direction
+        int Nx, Ny;          //Number of grid cells in x,y direction
+        double dx;           //Actual length between grid points; dx = 1/res, Nx*dx = Lx
+        int res;             //grid resolution (points per 1 Lx unit); Nx = Lx*res
+        int pml_thickness;   //The thickness of the pml in # of grid cells
         std::vector<int> p1, p2;            //Vector positions of TFSF corners 
+        //*** This should be a separate (boundary) class, and p1,p2 should volumes
     };
 
 
@@ -75,11 +76,12 @@ namespace qbox {
 
     public:
         //Grid properties (some reduntant)
-        double mu;             //Permeability constant everywhere
-        double dx,Lx,Ly;       //Physical lengths
-        int Nx,Ny;             //# of cells
-        int tStep;             //Current time step (starts at 0)
         grid_properties grid;  //grid object
+        int Nx,Ny;             //# of cells
+        double dx,Lx,Ly;       //Physical lengths
+        int tStep;             //Current time step (starts at 0)
+
+        double mu;             //Permeability constant everywhere
 
         //2D matrices defined everwhere. These make up the dominant memory usage
         matrix<double> Ez,Dz,Hx,Hy,Iz,ca,cb;  //Fields + auxillary fields
@@ -90,12 +92,14 @@ namespace qbox {
         std::vector<source*> source_list;
         std::vector<monitor*> monitor_list;
 
+        std::unique_ptr<medium> background;
+
         //Physical timestep, time
         double dt,t;
 
         //PML + TFSF
-        pml BC;
-        tfsf *total;   //This is nullptr if not in use
+        std::unique_ptr<pml> BC;
+        std::unique_ptr<tfsf> total;   //This is nullptr if not in use
 
         //*** Should be different class to manage IO
         //map of all HDF5 output files

@@ -24,15 +24,11 @@ namespace qbox {
             Ny = 1;
         }
 
-         
-        matrix(const matrix&) = default;
         matrix(matrix&&) = default;
-        matrix& operator=(const matrix&) = default;
         matrix& operator=(matrix&&) = default;
 
-
         matrix(int Nx,int Ny): Nx(Nx), Ny(Ny) {
-            mData = std::shared_ptr<T> (new T[Nx*Ny]);
+            mData = std::make_unique<T[]>(Nx*Ny);
             //for (int i = 0; i != Nx; i++) {
                 //for (int j = 0; j != Ny; j++)
                     //(*this)[i][j] = 0;
@@ -53,8 +49,8 @@ namespace qbox {
             return Ny;
         }
 
-    public:
-        std::shared_ptr<T> mData;
+    private:
+        std::unique_ptr<T[]> mData;
         int Nx,Ny;
     };
 }

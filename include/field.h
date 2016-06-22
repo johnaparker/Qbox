@@ -15,22 +15,24 @@ namespace qbox {
 
     class Field1D {
     public:
-        double mu;
-        double dx,L;
-        int Nx,tStep;
-
-        double *Ez,*Dz,*Hx,*Iz,*ca,*cb;
-        double dt,t;
-        pmlBoundary pml;
-
-        std::ofstream outE,outH;
-    public:
         Field1D(int Nx, double dl, double dt);
         void write();
         void display_info();
         void pulse(double f);
         void update();
         void run(double time);    
+
+    public:
+        int Nx,tStep;
+        double dx,L;
+        double dt,t;
+
+        double mu;
+
+        double *Ez,*Dz,*Hx,*Iz,*ca,*cb;
+        pmlBoundary pml;
+
+        std::ofstream outE,outH;
 
     };   
 }

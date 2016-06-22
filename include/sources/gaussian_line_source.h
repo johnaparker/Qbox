@@ -7,11 +7,11 @@
 namespace qbox {
     class gaussian_line_source: public source {
     public:
-        std::vector<int> p1, p2;
-        double T0, sig;
-    public:
         gaussian_line_source(std::vector<int> p1, std::vector<int> p2, double T0, double sig);
         void pulse();
+    private:
+        std::vector<int> p1, p2;
+        double T0, sig;
     };
 }
 

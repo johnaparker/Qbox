@@ -9,8 +9,8 @@ namespace qbox {
     class rectangle: public object {
     public:
         rectangle(std::vector<double> pa, std::vector<double> pb);
-        bool inside(std::vector<int> p);
-    public:
+        bool inside(std::vector<int> p) const override;
+    private:
         //*** should be volume
         std::vector<double> pa, pb;   //vector corners
     };

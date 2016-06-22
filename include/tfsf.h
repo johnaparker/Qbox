@@ -20,7 +20,7 @@ namespace qbox {
         void updateD(Field2D* f);   //update the D field in 1D sim
         void updateH(Field2D* f);   //update the H field in 1D sim
 
-    public:
+    private:
        //*** Smart poiter here, and Field1D needs proper destructor
        Field1D *inc;       //A 1D field simulation to produce perfect plane wave
        int ia,ib,ja,jb;    //position  of corners

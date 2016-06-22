@@ -10,7 +10,7 @@ namespace qbox {
         object();
 
         //bool function to determine whether the vector position p is inside the object; defines the geometry
-        virtual bool inside(std::vector<int> p) {};
+        virtual bool inside(std::vector<int> p) const = 0;
 
         //set eps/conduc
         void set_eps(double e);

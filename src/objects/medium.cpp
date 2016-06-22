@@ -7,7 +7,7 @@ using namespace std;
 namespace qbox {
     medium::medium() {};
 
-    bool medium::inside(vector<int> p) {
+    bool medium::inside(vector<int>) const {
         return true;
     }
 }

@@ -9,7 +9,7 @@ namespace qbox {
     public:
         gaussian_point_source(std::vector<int> p, double T0, double sig);
         void pulse();
-    public:
+    private:
         std::vector<int> p;    //vector position
         double T0, sig;        //temporal center, width
     };

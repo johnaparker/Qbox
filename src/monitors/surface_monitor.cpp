@@ -49,15 +49,17 @@ namespace qbox {
     }
 
     void surface_monitor::update() {
-        matrix<double> *Hfield;
+        //*** this dir, Hfield combo is bad design (maybe use enum)
+        matrix<double> *Hfield = nullptr;
         if (dir == 0)
             Hfield = &F->Hx;
-        if (dir == 1)
+        else if (dir == 1)
             Hfield = &F->Hy;
 
         int a = p1g[0];
         int b = p1g[1];
-        double E, H;
+        double E = 0;
+        double H = 0;
         (*freq).update(F->t);
 
         //this if check could be done outside the for loop somehow

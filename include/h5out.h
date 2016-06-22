@@ -15,6 +15,7 @@ This is useful for data of fixed size being written to repeatedly.
 #include <H5Cpp.h>
 #include <vector>
 #include <map>
+#include <memory>
 #include "matrix.h"
 
 namespace qbox {
@@ -24,6 +25,8 @@ namespace qbox {
     public:
         node(H5std_string name, H5::H5File & head, std::vector<hsize_t> size, bool extendable = true);
         node() = default;
+        node(node&&) = default;
+        node& operator= (node&&) = default;
 
         void extend(int amount = 1);  //extend the final dimension size by amount if extendable
         void select(std::vector<hsize_t> size, std::vector<hsize_t> offset);   //select hyperslab
@@ -31,10 +34,10 @@ namespace qbox {
         void write(double *data);   //write new data (automatically extends)
         bool isExtendable();        //returns True if extendable
 
-    public:
+    private:
         H5std_string name;       //name of node
         int rank;                //rank = dimensionality
-        hsize_t *dims;           //array of size rank that contains the size of each dimension
+        std::unique_ptr<hsize_t[]> dims;           //array of size rank that contains the size of each dimension
 
         H5::DataSpace dataspace;  //I don't think this is necessary
         H5::DataSpace selected;   //The currently selected hyperslab
@@ -56,7 +59,7 @@ namespace qbox {
         void write_to_node(H5std_string node_name, matrix<double> & data);  //write matrix data
         bool contains(H5std_string node_name);     //True if node_name already exists
 
-    public:
+    private:
         H5::H5File outFile;         //HDF5 file object
         H5std_string filename;      //HDF5 filename
         std::map<H5std_string, node> nodes;    //map of node_names to nodes

@@ -9,7 +9,7 @@ namespace qbox {
     class medium: public object {
     public:
         medium();
-        bool inside(std::vector<int> p);
+        bool inside(std::vector<int> p) const override;
     };
 }
 

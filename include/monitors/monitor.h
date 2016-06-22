@@ -17,17 +17,17 @@ namespace qbox {
     //monitor base class
     class monitor {
     public:
-        monitor(std::string name, std::shared_ptr<freq_data> freq, int N): name(name), freq(freq), N(N) {};
+        monitor(std::string name, std::shared_ptr<freq_data> freq, int N): name(name), N(N), freq(freq) {};
         virtual void set_freq(std::shared_ptr<freq_data> new_freq); //set the frequencies
         //*** should probably be private:
         virtual void set_F(Field2D *newF);       //set the owning field
-        virtual void update() {};                //update the DFT values
+        virtual void update() = 0;                //update the DFT values
 
         monitor() = default;
         monitor(const monitor&) = default;
         monitor(monitor&&) = default;
         monitor& operator=(monitor&&) = default;
-    public:
+    protected:
         std::string name;    //Monitor name; to call output from main
         int N;    //Number of points in the monitor
         std::shared_ptr<freq_data> freq;    //set of frequencies to DFT at
