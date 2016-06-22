@@ -10,6 +10,8 @@ namespace qbox {
         time_map[clock_name::looping] = timer();
         time_map[clock_name::fourier] = timer();
         time_map[clock_name::hdf5] = timer();
+        time_map[clock_name::self] = timer();
+        start(clock_name::self);
     }
     
     void timers::start(clock_name name) {
@@ -30,6 +32,8 @@ namespace qbox {
         for (const auto& t: time_map) {
            double duration = t.second.duration();
            string name = clock_string_name(t.first);
+           if (t.first == clock_name::self)
+               cout << termcolor::bold;
            cout << "     ";
            cout << left << setw(name_max_width) << 
                    setfill(sep) << name;
@@ -37,10 +41,12 @@ namespace qbox {
                    setfill(sep) << setprecision(5) << 
                    setw(1) << duration;
            cout << " s" << endl;
+           cout << termcolor::reset;
         }
     }
 
     timers::~timers() {
+        stop(clock_name::self);
         display();
     }
 
@@ -49,6 +55,7 @@ namespace qbox {
             case clock_name::fourier: return "Fourier Transforming";
             case clock_name::hdf5:    return "HDF5 Output";
             case clock_name::looping: return "Time Stepping";
+            case clock_name::self: return "Total";
             default: return "Other";
         }
     }

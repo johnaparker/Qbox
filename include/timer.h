@@ -5,7 +5,7 @@
 
 namespace qbox {
     enum class clock_name {
-        fourier,looping,hdf5
+        fourier,looping,hdf5,self
     };
 
 
