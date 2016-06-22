@@ -13,6 +13,7 @@
 #include "objects/object.h"
 #include "h5out.h"
 #include "tfsf.h"
+#include "termcolor.h"
 
 using namespace std;
 
@@ -87,14 +88,22 @@ namespace qbox {
         if (!outFiles[filename].contains(nodename))
             outFiles[filename].create_node(nodename, {N}, extendable);
         outFiles[filename].write_to_node(nodename, data);
-        clocks.start(clock_name::hdf5);
+        clocks.stop(clock_name::hdf5);
     }
 
     void Field2D::display_info() {
-        cout << setw(10) << "dx:" << dx << " m" << endl;
-        cout << setw(10) << "Lx:" << dx*Nx << " m" << endl;
-        cout << setw(10) << "Ly:" << dx*Ny << " m" << endl;
-        cout << setw(10) << "dt:" << dt << " s" << endl;
+        const int max_spacing = 5;
+        cout << termcolor::bold << termcolor::underline << "Grid data" 
+             << termcolor::reset << endl; 
+        cout << "     " << left << setw(max_spacing) 
+             << setfill('.') << "dx" << dx << " m" << endl;
+        cout << "     " << left << setw(max_spacing) 
+             << setfill('.') << "Lx" << dx*Nx << " m" << endl;
+        cout << "     " << left << setw(max_spacing) 
+             << setfill('.') << "Ly" << dx*Ny << " m" << endl;
+        cout << "     " << left << setw(max_spacing) 
+             << setfill('.') << "dt" << dt << " s" << endl;
+        cout << endl;
     }
 
     //inside each for loop: make a call to an external function that makes the necessary update: vacuum, material, pml

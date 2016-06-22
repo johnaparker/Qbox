@@ -1,6 +1,8 @@
 #include "h5out.h"
 #include <vector>
 #include "matrix.h"
+#include <iostream>
+#include "termcolor.h"
 
 
 using namespace std;
@@ -70,6 +72,8 @@ namespace qbox {
 
     h5out::h5out(H5std_string filename): filename(filename) {
         outFile = H5File(filename, H5F_ACC_TRUNC);
+        cout << termcolor::green << termcolor::bold << "Creating HDF5 file '" <<
+                filename <<  "'" << termcolor::reset << endl;
     }
 
     void h5out::create_node(H5std_string node_name, vector<int> size, bool extendable) {

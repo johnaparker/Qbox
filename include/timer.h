@@ -2,6 +2,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <stdexcept>
 
 namespace qbox {
     enum class clock_name {
@@ -12,13 +13,24 @@ namespace qbox {
     class timer {
     public:
         timer(): duration_(0) {};
-        void begin() {start = std::chrono::system_clock::now();}
-        void end() {duration_ += std::chrono::system_clock::now() - start;}
+        void begin() {
+            if (ticking)
+                throw std::runtime_error(std::string("Cannot start a clock already ticking"));
+            start = std::chrono::system_clock::now();
+            ticking = true;
+        }
+        void end() {
+            if (!ticking)
+                throw std::runtime_error(std::string("Cannot stop a clock that isn't ticking"));
+            duration_ += std::chrono::system_clock::now() - start;
+            ticking = false;
+        }
         double duration() const{return duration_.count();}
 
     private:
         std::chrono::duration<double> duration_;
         std::chrono::time_point<std::chrono::system_clock> start;
+        bool ticking = false;
     };
 
     class timers {

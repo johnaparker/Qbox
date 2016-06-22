@@ -26,9 +26,11 @@ namespace qbox {
     void timers::display() const{
         const int name_max_width = 25;
         const char sep = '.';
+
         cout << termcolor::underline << 
              termcolor::bold << "\nTime Usage" << endl;
         cout << termcolor::reset;
+
         for (const auto& t: time_map) {
            double duration = t.second.duration();
            string name = clock_string_name(t.first);
