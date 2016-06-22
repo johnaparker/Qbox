@@ -2,15 +2,17 @@
 #define GUARD_field_h
 
 #include <vector>
+#include <array>
 #include <fstream>
+#include <memory>
 
 namespace qbox {
     const double c0 = 2.99792458e8;
     const double epsilon = 8.854e-12;
 
     struct pmlBoundary{
-        double *left = new double[2];
-        double *right = new double[2];
+        std::array<double,2> left; 
+        std::array<double,2> right; 
     };
 
     class Field1D {
@@ -29,7 +31,7 @@ namespace qbox {
 
         double mu;
 
-        double *Ez,*Dz,*Hx,*Iz,*ca,*cb;
+        std::unique_ptr<double[]> Ez,Dz,Hx,Iz,ca,cb;
         pmlBoundary pml;
 
         std::ofstream outE,outH;

@@ -15,15 +15,15 @@ namespace qbox {
         L = dx*Nx;
         t = 0;
         tStep = 0;
-        Ez = new double [Nx];
-        Hx = new double [Nx];
-        Dz = new double [Nx];
-        Iz = new double [Nx];
-        ca = new double[Nx];
-        cb = new double[Nx];
+        Ez = make_unique<double[]>(Nx);
+        Hx = make_unique<double[]>(Nx);
+        Dz = make_unique<double[]>(Nx);
+        Iz = make_unique<double[]>(Nx);
+        ca = make_unique<double[]>(Nx);
+        cb = make_unique<double[]>(Nx);
 
-        double* eps = new double [Nx];
-        double* conduc = new double [Nx];
+        auto eps = make_unique<double[]>(Nx);
+        auto conduc = make_unique<double[]>(Nx);
         
         for (int i = 0; i != Nx; i++) {
             Ez[i] = 0;
@@ -39,9 +39,6 @@ namespace qbox {
         pml.left[1] = 0;
         pml.right[0] = 0;
         pml.right[1] = 0;
-
-        delete[] eps;
-        delete[] conduc;
 
         outE.open("Eout.dat", ios::binary);
         outH.open("Hout.dat", ios::binary);

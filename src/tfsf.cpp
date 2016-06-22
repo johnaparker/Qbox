@@ -18,7 +18,7 @@ namespace qbox {
         ja = grid.p1[1];
         jb = grid.p2[1];
 
-        inc = new Field1D(grid.Ny, grid.dx, dt);
+        inc =  make_unique<Field1D>(grid.Ny, grid.dx, dt);
     }
 
     void tfsf::pulse() {
