@@ -24,7 +24,7 @@ namespace qbox {
         freq = new double[N];
         cosf = new double[N];
         sinf = new double[N];
-        double d_freq = (fmax-fmin)/(N-1) ? N != 1 : 0;
+        double d_freq = N != 1 ? (fmax-fmin)/(N-1) : 0;
         for (int i = 0; i != N; i ++) {
             freq[i] = fmin + d_freq*i;
             cosf[i] = 1;
