@@ -61,7 +61,7 @@ namespace qbox {
         select(size, offset);
     }
 
-    void node::write(double *data) {
+    void node::write(const double *data) {
         dataset.write(data, PredType::NATIVE_DOUBLE, dataspace, selected);
     }
 
@@ -92,7 +92,7 @@ namespace qbox {
         write_to_node(node_name, data); 
     }
 
-    void h5out::write_to_node(H5std_string node_name, double *data) {
+    void h5out::write_to_node(H5std_string node_name, const double *data) {
         if (!first_write[node_name])
             nodes[node_name].extend();
         else (first_write[node_name] = false);
@@ -100,7 +100,7 @@ namespace qbox {
         nodes[node_name].write(data);
     }
 
-    void h5out::write_to_node(H5std_string name, matrix<double> & data) {
+    void h5out::write_to_node(H5std_string name, const matrix<double> & data) {
         write_to_node(name, data.data());
     }
 
