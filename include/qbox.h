@@ -1,6 +1,9 @@
 #ifndef GUARD_qbox_h
 #define GUARD_qbox_h
 
+/// qbox is the global namespace for Qbox
+namespace qbox{}
+
 //main
 #include "qbox/field2.h"
 #include "qbox/h5out.h"
