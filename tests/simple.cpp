@@ -25,7 +25,7 @@ int main() {
     test.add_object(c1);
     test.add_monitor(m1);
 
-    gaussian_point_source s1({40,60}, 30, 3);
+    gaussian_point_source s1({40,60}, f, 30, 3);
     //continuous_point_source s1({60,72}, 1/20);
     test.add_source(s1);
 

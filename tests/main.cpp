@@ -14,8 +14,8 @@ int main() {
 
     Field2D test(grid);
     
-    double f = 1/30.0;
-    box_monitor m1("m1",{50,50}, {70,70}, 0,5*f, 100); 
+    double f = 2/30.0;
+    box_monitor m1("m1",{50,50}, {70,70}, 1/30.0,3/30.0, 500); 
     //box_monitor m1("m1",{50,50}, {70,70}, (freq), 100); 
     //surface_monitor m1("m1",{50,50}, {50,70},0,5*f, 100); 
     //surface_monitor m2(m1); 
@@ -24,7 +24,7 @@ int main() {
     //test.add_object(c1);
     test.add_monitor(m1);
 
-    gaussian_point_source s1({60,60}, 30, 3);
+    gaussian_point_source s1({60,67}, f, 1/200.0, 80);
     //continuous_point_source s1({60,60}, 1/20.0);
     test.add_source(s1);
 

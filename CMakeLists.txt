@@ -36,8 +36,12 @@ add_library(qbox SHARED ${SOURCES})
 #Build executable
 set (PROJECT_LINK_LIBS qbox ${h5_lib})
 link_directories( build )
+
 add_executable(emag tests/main.cpp)
 target_link_libraries(emag ${PROJECT_LINK_LIBS} )
+
+add_executable(mie tests/mie.cpp)
+target_link_libraries(mie ${PROJECT_LINK_LIBS} )
 
 #Tests
 #Simple Test

@@ -27,7 +27,7 @@
 namespace qbox {
 
     /// Node of an h5out object
-    /*
+    /**
      *  A node is a data member of an HDF5 file. It provides an interface
      *  for writing and extending that data member
      */
@@ -79,7 +79,7 @@ namespace qbox {
     };
 
     /// h5out object maintains an HDF5 file
-    /*
+    /**
      *  Contains a list of nodes (data members inside the file).
      *  New nodes can be creates, and existing nodes can be written to.
      */
