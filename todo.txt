@@ -32,3 +32,19 @@ Data members need to be made private and/or protected
     When doing so, consider design choices in regards to get/set functions
 
 Create time class to time different things
+
+All position vectors will become eigen vectors:
+    Vector2d for real space
+    Vector2i for grid space
+    -performance?
+
+Class volume will contain two vecs
+Class surface will contain two vecs:
+    -checking to ensure one is the same
+    -having a known orientation
+
+Field Data and DFT data can become Boost::multi_arrays
+    -how can we pass this to HDF5?
+    -can we use a slice, and pass that to hdf5?
+    -can slices be sent easily through MPI?
+    -performance?

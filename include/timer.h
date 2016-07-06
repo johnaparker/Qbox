@@ -73,6 +73,9 @@ namespace qbox {
     private:
         /// Get string name for given clock_name
         std::string clock_string_name(clock_name name) const;
+        void display_timer(clock_name c_name) const;
+        void display_timer_string(std::string name, double duration) const;
+        double duration(clock_name c_name) const;
 
     private:
         std::map<clock_name, timer> time_map;   ///< map of timers
