@@ -66,11 +66,13 @@ namespace qbox {
         const int name_max_width = 25;
         const char sep = '.';
 
+        cout << fixed;
         cout << "     ";
         cout << left << setw(name_max_width) << 
                 setfill(sep) << name;
+        cout << " ";
         cout << left << setw(name_max_width) << 
-                setfill(sep) << setprecision(5) << 
+                setfill(sep) << setprecision(2) << 
                 setw(1) << duration;
         cout << " s" << endl;
         cout << termcolor::reset;
