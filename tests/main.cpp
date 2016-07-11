@@ -33,5 +33,5 @@ int main() {
         test.writeE();
     }
     m1.write();
-    //m1.write_sides("out.h5", true);
+    m1.write_sides();
 }
