@@ -1,0 +1,1 @@
+let g:alternateSearchPath = 'sfr:../include,sfr:../src,sfr:../../include/monitors,sfr:../../src/monitors,sfr:../../src/objects,sfr:../../include/objects,sfr:../../include/sources,sfr:../../src/sources'
