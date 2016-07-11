@@ -15,8 +15,8 @@ namespace qbox {
         
         monitors[0] = move(surface_monitor(name + "_1", p1, {p2[0], p1[1]}, freq, N));
         monitors[1] = move(surface_monitor(name + "_2", {p2[0], p1[1]}, p2, freq, N));
-        monitors[2] = move(surface_monitor(name + "_3", {p1[1], p2[0]}, p2, freq, N));
-        monitors[3] = move(surface_monitor(name + "_4", p1, {p1[1], p2[0]}, freq, N));
+        monitors[2] = move(surface_monitor(name + "_3", {p1[0], p2[1]}, p2, freq, N));
+        monitors[3] = move(surface_monitor(name + "_4", p1, {p1[0], p2[1]}, freq, N));
     }
 
     box_monitor::box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double fmin, double fmax, int N, bool extendable):
@@ -49,7 +49,7 @@ namespace qbox {
     }
 
     unique_ptr<double[]> box_monitor::compute_flux() const {
-        double sign_values[] = {1, 1, -1, -1};
+        double sign_values[] = {-1, -1, 1, 1};
         auto S = make_unique<double[]>(N);
         for (int i = 0; i != N; i++) {
             S[i] = 0;
