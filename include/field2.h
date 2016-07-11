@@ -16,12 +16,18 @@
 #include "monitors/monitor.h"
 #include "pml.h"
 #include "tfsf.h"
-#include "h5out.h"
 #include "timer.h"
+#include "h5cpp.h"
 
 
 
 namespace qbox {
+
+    enum class fields {
+        Ez,
+        Hx,
+        Hy
+    };
 
     class Field2D;
     class source;
@@ -59,7 +65,7 @@ namespace qbox {
     //Field object that does all of the work
     class Field2D {
     public:
-        Field2D(grid_properties grid);
+        Field2D(grid_properties grid, std::string filename = "");
         void display_info();   //print basic info about system
         void update();         //update the fields for a single time step; also time steps sources/monitors
         
@@ -69,11 +75,11 @@ namespace qbox {
         void add_monitor(monitor &new_monitor);
 
         //write to HDF5 with filename
-        void write(std::string filename, std::string nodename);  //write nodename (Ex,etc.) to filename
+        void write_field(const fields);  //write nodename (Ex,etc.) to filename
         //*** This should take in a monitor??
-        void write_monitor(std::string filename, std::string nodename, double *data, int N, bool extendable = false);   //write a monitor
-        void writeE(std::string filename);    //write the E fields
-        void writeH(std::string filename);    //write the H fields
+        void write_monitor(std::string name, double *data, int N, bool extendable = false);   //write a monitor
+        void writeE();    //write the E fields
+        void writeH();    //write the H fields
 
     public:
         //Grid properties (some reduntant)
@@ -104,7 +110,8 @@ namespace qbox {
 
         //*** Should be different class to manage IO
         //map of all HDF5 output files
-        std::map<std::string, h5out> outFiles;
+        //std::map<std::string, h5out> outFiles;
+        std::unique_ptr<h5cpp::h5file> outFile;
         
         //*** Enum here? 
         //map of field names to matrix pointer data

@@ -4,15 +4,14 @@
 #include <math.h>
 #include "matrix.h"
 #include "field2.h"
-#include "h5out.h"
 #include "monitors/monitor.h"
 #include "monitors/box_monitor.h"
 
 using namespace std;
 
 namespace qbox {
-    box_monitor::box_monitor(string name, vector<int> p1, vector<int> p2, shared_ptr<freq_data> freq_in, int N):
-                    monitor(name, freq_in, N) {
+    box_monitor::box_monitor(string name, vector<int> p1, vector<int> p2, shared_ptr<freq_data> freq_in, int N, bool extendable):
+                    monitor(name, freq_in, N, extendable) {
         
         monitors[0] = move(surface_monitor(name + "_1", p1, {p2[0], p1[1]}, freq, N));
         monitors[1] = move(surface_monitor(name + "_2", {p2[0], p1[1]}, p2, freq, N));
@@ -20,14 +19,14 @@ namespace qbox {
         monitors[3] = move(surface_monitor(name + "_4", p1, {p1[1], p2[0]}, freq, N));
     }
 
-    box_monitor::box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double fmin, double fmax, int N):
-                box_monitor(name, p1, p2, nullptr, N) {
+    box_monitor::box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double fmin, double fmax, int N, bool extendable):
+                box_monitor(name, p1, p2, nullptr, N, extendable) {
         freq = shared_ptr<freq_data> (new freq_data(fmin, fmax, N));
         set_freq(freq);
     }
 
-    box_monitor::box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double f):
-                box_monitor(name, p1, p2, nullptr, 1) {
+    box_monitor::box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double f, bool extendable):
+                box_monitor(name, p1, p2, nullptr, 1, extendable) {
         freq = shared_ptr<freq_data>(new freq_data(f));
         set_freq(freq);
     }
@@ -64,14 +63,14 @@ namespace qbox {
         return S;
     }
 
-    void box_monitor::write(string filename, bool extendable) {
+    void box_monitor::write() {
         auto S = compute_flux();
-        F->write_monitor(filename, name, S.get(), N, extendable); 
+        F->write_monitor(name, S.get(), N, extendable); 
     }
 
-    void box_monitor::write_sides(string filename, bool extendable) {
+    void box_monitor::write_sides() {
         for (int i = 0; i != 4; i++) 
-            monitors[i].write(filename, extendable);
+            monitors[i].write();
     }
 }
 

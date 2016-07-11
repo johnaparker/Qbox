@@ -4,24 +4,23 @@
 #include <math.h>
 #include "matrix.h"
 #include "field2.h"
-#include "h5out.h"
 #include "monitors/surface_monitor.h"
 
 using namespace std;
 
 
 namespace qbox {
-    surface_monitor::surface_monitor(string name, vector<int> p1, vector<int> p2, shared_ptr<freq_data> freq, int N): monitor(name,freq,N), p1(p1), p2(p2), dir(0), length(0) {
+    surface_monitor::surface_monitor(string name, vector<int> p1, vector<int> p2, shared_ptr<freq_data> freq, int N, bool extendable): monitor(name,freq,N,extendable), p1(p1), p2(p2), dir(0), length(0) {
         F = nullptr;
         prevE = nullptr;
     }
 
-    surface_monitor::surface_monitor(string name, vector<int> p1, vector<int> p2, double fmin, double fmax, int N): surface_monitor(name, p1, p2, nullptr, N) {
+    surface_monitor::surface_monitor(string name, vector<int> p1, vector<int> p2, double fmin, double fmax, int N, bool extendable): surface_monitor(name, p1, p2, nullptr, N, extendable) {
         freq = shared_ptr<freq_data> (new freq_data(fmin, fmax, N));
     }
 
-    surface_monitor::surface_monitor(string name, vector<int> p1, vector<int> p2, double f): 
-            surface_monitor(name, p1, p2, nullptr, 1) {
+    surface_monitor::surface_monitor(string name, vector<int> p1, vector<int> p2, double f, bool extendable): 
+            surface_monitor(name, p1, p2, nullptr, 1, extendable) {
         freq = shared_ptr<freq_data> (new freq_data(f));
     }
 
@@ -108,9 +107,9 @@ namespace qbox {
         return S;
     }
 
-    void surface_monitor::write(string filename, bool extendable) {
+    void surface_monitor::write() {
         auto S = compute_flux();
-        F->write_monitor(filename, name, S.get(), N, extendable); 
+        F->write_monitor(name, S.get(), N, extendable); 
     }
 }
 

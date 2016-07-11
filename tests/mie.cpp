@@ -11,7 +11,7 @@ int main() {
 
     grid_properties grid(120,120,res,pml_thickness);
 {
-    Field2D norm(grid);
+    Field2D norm(grid, "norm.h5");
 
     box_monitor m1("m_norm",{50,50}, {70,70}, 1/30.0,3/30.0, 500); 
     norm.add_monitor(m1);
@@ -21,13 +21,13 @@ int main() {
 
     for (int i = 0; i != 1000; i++) {
         norm.update();
-        norm.writeE("out.h5");
+        norm.writeE();
     }
-    m1.write("norm.h5", false);
+    m1.write();
 }
 
 
-    Field2D scat(grid);
+    Field2D scat(grid, "scat.h5");
 
     cylinder c1(60,60,5);
     c1.set_eps(4);
@@ -41,7 +41,7 @@ int main() {
 
     for (int i = 0; i != 1000; i++) {
         scat.update();
-        scat.writeE("out.h5");
+        scat.writeE();
     }
-    m2.write("scat.h5", false);
+    m2.write();
 }

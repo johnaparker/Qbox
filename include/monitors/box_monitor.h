@@ -17,9 +17,9 @@ namespace qbox {
     class box_monitor: public monitor {
     public:
         //various constructors
-        box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, std::shared_ptr<freq_data> freq, int N);
-        box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double fmin, double fmax, int N);
-        box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double f);
+        box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, std::shared_ptr<freq_data> freq, int N, bool extendable=false);
+        box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double fmin, double fmax, int N, bool extendable=false);
+        box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double f, bool extendable=false);
 
         box_monitor() = default;
         box_monitor(const box_monitor&) = default;
@@ -31,9 +31,9 @@ namespace qbox {
         void set_F(Field2D *newF);
         void update();
         std::unique_ptr<double[]> compute_flux() const;
-        void write(std::string filename, bool extendable = false);
+        void write();
 
-        void write_sides(std::string filename, bool extendable = false);  //call write for all surface_monitors
+        void write_sides();  //call write for all surface_monitors
 
     private:
         surface_monitor monitors[4];    //4 surface monitors

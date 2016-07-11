@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5.2)
 project(Qbox)
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 enable_testing()
  
 #Compiler flags
@@ -9,15 +9,24 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 elseif(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -g -Og")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g -Og")
 endif()
 
 #Dependencies
+#HDF5 library
 find_library(h5_lib hdf5_cpp)
 if(NOT h5_lib)
     message(FATAL_ERROR "hdf5 library not found")
 else()
     message(STATUS "hdf5 library found")
+endif()
+
+#h5cpp library
+find_library(h5cpp_lib h5cpp)
+if(NOT h5_lib)
+    message(FATAL_ERROR "h5cpp library not found")
+else()
+    message(STATUS "h5cpp library found")
 endif()
 
 #Include the headers
@@ -34,7 +43,7 @@ file(GLOB SOURCES_HEADERS "include/sources/*.h")
 add_library(qbox SHARED ${SOURCES})
  
 #Build executable
-set (PROJECT_LINK_LIBS qbox ${h5_lib})
+set (PROJECT_LINK_LIBS qbox ${h5_lib} ${h5cpp_lib})
 link_directories( build )
 
 add_executable(emag tests/main.cpp)

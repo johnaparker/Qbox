@@ -13,7 +13,7 @@ int main() {
     //grid.set_tfsf({12,12},{68,119});
 
 
-    Field2D test(grid);
+    Field2D test(grid, "out.h5");
     
     double f = 1/30.0;
     box_monitor m1("m1",{50,50}, {70,70}, 0,5*f, 100); 
@@ -33,7 +33,7 @@ int main() {
         test.update();
         //test.writeE("out.h5");
     }
-    m1.write("out.h5", false);
-    m1.write_sides("out.h5", true);
+    m1.write();
+    m1.write_sides();
 
 }

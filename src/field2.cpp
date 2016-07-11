@@ -11,7 +11,6 @@
 #include "field.h"
 #include "matrix.h"
 #include "objects/object.h"
-#include "h5out.h"
 #include "tfsf.h"
 #include "termcolor.h"
 
@@ -19,7 +18,7 @@ using namespace std;
 
 namespace qbox {
 
-    Field2D::Field2D(grid_properties grid): grid(grid), Nx(grid.Nx), Ny(grid.Ny), dx(grid.dx), Lx(grid.Lx), Ly(grid.Ly) {
+    Field2D::Field2D(grid_properties grid, string filename): grid(grid), Nx(grid.Nx), Ny(grid.Ny), dx(grid.dx), Lx(grid.Lx), Ly(grid.Ly) {
         t = 1;
         tStep = 0;
         dt = dx/2.0;
@@ -58,36 +57,79 @@ namespace qbox {
             total = nullptr;
         field_components = {{"Ez", &Ez}, {"Hx", &Hx}, {"Hy", &Hy}};
 
+        if (!filename.empty())
+            outFile = make_unique<h5cpp::h5file>(filename, h5cpp::io::w);
+
         display_info();
     }
 
-    void Field2D::write(string filename, const string nodename) {
+    void Field2D::write_field(const fields field) {
         clocks.start(clock_name::hdf5);
-        if (outFiles.count(filename) == 0)
-            outFiles[filename] = h5out(filename);
-        if (!outFiles[filename].contains(nodename))
-            outFiles[filename].create_node(nodename, {Nx,Ny});
-        if (field_components.count(nodename))
-            outFiles[filename].write_to_node(nodename, *field_components[nodename]);
+
+        unique_ptr<h5cpp::h5group> gFields;
+        if (!outFile->object_exists("Fields"))
+            gFields = outFile->create_group("Fields");
+        else
+            gFields = outFile->open_group("Fields");
+
+
+        unique_ptr<h5cpp::h5dset> dset;
+        switch(field) {
+            case fields::Ez: if (!outFile->object_exists("Fields/Ez")) {
+                                vector<hsize_t> dims = {hsize_t(Nx),hsize_t(Ny),1};
+                                vector<hsize_t> max_dims = {hsize_t(Nx),hsize_t(Ny),h5cpp::inf};
+                                vector<hsize_t> chunk_dims = dims;
+                                h5cpp::dataspace ds(dims, max_dims, chunk_dims, false);
+                                dset = gFields->create_dataset("Ez", 
+                                             h5cpp::dtype::Double, ds); 
+                                dset->write(Ez.data());
+
+                                h5cpp::dataspace ds_a({1});
+                                auto attr = dset->create_attribute("dx", h5cpp::dtype::Double, ds_a);
+                                attr->write(&dx);
+                             }
+                             else {
+                                 dset = gFields->open_dataset("Ez");
+                                 dset->append(Ez.data());
+                             }
+                             break;
+        }
         clocks.stop(clock_name::hdf5);
     }
 
-    void Field2D::writeE(string filename) {
-        write(filename, "Ez");
+    void Field2D::writeE() {
+        write_field(fields::Ez);
     }
 
-    void Field2D::writeH(string filename) {
-        write(filename, "Hx");
-        write(filename, "Hy");
+    void Field2D::writeH() {
+        write_field(fields::Hx);
+        write_field(fields::Hy);
     }
 
-    void Field2D::write_monitor(string filename, string nodename, double* data, int N, bool extendable) {
+    void Field2D::write_monitor(string name, double* data, int N, bool extendable) {
         clocks.start(clock_name::hdf5);
-        if (outFiles.count(filename) == 0)
-            outFiles[filename] = h5out(filename);
-        if (!outFiles[filename].contains(nodename))
-            outFiles[filename].create_node(nodename, {N}, extendable);
-        outFiles[filename].write_to_node(nodename, data);
+
+        unique_ptr<h5cpp::h5group> gFields;
+        if (!outFile->object_exists("Monitors"))
+            gFields = outFile->create_group("Monitors");
+        else
+            gFields = outFile->open_group("Monitors");
+
+        unique_ptr<h5cpp::h5dset> dset;
+        if (!outFile->object_exists("Monitors/"+name)) {
+            vector<hsize_t> dims = {hsize_t(N)};
+            vector<hsize_t> max_dims = {hsize_t(N)};
+            //vector<hsize_t> chunk_dims = dims;
+            h5cpp::dataspace ds(dims, max_dims);
+            dset = gFields->create_dataset(name, 
+                         h5cpp::dtype::Double, ds); 
+            dset->write(data);
+        }
+        else {
+            dset = gFields->open_dataset(name);
+            dset->append(data);
+        }
+
         clocks.stop(clock_name::hdf5);
     }
 
