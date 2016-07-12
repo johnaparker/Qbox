@@ -18,20 +18,18 @@
 #include "tfsf.h"
 #include "timer.h"
 #include "h5cpp.h"
+#include "fieldIO.h"
+
 
 
 
 namespace qbox {
 
-    enum class fields {
-        Ez,
-        Hx,
-        Hy
-    };
-
+    enum class fields;
     class Field2D;
     class source;
     class tfsf;
+    class fieldIO;
 
     //grid class that controls length, resolution, and boundary of the grid
     class grid_properties {
@@ -64,6 +62,7 @@ namespace qbox {
 
     //Field object that does all of the work
     class Field2D {
+        friend class fieldIO;
     public:
         Field2D(grid_properties grid, std::string filename = "");
         void display_info();   //print basic info about system
@@ -111,7 +110,8 @@ namespace qbox {
         //*** Should be different class to manage IO
         //map of all HDF5 output files
         //std::map<std::string, h5out> outFiles;
-        std::unique_ptr<h5cpp::h5file> outFile;
+        std::unique_ptr<fieldIO> output;
+
         
         //*** Enum here? 
         //map of field names to matrix pointer data
