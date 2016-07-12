@@ -15,7 +15,7 @@ int main() {
     Field2D test(grid, "out.h5");
     
     double f = 2/30.0;
-    box_monitor m1("m1",{50,50}, {70,70}, 1/30.0,3/30.0, 500); 
+    box_monitor m1("m1",{50,50}, {70,70}, 1/30.0,3/30.0, 500, true); 
     //box_monitor m1("m1",{50,50}, {70,70}, (freq), 100); 
     //surface_monitor m1("m1",{50,50}, {50,70},0,5*f, 100); 
     //surface_monitor m2(m1); 
@@ -31,7 +31,7 @@ int main() {
     for (int i = 0; i != 1000; i++) {
         test.update();
         test.writeE();
+        m1.write();
+        m1.write_sides();
     }
-    m1.write();
-    m1.write_sides();
 }

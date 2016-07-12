@@ -59,10 +59,19 @@ void fieldIO::write_monitor(std::string name, double *data, int N, bool extendab
     if (!outFile->object_exists("Monitors/"+name)) {
         vector<hsize_t> dims = {hsize_t(N)};
         vector<hsize_t> max_dims = {hsize_t(N)};
-        //vector<hsize_t> chunk_dims = dims;
-        h5cpp::dataspace ds(dims, max_dims);
-        dset = gFields->create_dataset(name, 
-                     h5cpp::dtype::Double, ds); 
+        if (!extendable) {
+            h5cpp::dataspace ds(dims, max_dims);
+            dset = gFields->create_dataset(name, 
+                         h5cpp::dtype::Double, ds); 
+        }
+        else {
+            dims.push_back(1);
+            max_dims.push_back(h5cpp::inf);
+            vector<hsize_t> chunk_dims = dims;
+            h5cpp::dataspace ds(dims, max_dims, chunk_dims);
+            dset = gFields->create_dataset(name, 
+                         h5cpp::dtype::Double, ds); 
+        }
         dset->write(data);
         h5cpp::dataspace ds_a(vector<hsize_t>{1});
 

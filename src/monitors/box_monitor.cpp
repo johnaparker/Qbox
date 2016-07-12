@@ -13,10 +13,10 @@ namespace qbox {
     box_monitor::box_monitor(string name, vector<int> p1, vector<int> p2, shared_ptr<freq_data> freq_in, int N, bool extendable):
                     monitor(name, freq_in, N, extendable) {
         
-        monitors[0] = move(surface_monitor(name + "_1", p1, {p2[0], p1[1]}, freq, N));
-        monitors[1] = move(surface_monitor(name + "_2", {p2[0], p1[1]}, p2, freq, N));
-        monitors[2] = move(surface_monitor(name + "_3", {p1[0], p2[1]}, p2, freq, N));
-        monitors[3] = move(surface_monitor(name + "_4", p1, {p1[0], p2[1]}, freq, N));
+        monitors[0] = surface_monitor(name + "_1", p1, {p2[0], p1[1]}, freq, N, extendable);
+        monitors[1] = surface_monitor(name + "_2", {p2[0], p1[1]}, p2, freq, N, extendable);
+        monitors[2] = surface_monitor(name + "_3", {p1[0], p2[1]}, p2, freq, N, extendable);
+        monitors[3] = surface_monitor(name + "_4", p1, {p1[0], p2[1]}, freq, N, extendable);
     }
 
     box_monitor::box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double fmin, double fmax, int N, bool extendable):
