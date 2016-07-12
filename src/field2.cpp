@@ -94,14 +94,17 @@ namespace qbox {
         cout << "     " << left << setw(max_spacing) 
              << setfill('.') << "Ly" << dx*Ny << " m" << endl;
         cout << "     " << left << setw(max_spacing) 
-             << setfill('.') << "dt" << dt << " s" << endl;
-        cout << endl;
+             << setfill('.') << "dt" << dt << " s" << endl << endl;
     }
 
     //inside each for loop: make a call to an external function that makes the necessary update: vacuum, material, pml
     void Field2D::update() {
         tStep += 1;
         t += dt;
+
+        if (tStep%100 == 0) {
+            cout << "\rOn time step " << tStep << flush;
+        }
         
         clocks.start(clock_name::looping);
         for (int i=1; i<Nx-1; i++) {

@@ -1,12 +1,18 @@
 #include "fieldIO.h"
+#include "termcolor.h"
+#include <iostream>
 
 using namespace std;
 
 namespace qbox {
 
 fieldIO::fieldIO(string filename, Field2D* fp): filename(filename), fp(fp) {
-    if (!filename.empty())
+    if (!filename.empty()) {
         outFile = make_unique<h5cpp::h5file>(filename, h5cpp::io::w);
+        cout << "\n" << termcolor::bold << termcolor::green 
+             << "New simulation, creating HDF5 output file \'" << filename << "\'" 
+             << termcolor::reset << endl << endl;
+    }
 }
 
 void fieldIO::write_field(const fields field) {

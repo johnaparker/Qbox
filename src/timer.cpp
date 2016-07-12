@@ -27,7 +27,7 @@ namespace qbox {
     void timers::display() const{
 
         cout << termcolor::underline << 
-             termcolor::bold << "\nTime Usage" << endl;
+             termcolor::bold << "\n\nTime Usage" << endl;
         cout << termcolor::reset;
 
         double other_time = duration(clock_name::self) - duration(clock_name::hdf5) - duration(clock_name::fourier) - duration(clock_name::looping);
