@@ -21,6 +21,7 @@ namespace qbox {
         void write_monitor(std::string name, double *data, int N, bool extendable = false);   //write a monitor
 
     private:
+        void create_fields_dataset(fields field);
         std::string filename;
         Field2D* fp;
         std::unique_ptr<h5cpp::h5file> outFile;
