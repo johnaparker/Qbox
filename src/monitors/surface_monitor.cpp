@@ -46,8 +46,12 @@ namespace qbox {
         }
         prevE[length] = 0;
 
-        //auto gName = get_group();
-        //auto attr = gName->create_attribute("p1", h5cpp::Int, );
+        auto gName = get_group();
+        auto dspace = h5cpp::dataspace(vector<hsize_t>{2});
+        auto attr = gName->create_attribute("p1", h5cpp::dtype::Int, dspace);
+        attr->write(p1.data());
+        attr = gName->create_attribute("p2", h5cpp::dtype::Int, dspace);
+        attr->write(p2.data());
     }
 
     void surface_monitor::update() {

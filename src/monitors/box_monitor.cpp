@@ -11,7 +11,7 @@ using namespace std;
 
 namespace qbox {
     box_monitor::box_monitor(string name, vector<int> p1, vector<int> p2, shared_ptr<freq_data> freq_in, int N, bool extendable):
-                    monitor(name, freq_in, N, extendable) {
+                    monitor(name, freq_in, N, extendable), p1(p1), p2(p2) {
         
         monitors[0] = surface_monitor(name + "_1", p1, {p2[0], p1[1]}, freq, N, extendable);
         monitors[1] = surface_monitor(name + "_2", {p2[0], p1[1]}, p2, freq, N, extendable);
@@ -41,6 +41,13 @@ namespace qbox {
         monitor::set_F(newF);
         for (int i = 0; i != 4; i++) 
             monitors[i].set_F(newF);
+
+        auto gName = get_group();
+        auto dspace = h5cpp::dataspace(vector<hsize_t>{2});
+        auto attr = gName->create_attribute("p1", h5cpp::dtype::Int, dspace);
+        attr->write(p1.data());
+        attr = gName->create_attribute("p2", h5cpp::dtype::Int, dspace);
+        attr->write(p2.data());
     }
 
     void box_monitor::update() {

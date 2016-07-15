@@ -37,6 +37,7 @@ namespace qbox {
 
     private:
         surface_monitor monitors[4];    //4 surface monitors
+        std::vector<int> p1, p2;
     };
 }
 
