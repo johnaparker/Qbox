@@ -20,6 +20,29 @@ namespace qbox {
 
     void monitor::set_F(Field2D *newF) {
         F = newF;
+        outFile = newF->outFile.get();
+    }
+
+    unique_ptr<h5cpp::h5group> monitor::get_group() {
+        unique_ptr<h5cpp::h5group> gMonitors, gName;
+        if (!outFile->object_exists("Monitors"))
+            gMonitors = outFile->create_group("Monitors");
+        else
+            gMonitors = outFile->open_group("Monitors");
+
+        if (!gMonitors->object_exists(name)) {
+            gName = gMonitors->create_group(name);
+
+            int Nfreq = freq->size();
+            auto freq_data = freq->get_freq();
+            h5cpp::dataspace ds_freq(vector<hsize_t>{hsize_t(Nfreq)});
+            auto dset = gName->create_dataset("freq", h5cpp::dtype::Double, ds_freq);
+            dset->write(freq_data.data());
+        }
+        else
+            gName = gMonitors->open_group(name);
+
+        return gName;
     }
 
     int get_direction(vector<int> p1, vector<int> p2) {

@@ -63,14 +63,38 @@ namespace qbox {
         return S;
     }
 
-    void box_monitor::write() {
-        //auto S = compute_flux();
-        F->write_monitor(*this); 
+    void box_monitor::write_flux() {
+        auto S = compute_flux();
+        auto gName = get_group();
+
+        unique_ptr<h5cpp::h5dset> dset;
+        if (!gName->object_exists("flux")) {
+            vector<hsize_t> dims = {hsize_t(N)};
+            vector<hsize_t> max_dims = {hsize_t(N)};
+            if (!extendable) {
+                h5cpp::dataspace ds(dims, max_dims);
+                dset = gName->create_dataset("flux", 
+                             h5cpp::dtype::Double, ds); 
+            }
+            else {
+                dims.push_back(1);
+                max_dims.push_back(h5cpp::inf);
+                vector<hsize_t> chunk_dims = dims;
+                h5cpp::dataspace ds(dims, max_dims, chunk_dims);
+                dset = gName->create_dataset("flux", 
+                             h5cpp::dtype::Double, ds); 
+            }
+            dset->write(S.get());
+        }
+        else {
+            dset = gName->open_dataset("flux");
+            dset->append(S.get());
+        }
     }
 
-    void box_monitor::write_sides() {
+    void box_monitor::write_flux_sides() {
         for (int i = 0; i != 4; i++) 
-            monitors[i].write();
+            monitors[i].write_flux();
     }
 }
 

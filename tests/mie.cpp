@@ -23,8 +23,8 @@ int main() {
         norm.update();
         norm.writeE();
     }
-    m1.write();
-    m1.write_sides();
+    m1.write_flux();
+    m1.write_flux_sides();
 }
 
 
@@ -44,5 +44,5 @@ int main() {
         scat.update();
         scat.writeE();
     }
-    m2.write();
+    m2.write_flux();
 }

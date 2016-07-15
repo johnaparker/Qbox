@@ -45,6 +45,9 @@ namespace qbox {
             }
         }
         prevE[length] = 0;
+
+        //auto gName = get_group();
+        //auto attr = gName->create_attribute("p1", h5cpp::Int, );
     }
 
     void surface_monitor::update() {
@@ -107,9 +110,33 @@ namespace qbox {
         return S;
     }
 
-    void surface_monitor::write() {
-        //auto S = compute_flux();
-        F->write_monitor(*this); 
+    void surface_monitor::write_flux() {
+        auto S = compute_flux();
+        auto gName = get_group();
+
+        unique_ptr<h5cpp::h5dset> dset;
+        if (!gName->object_exists("flux")) {
+            vector<hsize_t> dims = {hsize_t(N)};
+            vector<hsize_t> max_dims = {hsize_t(N)};
+            if (!extendable) {
+                h5cpp::dataspace ds(dims, max_dims);
+                dset = gName->create_dataset("flux", 
+                             h5cpp::dtype::Double, ds); 
+            }
+            else {
+                dims.push_back(1);
+                max_dims.push_back(h5cpp::inf);
+                vector<hsize_t> chunk_dims = dims;
+                h5cpp::dataspace ds(dims, max_dims, chunk_dims);
+                dset = gName->create_dataset("flux", 
+                             h5cpp::dtype::Double, ds); 
+            }
+            dset->write(S.get());
+        }
+        else {
+            dset = gName->open_dataset("flux");
+            dset->append(S.get());
+        }
     }
 }
 

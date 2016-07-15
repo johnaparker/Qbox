@@ -6,19 +6,17 @@
 #include <memory>
 #include "../matrix.h"
 #include "freq.h"
+#include "h5cpp.h"
 
 
 namespace qbox {
 
     class Field2D;
-    class fieldIO;
 
     //*** technically, these are DFT monitors. Normal monitor can exist too.
 
     //monitor base class
     class monitor {
-
-    friend fieldIO;
 
     public:
         monitor(std::string name, std::shared_ptr<freq_data> freq, int N, bool extendable): name(name), N(N), freq(freq), extendable(extendable) {};
@@ -27,6 +25,8 @@ namespace qbox {
         virtual void set_F(Field2D *newF);       //set the owning field
         virtual void update() = 0;                //update the DFT values
         virtual std::unique_ptr<double[]> compute_flux() const = 0;
+
+        std::unique_ptr<h5cpp::h5group> get_group();
 
         monitor() = default;
         monitor(const monitor&) = default;
@@ -39,6 +39,7 @@ namespace qbox {
         bool extendable;
         std::unique_ptr<double[]> prevE;   //previous E at all all points in the monitor; needed to interpolate E in time domain
         Field2D *F;      //pointer to owning field object
+        h5cpp::h5file *outFile;
     };
 
 

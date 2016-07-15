@@ -57,14 +57,48 @@ namespace qbox {
             total = nullptr;
         field_components = {{"Ez", &Ez}, {"Hx", &Hx}, {"Hy", &Hy}};
 
-        output = make_unique<fieldIO>(filename, this);
+        if (!filename.empty()) {
+            outFile = make_unique<h5cpp::h5file>(filename, h5cpp::io::w);
+            cout << "\n" << termcolor::bold << termcolor::green 
+                 << "New simulation, creating HDF5 output file \'" << filename << "\'" 
+                 << termcolor::reset << endl << endl;
+        }
+
 
         display_info();
     }
 
     void Field2D::write_field(const fields field) {
         clocks.start(clock_name::hdf5);
-        output->write_field(field);
+        switch(field) {
+            case fields::Ez: if (!outFile->object_exists("Fields/Ez")) {
+                                     create_fields_dataset(field);
+                             }
+                             else {
+                                 auto gFields = outFile->open_group("Fields");
+                                 auto dset = gFields->open_dataset("Ez");
+                                 dset->append(Ez.data());
+                             }
+                             break;
+            case fields::Hx: if (!outFile->object_exists("Fields/Hx")) {
+                                     create_fields_dataset(field);
+                             }
+                             else {
+                                 auto gFields = outFile->open_group("Fields");
+                                 auto dset = gFields->open_dataset("Hx");
+                                 dset->append(Hx.data());
+                             }
+                             break;
+            case fields::Hy: if (!outFile->object_exists("Fields/Hy")) {
+                                     create_fields_dataset(field);
+                             }
+                             else {
+                                 auto gFields = outFile->open_group("Fields");
+                                 auto dset = gFields->open_dataset("Hy");
+                                 dset->append(Hy.data());
+                             }
+                             break;
+        }
         clocks.stop(clock_name::hdf5);
     }
 
@@ -79,7 +113,7 @@ namespace qbox {
 
     void Field2D::write_monitor(monitor& mon) {
         clocks.start(clock_name::hdf5);
-        output->write_monitor(mon);
+        //output->write_monitor(mon);
         clocks.stop(clock_name::hdf5);
     }
 
@@ -188,6 +222,43 @@ namespace qbox {
         new_monitor.set_F(this);
         monitor_list.push_back(&new_monitor);
     } 
+
+
+    void Field2D::create_fields_dataset(fields field) {
+        unique_ptr<h5cpp::h5group> gFields;
+        unique_ptr<h5cpp::h5dset> dset;
+
+        if (!outFile->object_exists("Fields")) {
+            gFields = outFile->create_group("Fields");
+            h5cpp::dataspace ds_a(vector<hsize_t>{1});
+            auto attr = gFields->create_attribute("dx", h5cpp::dtype::Double, ds_a);
+            attr->write(&(dx));
+            attr = gFields->create_attribute("dt", h5cpp::dtype::Double, ds_a);
+            attr->write(&(dt));
+        }
+        else
+            gFields = outFile->open_group("Fields");
+
+        vector<hsize_t> dims = {hsize_t(Nx),hsize_t(Ny),1};
+        vector<hsize_t> max_dims = {hsize_t(Nx),hsize_t(Ny),h5cpp::inf};
+        vector<hsize_t> chunk_dims = dims;
+        h5cpp::dataspace ds(dims, max_dims, chunk_dims, false);
+        switch(field) {
+            case fields::Ez:  dset = gFields->create_dataset("Ez", 
+                                     h5cpp::dtype::Double, ds); 
+                              dset->write(Ez.data());
+                              break;
+            case fields::Hx:  dset = gFields->create_dataset("Hx", 
+                                     h5cpp::dtype::Double, ds); 
+                              dset->write(Hx.data());
+                              break;
+            case fields::Hy:  dset = gFields->create_dataset("Hy", 
+                                     h5cpp::dtype::Double, ds); 
+                              dset->write(Hy.data());
+                              break;
+        }
+    }
+
 
     grid_properties::grid_properties(int Lx, int Ly, int res, int pml_thickness):
             Lx(Lx), Ly(Ly), res(res), pml_thickness(pml_thickness) {

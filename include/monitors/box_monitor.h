@@ -31,9 +31,9 @@ namespace qbox {
         void set_F(Field2D *newF);
         void update();
         std::unique_ptr<double[]> compute_flux() const;
-        void write();
+        void write_flux();
 
-        void write_sides();  //call write for all surface_monitors
+        void write_flux_sides();  //call write for all surface_monitors
 
     private:
         surface_monitor monitors[4];    //4 surface monitors

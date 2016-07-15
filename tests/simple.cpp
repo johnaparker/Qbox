@@ -33,7 +33,7 @@ int main() {
         test.update();
         //test.writeE("out.h5");
     }
-    m1.write();
-    m1.write_sides();
+    m1.write_flux();
+    m1.write_flux_sides();
 
 }
