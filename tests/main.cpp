@@ -28,9 +28,9 @@ int main() {
     //continuous_point_source s1({60,60}, 1/20.0);
     test.add_source(s1);
 
-    for (int i = 0; i != 15000; i++) {
+    for (int i = 0; i != 1000; i++) {
         test.update();
-        //test.writeE();
+        test.writeE();
     }
     m1.write();
     m1.write_sides();

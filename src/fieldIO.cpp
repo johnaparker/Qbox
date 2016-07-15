@@ -49,19 +49,24 @@ void fieldIO::write_field(const fields field) {
 }
 
 void fieldIO::write_monitor(std::string name, double *data, int N, bool extendable)  {
-    unique_ptr<h5cpp::h5group> gFields;
+    unique_ptr<h5cpp::h5group> gMonitors, gName;
     if (!outFile->object_exists("Monitors"))
-        gFields = outFile->create_group("Monitors");
+        gMonitors = outFile->create_group("Monitors");
     else
-        gFields = outFile->open_group("Monitors");
+        gMonitors = outFile->open_group("Monitors");
+
+    if (!gMonitors->object_exists(name))
+        gName = gMonitors->create_group(name);
+    else
+        gName = gMonitors->open_group(name);
 
     unique_ptr<h5cpp::h5dset> dset;
-    if (!outFile->object_exists("Monitors/"+name)) {
+    if (!gName->object_exists("flux")) {
         vector<hsize_t> dims = {hsize_t(N)};
         vector<hsize_t> max_dims = {hsize_t(N)};
         if (!extendable) {
             h5cpp::dataspace ds(dims, max_dims);
-            dset = gFields->create_dataset(name, 
+            dset = gName->create_dataset("flux", 
                          h5cpp::dtype::Double, ds); 
         }
         else {
@@ -69,7 +74,7 @@ void fieldIO::write_monitor(std::string name, double *data, int N, bool extendab
             max_dims.push_back(h5cpp::inf);
             vector<hsize_t> chunk_dims = dims;
             h5cpp::dataspace ds(dims, max_dims, chunk_dims);
-            dset = gFields->create_dataset(name, 
+            dset = gName->create_dataset("flux", 
                          h5cpp::dtype::Double, ds); 
         }
         dset->write(data);
@@ -87,7 +92,7 @@ void fieldIO::write_monitor(std::string name, double *data, int N, bool extendab
         attr->write(&df);
     }
     else {
-        dset = gFields->open_dataset(name);
+        dset = gName->open_dataset("flux");
         dset->append(data);
     }
 }  
