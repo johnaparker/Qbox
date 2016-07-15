@@ -76,7 +76,7 @@ namespace qbox {
         //write to HDF5 with filename
         void write_field(const fields);  //write nodename (Ex,etc.) to filename
         //*** This should take in a monitor??
-        void write_monitor(std::string name, double *data, int N, bool extendable = false);   //write a monitor
+        void write_monitor(monitor& mon);   //write a monitor
         void writeE();    //write the E fields
         void writeH();    //write the H fields
 

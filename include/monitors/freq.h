@@ -1,6 +1,10 @@
 #ifndef GUARD_freq_h
 #define GUARD_freq_h
 
+#include <memory>
+#include <cstring>
+#include <vector>
+
 namespace qbox {
 
     class Field2D;
@@ -26,9 +30,14 @@ namespace qbox {
         void update(double tnew);
 
         //getter functions
+        std::vector<double>  get_freq() {
+            std::vector<double> ret(freq, freq+N);
+            return ret;
+        }
         double get_freq(int i) {return freq[i];}
         double get_cosf(int i) {return cosf[i];}
         double get_sinf(int i) {return sinf[i];}
+        int size() {return N;}
 
     private:
         int N;   //size of arrays

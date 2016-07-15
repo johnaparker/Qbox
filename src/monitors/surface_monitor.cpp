@@ -108,8 +108,8 @@ namespace qbox {
     }
 
     void surface_monitor::write() {
-        auto S = compute_flux();
-        F->write_monitor(name, S.get(), N, extendable); 
+        //auto S = compute_flux();
+        F->write_monitor(*this); 
     }
 }
 

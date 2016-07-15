@@ -5,6 +5,7 @@
 #include <string>
 #include "h5cpp.h"
 #include "field2.h"
+#include "monitors/monitor.h"
 
 namespace qbox {
 
@@ -18,7 +19,7 @@ namespace qbox {
     public:
         fieldIO(std::string filename, Field2D* fp);
         void write_field(const fields field); 
-        void write_monitor(std::string name, double *data, int N, bool extendable = false);   //write a monitor
+        void write_monitor(monitor& mon);   //write a monitor
 
     private:
         void create_fields_dataset(fields field);

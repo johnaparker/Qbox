@@ -77,9 +77,9 @@ namespace qbox {
         write_field(fields::Hy);
     }
 
-    void Field2D::write_monitor(string name, double* data, int N, bool extendable) {
+    void Field2D::write_monitor(monitor& mon) {
         clocks.start(clock_name::hdf5);
-        output->write_monitor(name, data, N, extendable);
+        output->write_monitor(mon);
         clocks.stop(clock_name::hdf5);
     }
 

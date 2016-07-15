@@ -11,17 +11,22 @@
 namespace qbox {
 
     class Field2D;
+    class fieldIO;
 
     //*** technically, these are DFT monitors. Normal monitor can exist too.
 
     //monitor base class
     class monitor {
+
+    friend fieldIO;
+
     public:
         monitor(std::string name, std::shared_ptr<freq_data> freq, int N, bool extendable): name(name), N(N), freq(freq), extendable(extendable) {};
         virtual void set_freq(std::shared_ptr<freq_data> new_freq); //set the frequencies
         //*** should probably be private:
         virtual void set_F(Field2D *newF);       //set the owning field
         virtual void update() = 0;                //update the DFT values
+        virtual std::unique_ptr<double[]> compute_flux() const = 0;
 
         monitor() = default;
         monitor(const monitor&) = default;

@@ -48,15 +48,29 @@ void fieldIO::write_field(const fields field) {
     }
 }
 
-void fieldIO::write_monitor(std::string name, double *data, int N, bool extendable)  {
+//void fieldIO::write_monitor(std::string name, double *data, int N, bool extendable)  {
+void fieldIO::write_monitor(monitor& mon)  {
+    string name = mon.name;
+    auto flux_data = mon.compute_flux();
+    double *data = flux_data.get();
+    int N = mon.N;
+    bool extendable = mon.extendable;
+
     unique_ptr<h5cpp::h5group> gMonitors, gName;
     if (!outFile->object_exists("Monitors"))
         gMonitors = outFile->create_group("Monitors");
     else
         gMonitors = outFile->open_group("Monitors");
 
-    if (!gMonitors->object_exists(name))
+    if (!gMonitors->object_exists(name)) {
         gName = gMonitors->create_group(name);
+
+        int Nfreq = mon.freq->size();
+        auto freq_data = mon.freq->get_freq();
+        h5cpp::dataspace ds_freq(vector<hsize_t>{hsize_t(Nfreq)});
+        auto dset = gName->create_dataset("freq", h5cpp::dtype::Double, ds_freq);
+        dset->write(freq_data.data());
+    }
     else
         gName = gMonitors->open_group(name);
 
@@ -78,18 +92,6 @@ void fieldIO::write_monitor(std::string name, double *data, int N, bool extendab
                          h5cpp::dtype::Double, ds); 
         }
         dset->write(data);
-        h5cpp::dataspace ds_a(vector<hsize_t>{1});
-
-        //*** Need to pass in freq data
-        double fmin = 0;
-        double fmax = 1;
-        double df = .1;
-        auto attr = dset->create_attribute("fmin", h5cpp::dtype::Double, ds_a);
-        attr->write(&fmin);
-        attr = dset->create_attribute("fmax", h5cpp::dtype::Double, ds_a);
-        attr->write(&fmax);
-        attr = dset->create_attribute("df", h5cpp::dtype::Double, ds_a);
-        attr->write(&df);
     }
     else {
         dset = gName->open_dataset("flux");
