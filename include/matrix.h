@@ -5,6 +5,10 @@
 #include <algorithm>
 #include <iostream>
 #include <memory>
+#include <vector>
+#include <cstdarg>
+#include <algorithm>
+#include <numeric>
 
 namespace qbox {
 
@@ -14,25 +18,25 @@ namespace qbox {
  *  Data can be accessed using M[x][y]
  *  @todo Matrix should be benchmarked against other methods
  */
-    template <class T>
+    template <class T, int D>
     class matrix {
     public:
         matrix() {
             mData = nullptr;
-            Nx = 0;
-            Ny = 0;
+            dims.resize(D);
         }
 
         matrix(matrix&&) = default;
         matrix& operator=(matrix&&) = default;
 
         /// construct a Nx by Ny matrix
-        matrix(int Nx,int Ny): Nx(Nx), Ny(Ny) {
-            mData = std::make_unique<T[]>(Nx*Ny);
-            //for (int i = 0; i != Nx; i++) {
-                //for (int j = 0; j != Ny; j++)
-                    //(*this)[i][j] = 0;
-            //}
+        matrix(std::initializer_list<int> init_dims): dims(init_dims) {
+            mData = std::make_unique<T[]>(tot());
+
+            offsets.push_back(1);
+            for (int i = 1; i != D; i++)
+                offsets.push_back( offsets[i-1]*dims[D-i] );
+            reverse(offsets.begin(), offsets.end());
         };
 
         /// get reference to row i
@@ -40,27 +44,38 @@ namespace qbox {
          * &param index row number
          * &return row array pointer of size Ny
          */
-        T* operator[](int index) const {return mData.get()+index*Ny;}
+        T& operator() (const std::initializer_list<int>& i) {
+            int index = std::inner_product(i.begin(), i.end(), offsets.begin(), 0);
+            return *(mData.get() + index);
+        }
+
+        const T& operator() (const std::initializer_list<int>& i) const {
+            int index = std::inner_product(i.begin(), i.end(), offsets.begin(), 0);
+            return *(mData.get() + index);
+        }
 
         /// get value at row i, col j
-        T get(int i, int j) const {return mData.get()[i*Ny+j];}
+        T get(const std::initializer_list<int>& i) const {
+            int index = std::inner_product(i.begin(), i.end(), offsets.begin(), 0);
+            return *(mData.get() + index);
+        }
 
         /// get pointer to data
         T* data() const {
             return mData.get();
         }
-        /// get Nx
-        int get_Nx() const {
-            return Nx;
-        }
-        /// get Ny
-        int get_Ny() const {
-            return Ny;
+
+        int tot() {
+            int ret = 1;
+            for (const auto x: dims)
+                ret *= x;
+            return ret;
         }
 
     private:
         std::unique_ptr<T[]> mData; ///<  Pointer to data
-        int Nx,Ny;  ///< Size of the matrix
+        std::vector<int> dims;
+        std::vector<int> offsets;
     };
 }
 

@@ -27,9 +27,9 @@ namespace qbox {
         double pulse_amp = sin(2*M_PI*freq*(*t));
         for (int i = start; i != end; i++) {
             if (vertical)
-                F->Ez[p1i[0]][i] += pulse_amp;
+                F->Ez({p1i[0],i}) += pulse_amp;
             else
-                F->Ez[i][p2i[1]] += pulse_amp;
+                F->Ez({i,p2i[1]}) += pulse_amp;
         }
     }
 }

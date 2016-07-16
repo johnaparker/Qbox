@@ -12,6 +12,6 @@ namespace qbox {
 
     void custom_point_source::pulse() {
         static vector<int> pi = (F->grid).convertToGrid(p);
-        F->Ez[pi[0]][pi[1]] += time_func(*t);
+        F->Ez({pi[0],pi[1]}) += time_func(*t);
     }
 }

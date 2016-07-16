@@ -93,8 +93,8 @@ namespace qbox {
         double mu;             //Permeability constant everywhere
 
         //2D matrices defined everwhere. These make up the dominant memory usage
-        matrix<double> Ez,Dz,Hx,Hy,Iz,ca,cb;  //Fields + auxillary fields
-        matrix<object*> obj;    //Pointer-to-Object matrix
+        matrix<double,2> Ez,Dz,Hx,Hy,Iz,ca,cb;  //Fields + auxillary fields
+        matrix<object*,2> obj;    //Pointer-to-Object matrix
 
         //Objects, sources, and monitors. These are all polymorphic classes
         std::vector<object*> obj_list;
@@ -118,7 +118,7 @@ namespace qbox {
         
         //*** Enum here? 
         //map of field names to matrix pointer data
-        std::map<std::string, matrix<double>* > field_components;
+        std::map<std::string, matrix<double,2>* > field_components;
         timers clocks;
     };   
 }

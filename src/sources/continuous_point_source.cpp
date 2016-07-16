@@ -11,6 +11,6 @@ namespace qbox {
 
     void continuous_point_source::pulse() {
         static vector<int> pi = (F->grid).convertToGrid(p);
-        F->Ez[pi[0]][pi[1]] += sin(2*M_PI*freq*(*t));
+        F->Ez({pi[0],pi[1]}) += sin(2*M_PI*freq*(*t));
     }
 }

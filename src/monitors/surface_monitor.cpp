@@ -31,17 +31,17 @@ namespace qbox {
         dir = get_direction(p1g, p2g);
         length = p2g[dir] - p1g[dir];
         prevE = unique_ptr<double[]>(new double[length+1]);
-        rE = matrix<double>(length, N);
-        iE = matrix<double>(length, N);
-        rH = matrix<double>(length, N);
-        iH = matrix<double>(length, N);
+        rE = matrix<double,2>({length, N});
+        iE = matrix<double,2>({length, N});
+        rH = matrix<double,2>({length, N});
+        iH = matrix<double,2>({length, N});
         for (int i = 0; i != length; i++) {
             prevE[i] = 0;
             for (int j = 0; j!= N; j++) {
-                rE[i][j] = 0;
-                iE[i][j] = 0;
-                rH[i][j] = 0;
-                iH[i][j] = 0;
+                rE({i,j}) = 0;
+                iE({i,j}) = 0;
+                rH({i,j}) = 0;
+                iH({i,j}) = 0;
             }
         }
         prevE[length] = 0;
@@ -56,7 +56,7 @@ namespace qbox {
 
     void surface_monitor::update() {
         //*** this dir, Hfield combo is bad design (maybe use enum)
-        matrix<double> *Hfield = nullptr;
+        matrix<double,2> *Hfield = nullptr;
         if (dir == 0)
             Hfield = &F->Hx;
         else if (dir == 1)
@@ -72,32 +72,32 @@ namespace qbox {
         for (int i = 0; i != length; i++) {
             if (dir == 0) {
                 a = p1g[0] + i;
-                H = ((*Hfield)[a][b] + (*Hfield)[a][b-1]
-                        + (*Hfield)[a+1][b] + (*Hfield)[a+1][b-1])/4;
-                E = (F->Ez[a][b] + F->Ez[a+1][b]
+                H = ((*Hfield)({a,b})+ (*Hfield)({a,b-1})
+                        + (*Hfield)({a+1,b}) + (*Hfield)({a+1,b-1}))/4;
+                E = (F->Ez({a,b}) + F->Ez({a+1,b})
                         + prevE[i] + prevE[i+1])/4;
             }
             else if (dir == 1) {
                 b = p1g[1] + i;
-                H = ((*Hfield)[a][b] + (*Hfield)[a-1][b]
-                        + (*Hfield)[a][b+1] + (*Hfield)[a-1][b+1])/4;
-                E = (F->Ez[a][b] + F->Ez[a][b+1]
+                H = ((*Hfield)({a,b}) + (*Hfield)({a-1,b})
+                        + (*Hfield)({a,b+1}) + (*Hfield)({a-1,b+1}))/4;
+                E = (F->Ez({a,b}) + F->Ez({a,b+1})
                         + prevE[i] + prevE[i+1])/4;
             }
-            prevE[i] = F->Ez[a][b];
+            prevE[i] = F->Ez({a,b});
 
             for (int j = 0; j != N; j++) {
-                rE[i][j] += E*(*freq).get_cosf(j);
-                iE[i][j] += E*(*freq).get_sinf(j);
-                rH[i][j] += H*(*freq).get_cosf(j);
-                iH[i][j] += H*(*freq).get_sinf(j);
+                rE({i,j}) += E*(*freq).get_cosf(j);
+                iE({i,j}) += E*(*freq).get_sinf(j);
+                rH({i,j}) += H*(*freq).get_cosf(j);
+                iH({i,j}) += H*(*freq).get_sinf(j);
             }
         }
         if (dir == 0)
             a += 1;
         else
             b += 1;
-        prevE[length] = F->Ez[a][b];
+        prevE[length] = F->Ez({a,b});
     }
 
     unique_ptr<double[]> surface_monitor::compute_flux() const {
@@ -107,7 +107,7 @@ namespace qbox {
 
         for (int j = 0; j != N; j++) {
             for (int i = 0; i != length; i++) {
-                S[j] += rE[i][j]*rH[i][j] + iE[i][j]*iH[i][j];
+                S[j] += rE({i,j})*rH({i,j}) + iE({i,j})*iH({i,j});
             }
             S[j] *= F->dx;
         }

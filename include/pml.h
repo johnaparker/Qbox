@@ -19,7 +19,7 @@ namespace qbox {
         //PML array and matrix properties
         std::unique_ptr<double[]> fi1,fi2,fi3,fj1,fj2,fj3;
         std::unique_ptr<double[]> gi2,gi3,gj2,gj3;
-        matrix<double> Ihx, Ihy;
+        matrix<double,2> Ihx, Ihy;
 
     private:
         //PML dimensions

@@ -19,8 +19,8 @@ namespace qbox {
     pml::pml(grid_properties grid): Nx(grid.Nx), Ny(grid.Ny), thickness(grid.pml_thickness) {
         thickness -= 2;
 
-        Ihx = matrix<double>(Nx, Ny); 
-        Ihy = matrix<double>(Nx, Ny);
+        Ihx = matrix<double,2>({Nx, Ny}); 
+        Ihy = matrix<double,2>({Nx, Ny});
 
         fi1 = make_unique<double[]>(Nx);
         fi2 = make_unique<double[]>(Nx);
@@ -36,8 +36,8 @@ namespace qbox {
 
         for (int i = 0; i != Nx; i++) {
             for (int j = 0; j != Ny; j++) {
-                Ihx[i][j] = 0;
-                Ihy[i][j] = 0;
+                Ihx({i,j}) = 0;
+                Ihy({i,j}) = 0;
             }
         }
 
