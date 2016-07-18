@@ -39,6 +39,10 @@ namespace qbox {
             reverse(offsets.begin(), offsets.end());
         };
 
+        matrix(int Nx, int Ny): matrix({Nx,Ny}) { (*this)(0,0); }
+        matrix(int Nx, int Ny, int Nz): matrix({Nx,Ny,Nz}) {(*this)(0,0,0);}
+        matrix(int Nx, int Ny, int Nz, int Nt): matrix({Nx,Ny,Nz,Nt}) {(*this)(0,0,0,0);}
+
         /// get reference to row i
         /**
          * &param index row number
@@ -52,6 +56,27 @@ namespace qbox {
         const T& operator() (const std::initializer_list<int>& i) const {
             int index = std::inner_product(i.begin(), i.end(), offsets.begin(), 0);
             return *(mData.get() + index);
+        }
+
+        T& operator() (int Nx, int Ny) {
+            return f2(*this, {Nx,Ny});
+        }
+        const T& operator() (int Nx, int Ny) const {
+            return f2(*this, {Nx,Ny});
+        }
+
+        T& operator() (int Nx, int Ny, int Nz) {
+            return f3(*this, {Nx,Ny,Nz});
+        }
+        const T& operator() (int Nx, int Ny, int Nz) const {
+            return f3(*this, {Nx,Ny,Nz});
+        }
+
+        T& operator() (int Nx, int Ny, int Nz, int Nt) {
+            return f4(*this, {Nx,Ny,Nz,Nt});
+        }
+        const T& operator() (int Nx, int Ny, int Nz, int Nt) const{
+            return f4(*this, {Nx,Ny,Nz,Nt});
         }
 
         /// get value at row i, col j
@@ -76,6 +101,27 @@ namespace qbox {
         std::unique_ptr<T[]> mData; ///<  Pointer to data
         std::vector<int> dims;
         std::vector<int> offsets;
+
+        T& f2 (matrix<T,2>& m, const std::initializer_list<int>& i) {
+            return m(i);
+        }
+        const T& f2 (const matrix<T,2>& m, const std::initializer_list<int>& i) const {
+            return m(i);
+        }
+
+        T& f3 (matrix<T,3>& m, const std::initializer_list<int>& i) {
+            return m(i);
+        }
+        const T& f3 (const matrix<T,3>& m, const std::initializer_list<int>& i) const{
+            return m(i);
+        }
+
+        T& f4 (matrix<T,4>& m, const std::initializer_list<int>& i) {
+            return m(i);
+        }
+        const T& f4 (const matrix<T,4>& m, const std::initializer_list<int>& i) const{
+            return m(i);
+        }
     };
 }
 

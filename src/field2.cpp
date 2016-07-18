@@ -22,30 +22,30 @@ namespace qbox {
         t = 1;
         tStep = 0;
         dt = dx/2.0;
-        Ez = matrix<double,2>({Nx, Ny}); 
-        Hx = matrix<double,2>({Nx, Ny});
-        Hy = matrix<double,2>({Nx, Ny});
-        Dz = matrix<double,2>({Nx, Ny});
-        Iz = matrix<double,2>({Nx, Ny});
-        ca = matrix<double,2>({Nx, Ny});
-        cb = matrix<double,2>({Nx, Ny});
+        Ez = matrix<double,2>(Nx, Ny); 
+        Hx = matrix<double,2>(Nx, Ny);
+        Hy = matrix<double,2>(Nx, Ny);
+        Dz = matrix<double,2>(Nx, Ny);
+        Iz = matrix<double,2>(Nx, Ny);
+        ca = matrix<double,2>(Nx, Ny);
+        cb = matrix<double,2>(Nx, Ny);
 
-        obj  = matrix<object*,2>({Nx, Ny}); 
+        obj  = matrix<object*,2>(Nx, Ny); 
         background = make_unique<medium>();
         obj_list = {background.get()};
         
         for (int i = 0; i != Nx; i++) {
             for (int j = 0; j != Ny; j++) {
-                Ez({i,j}) = 0;
-                Hx({i,j}) = 0;
-                Hy({i,j}) = 0;
-                Dz({i,j}) = 0;
-                Iz({i,j}) = 0;
+                Ez(i,j) = 0;
+                Hx(i,j) = 0;
+                Hy(i,j) = 0;
+                Dz(i,j) = 0;
+                Iz(i,j) = 0;
                 double eps = obj_list[0]->eps;      
                 double conduc = obj_list[0]->conduc; 
-                ca({i,j}) = 1/(eps + conduc*dt/epsilon);
-                cb({i,j}) = conduc*dt/epsilon;
-                obj({i,j}) = obj_list[0];
+                ca(i,j) = 1/(eps + conduc*dt/epsilon);
+                cb(i,j) = conduc*dt/epsilon;
+                obj(i,j) = obj_list[0];
              }
         }
 
@@ -143,8 +143,8 @@ namespace qbox {
         clocks.start(clock_name::looping);
         for (int i=1; i<Nx-1; i++) {
             for (int j=1; j<Ny-1; j++) {
-                Dz({i,j}) = BC->gi3[i]*BC->gj3[j]*Dz({i,j}) + 
-                    BC->gi2[i]*BC->gj2[j]*0.5*(Hy({i,j})-Hy({i-1,j}) - Hx({i,j})+Hx({i,j-1}));
+                Dz(i,j) = BC->gi3[i]*BC->gj3[j]*Dz(i,j) + 
+                    BC->gi2[i]*BC->gj2[j]*0.5*(Hy(i,j)-Hy(i-1,j) - Hx(i,j)+Hx(i,j-1));
              }
         }
 
@@ -153,8 +153,8 @@ namespace qbox {
 
         for (int i=1; i<Nx-1; i++) {
             for (int j=1; j<Ny-1; j++) {
-                Ez({i,j})= ca({i,j})*(Dz({i,j}) -Iz({i,j}));
-                Iz({i,j})+= cb({i,j})*Ez({i,j});
+                Ez(i,j)= ca(i,j)*(Dz(i,j) -Iz(i,j));
+                Iz(i,j)+= cb(i,j)*Ez(i,j);
              }
         }
 
@@ -178,12 +178,12 @@ namespace qbox {
         for (int i=1; i<Nx-1; i++) {
             for (int j=1; j<Ny-1; j++) {
                 double curl_e = Ez({i+1,j}) - Ez({i,j});
-                BC->Ihy({i,j}) += curl_e;
-                Hy({i,j}) = BC->fi3[i]*Hy({i,j}) + BC->fi2[i]*0.5*curl_e + BC->fj1[j]*BC->Ihy({i,j});
+                BC->Ihy(i,j) += curl_e;
+                Hy(i,j) = BC->fi3[i]*Hy(i,j) + BC->fi2[i]*0.5*curl_e + BC->fj1[j]*BC->Ihy(i,j);
                 
-                curl_e = Ez({i,j}) - Ez({i,j+1});
-                BC->Ihx({i,j}) += curl_e;
-                Hx({i,j}) = BC->fj3[j]*Hx({i,j}) + BC->fj2[j]*0.5*curl_e + BC->fi1[i]*BC->Ihx({i,j});
+                curl_e = Ez(i,j) - Ez(i,j+1);
+                BC->Ihx(i,j) += curl_e;
+                Hx(i,j) = BC->fj3[j]*Hx(i,j) + BC->fj2[j]*0.5*curl_e + BC->fi1[i]*BC->Ihx(i,j);
             }
         }
 
@@ -203,11 +203,11 @@ namespace qbox {
                 vector<int> pi = {i,j};
                 vector<int> p = grid.convertToReal(pi);
                 if (new_object.inside(p)) {
-                    obj({i,j}) = &new_object;
-                    obj({i,j}) = &new_object;
+                    obj(i,j) = &new_object;
+                    obj(i,j) = &new_object;
                         
-                    ca({i,j}) = 1/(eps + conduc*dt/epsilon);
-                    cb({i,j}) = conduc*dt/epsilon;
+                    ca(i,j) = 1/(eps + conduc*dt/epsilon);
+                    cb(i,j) = conduc*dt/epsilon;
                 }
             }
         }
