@@ -1,3 +1,6 @@
+#ifndef GUARD_timer_h
+#define GUARD_timer_h
+
 #include <chrono>
 #include <iostream>
 #include <map>
@@ -81,3 +84,5 @@ namespace qbox {
         std::map<clock_name, timer> time_map;   ///< map of timers
     };
 }
+
+#endif

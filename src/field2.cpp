@@ -13,6 +13,7 @@
 #include "objects/object.h"
 #include "tfsf.h"
 #include "termcolor.h"
+#include "timer.h"
 
 using namespace std;
 

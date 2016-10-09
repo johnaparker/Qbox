@@ -40,11 +40,5 @@ Class surface will contain two vecs:
     -checking to ensure one is the same
     -having a known orientation
 
-Field Data and DFT data can become Boost::multi_arrays
-    -how can we pass this to HDF5?
-    -can we use a slice, and pass that to hdf5?
-    -can slices be sent easily through MPI?
-    -performance?
-
 Bug in box_monitor... when extendable, surface monitor m1_1 is not extendable.
     A quick way to find solution: replace bool extendable with an enum class
