@@ -77,8 +77,8 @@ namespace qbox {
                              }
                              else {
                                  auto gFields = outFile->open_group("Fields");
-                                 auto dset = gFields->open_dataset("Ez");
-                                 dset->append(Ez.data());
+                                 auto dset = gFields.open_dataset("Ez");
+                                 dset.append(Ez.data());
                              }
                              break;
             case fields::Hx: if (!outFile->object_exists("Fields/Hx")) {
@@ -86,8 +86,8 @@ namespace qbox {
                              }
                              else {
                                  auto gFields = outFile->open_group("Fields");
-                                 auto dset = gFields->open_dataset("Hx");
-                                 dset->append(Hx.data());
+                                 auto dset = gFields.open_dataset("Hx");
+                                 dset.append(Hx.data());
                              }
                              break;
             case fields::Hy: if (!outFile->object_exists("Fields/Hy")) {
@@ -95,8 +95,8 @@ namespace qbox {
                              }
                              else {
                                  auto gFields = outFile->open_group("Fields");
-                                 auto dset = gFields->open_dataset("Hy");
-                                 dset->append(Hy.data());
+                                 auto dset = gFields.open_dataset("Hy");
+                                 dset.append(Hy.data());
                              }
                              break;
         }
@@ -226,16 +226,16 @@ namespace qbox {
 
 
     void Field2D::create_fields_dataset(fields field) {
-        unique_ptr<h5cpp::h5group> gFields;
-        unique_ptr<h5cpp::h5dset> dset;
+        h5cpp::h5group gFields;
+        h5cpp::h5dset dset;
 
         if (!outFile->object_exists("Fields")) {
             gFields = outFile->create_group("Fields");
-            h5cpp::dataspace ds_a(vector<hsize_t>{1});
-            auto attr = gFields->create_attribute("dx", h5cpp::dtype::Double, ds_a);
-            attr->write(&(dx));
-            attr = gFields->create_attribute("dt", h5cpp::dtype::Double, ds_a);
-            attr->write(&(dt));
+            h5cpp::dspace ds_a(vector<hsize_t>{1});
+            auto attr = gFields.create_attribute("dx", h5cpp::dtype::Double, ds_a);
+            attr.write(&(dx));
+            attr = gFields.create_attribute("dt", h5cpp::dtype::Double, ds_a);
+            attr.write(&(dt));
         }
         else
             gFields = outFile->open_group("Fields");
@@ -243,19 +243,19 @@ namespace qbox {
         vector<hsize_t> dims = {hsize_t(Nx),hsize_t(Ny),1};
         vector<hsize_t> max_dims = {hsize_t(Nx),hsize_t(Ny),h5cpp::inf};
         vector<hsize_t> chunk_dims = dims;
-        h5cpp::dataspace ds(dims, max_dims, chunk_dims, false);
+        h5cpp::dspace ds(dims, max_dims, chunk_dims, false);
         switch(field) {
-            case fields::Ez:  dset = gFields->create_dataset("Ez", 
+            case fields::Ez:  dset = gFields.create_dataset("Ez", 
                                      h5cpp::dtype::Double, ds); 
-                              dset->write(Ez.data());
+                              dset.write(Ez.data());
                               break;
-            case fields::Hx:  dset = gFields->create_dataset("Hx", 
+            case fields::Hx:  dset = gFields.create_dataset("Hx", 
                                      h5cpp::dtype::Double, ds); 
-                              dset->write(Hx.data());
+                              dset.write(Hx.data());
                               break;
-            case fields::Hy:  dset = gFields->create_dataset("Hy", 
+            case fields::Hy:  dset = gFields.create_dataset("Hy", 
                                      h5cpp::dtype::Double, ds); 
-                              dset->write(Hy.data());
+                              dset.write(Hy.data());
                               break;
         }
     }

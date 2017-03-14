@@ -1,16 +1,17 @@
 cmake_minimum_required(VERSION 3.5.2)
 project(Qbox)
-set(CMAKE_BUILD_TYPE Release)
+#set(CMAKE_BUILD_TYPE DEBUG)
 enable_testing()
  
 #Compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wl,--no-as-needed -ldl")
 
-if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
+if(${CMAKE_BUILD_TYPE} STREQUAL "RELEASE")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
-elseif(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+elseif(${CMAKE_BUILD_TYPE} STREQUAL "DEBUG")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g -Og")
 endif()
+message(STATUS "${CMAKE_CXX_FLAGS}")
 
 #Dependencies
 #HDF5 library

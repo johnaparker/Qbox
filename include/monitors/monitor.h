@@ -26,7 +26,7 @@ namespace qbox {
         virtual void update() = 0;                //update the DFT values
         virtual std::unique_ptr<double[]> compute_flux() const = 0;
 
-        std::unique_ptr<h5cpp::h5group> get_group();
+        h5cpp::h5group get_group();
 
         monitor() = default;
         monitor(const monitor&) = default;
@@ -39,7 +39,7 @@ namespace qbox {
         bool extendable;
         std::unique_ptr<double[]> prevE;   //previous E at all all points in the monitor; needed to interpolate E in time domain
         Field2D *F;      //pointer to owning field object
-        h5cpp::h5file *outFile;
+        std::unique_ptr<h5cpp::h5file> outFile;
     };
 
 

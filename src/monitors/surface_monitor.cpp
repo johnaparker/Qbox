@@ -47,11 +47,11 @@ namespace qbox {
         prevE[length] = 0;
 
         auto gName = get_group();
-        auto dspace = h5cpp::dataspace(vector<hsize_t>{2});
-        auto attr = gName->create_attribute("p1", h5cpp::dtype::Int, dspace);
-        attr->write(p1.data());
-        attr = gName->create_attribute("p2", h5cpp::dtype::Int, dspace);
-        attr->write(p2.data());
+        auto dspace = h5cpp::dspace(vector<hsize_t>{2});
+        auto attr = gName.create_attribute("p1", h5cpp::dtype::Int, dspace);
+        attr.write(p1.data());
+        attr = gName.create_attribute("p2", h5cpp::dtype::Int, dspace);
+        attr.write(p2.data());
     }
 
     void surface_monitor::update() {
@@ -118,28 +118,28 @@ namespace qbox {
         auto S = compute_flux();
         auto gName = get_group();
 
-        unique_ptr<h5cpp::h5dset> dset;
-        if (!gName->object_exists("flux")) {
+        h5cpp::h5dset dset;
+        if (!gName.object_exists("flux")) {
             vector<hsize_t> dims = {hsize_t(N)};
             vector<hsize_t> max_dims = {hsize_t(N)};
             if (!extendable) {
-                h5cpp::dataspace ds(dims, max_dims);
-                dset = gName->create_dataset("flux", 
+                h5cpp::dspace ds(dims, max_dims);
+                dset = gName.create_dataset("flux", 
                              h5cpp::dtype::Double, ds); 
             }
             else {
                 dims.push_back(1);
                 max_dims.push_back(h5cpp::inf);
                 vector<hsize_t> chunk_dims = dims;
-                h5cpp::dataspace ds(dims, max_dims, chunk_dims);
-                dset = gName->create_dataset("flux", 
+                h5cpp::dspace ds(dims, max_dims, chunk_dims);
+                dset = gName.create_dataset("flux", 
                              h5cpp::dtype::Double, ds); 
             }
-            dset->write(S.get());
+            dset.write(S.get());
         }
         else {
-            dset = gName->open_dataset("flux");
-            dset->append(S.get());
+            dset = gName.open_dataset("flux");
+            dset.append(S.get());
         }
     }
 }
