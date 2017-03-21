@@ -11,15 +11,14 @@
 #include <memory>
 #include "matrix.h"
 #include "sources/source.h"
-#include "objects/object.h"
-#include "objects/medium.h"
+#include "object.h"
+#include "geometry/geometry.h"
 #include "monitors/monitor.h"
 #include "pml.h"
 #include "tfsf.h"
 #include "timer.h"
+#include "vec.h"
 #include "h5cpp.h"
-
-
 
 
 namespace qbox {
@@ -101,7 +100,7 @@ namespace qbox {
         std::vector<source*> source_list;
         std::vector<monitor*> monitor_list;
 
-        std::unique_ptr<medium> background;
+        std::unique_ptr<object> background;
 
         //Physical timestep, time
         double dt,t;

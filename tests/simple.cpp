@@ -20,9 +20,11 @@ int main() {
     //box_monitor m1("m1",{50,50}, {70,70}, (freq), 100); 
     //surface_monitor m1("m1",{50,50}, {50,70},0,5*f, 100); 
     //surface_monitor m2(m1); 
-    cylinder c1(60,60,5);
-    c1.set_eps(4);
-    test.add_object(c1);
+    cylinder c1(5);
+    simple_material d1(4);
+    object o1(c1, d1, vec(60,60));
+
+    test.add_object(o1);
     test.add_monitor(m1);
 
     gaussian_point_source s1({40,60}, f, 30, 3);

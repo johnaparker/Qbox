@@ -1,16 +1,16 @@
 #ifndef GUARD_cylinder_h
 #define GUARD_cylinder_h
 
-#include <vector>
-#include "geometry.h"
+#include "geometry/geometry.h"
 
 namespace qbox {
 
     class cylinder: public geometry {
     public:
-        sphere(double r);
+        cylinder(double r);
         bool inside(const vec& v) const override;
-        void write(std::unique_ptr<h5cpp::h5file>& file) const override;
+        void write(h5cpp::h5group& group) const override;
+        std::unique_ptr<geometry> clone() const override;
 
     private:
         double r;

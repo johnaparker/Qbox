@@ -1,15 +1,28 @@
-#include <vector>
-#include <math.h>
-#include "objects/cylinder.h"
+#include "geometry/cylinder.h"
 
 using namespace std;
 
 namespace qbox {
-    cylinder::cylinder(double x, double y, double r): x(x), y(y), r(r) {};
 
-    bool cylinder::inside(vector<int> p) const{
-        if (pow(p[0]-x,2) + pow(p[1]-y,2) < pow(r,2))
+    cylinder::cylinder(double r): r(r) {
+        set_bounding_box(vec(-r,-r), vec(r,r));
+        set_interior_box(vec(-r,-r)/sqrt(2), vec(r,r)/sqrt(2));
+    };
+
+    bool cylinder::inside(const vec& p) const{
+        if (p.squaredNorm() < pow(r,2))
            return true;
         else return false; 
     }
+
+    void cylinder::write(h5cpp::h5group& group) const {
+        auto dspace = h5cpp::dspace(vector<hsize_t>{1});
+        auto attr = group.create_attribute("r", h5cpp::dtype::Double, dspace);
+        attr.write(&r);
+    }
+
+    unique_ptr<geometry> cylinder::clone() const {
+        return unique_ptr<cylinder>(new cylinder(*this));
+    }
+
 }

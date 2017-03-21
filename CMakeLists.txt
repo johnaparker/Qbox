@@ -11,7 +11,7 @@ if(${CMAKE_BUILD_TYPE} STREQUAL "RELEASE")
 elseif(${CMAKE_BUILD_TYPE} STREQUAL "DEBUG")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g -Og")
 endif()
-message(STATUS "${CMAKE_CXX_FLAGS}")
+message(STATUS "FLAGS: ${CMAKE_CXX_FLAGS}")
 
 #Dependencies
 #HDF5 library
@@ -37,7 +37,8 @@ include_directories(include)
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 file(GLOB MAIN_HEADERS "include/*.h" )
 file(GLOB MONITORS_HEADERS "include/monitors/*.h")
-file(GLOB OBJECTS_HEADERS "include/objects/*.h")
+file(GLOB GEOMETRY_HEADERS "include/geometry/*.h")
+file(GLOB MATERIALS_HEADERS "include/materials/*.h")
 file(GLOB SOURCES_HEADERS "include/sources/*.h")
  
 #Generate the shared library from the sources
@@ -63,6 +64,7 @@ add_test(SimpleRun simple)
 install(TARGETS qbox DESTINATION lib)
 install(FILES ${MAIN_HEADERS} DESTINATION include/qbox)
 install(FILES ${MONITORS_HEADERS} DESTINATION include/qbox/monitors)
-install(FILES ${OBJECTS_HEADERS} DESTINATION include/qbox/objects)
+install(FILES ${GEOMETRY_HEADERS} DESTINATION include/qbox/geometry)
+install(FILES ${MATERIALS_HEADERS} DESTINATION include/qbox/materials)
 install(FILES ${SOURCES_HEADERS} DESTINATION include/qbox/sources)
 install(FILES include/qbox.h DESTINATION include)

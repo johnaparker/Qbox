@@ -1,19 +1,21 @@
-#ifndef GUARD_rectangle_h
-#define GUARD_rectangle_h
+#ifndef GUARD_block_h
+#define GUARD_block_h
 
-#include <vector>
-#include "geometry.h"
+#include "geometry/geometry.h"
 
 namespace qbox {
-    //block object
+
     class block: public geometry {
     public:
         block(vec dim);
         bool inside(const vec& v) const override;
+        void write(h5cpp::h5group& group) const override;
+        std::unique_ptr<geometry> clone() const override;
 
     private:
         vec dim;
     };
+
 }
 
 #endif

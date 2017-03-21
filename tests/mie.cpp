@@ -30,9 +30,10 @@ int main() {
 
     Field2D scat(grid, "scat.h5");
 
-    cylinder c1(60,60,5);
-    c1.set_eps(4);
-    scat.add_object(c1);
+    cylinder c1(5);
+    simple_material d1(4);
+    object o1(c1, d1, vec(60,60));
+    scat.add_object(o1);
 
     box_monitor m2("m_scat",{50,50}, {70,70}, 1/30.0,3/30.0, 500); 
     scat.add_monitor(m2);

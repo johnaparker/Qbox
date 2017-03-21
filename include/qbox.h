@@ -7,11 +7,15 @@ namespace qbox{}
 //main
 #include "qbox/field2.h"
 #include "qbox/field.h"
+#include "qbox/vec.h"
 
-//objects
-#include "qbox/objects/cylinder.h"
-#include "qbox/objects/medium.h"
-#include "qbox/objects/rectangle.h"
+//geometry
+#include "qbox/geometry/cylinder.h"
+#include "qbox/geometry/medium.h"
+#include "qbox/geometry/block.h"
+
+//materials
+#include "qbox/materials/simple_material.h"
 
 //monitors
 #include "qbox/monitors/surface_monitor.h"

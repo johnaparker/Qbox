@@ -10,10 +10,13 @@
 #include "field2.h"
 #include "field.h"
 #include "matrix.h"
-#include "objects/object.h"
 #include "tfsf.h"
 #include "termcolor.h"
 #include "timer.h"
+
+#include "materials/simple_material.h"
+#include "geometry/cylinder.h"
+#include "geometry/medium.h"
 
 using namespace std;
 
@@ -32,9 +35,13 @@ namespace qbox {
         cb = matrix<double,2>(Nx, Ny);
 
         obj  = matrix<object*,2>(Nx, Ny); 
-        background = make_unique<medium>();
+
+        simple_material background_material(1);
+        //cylinder background_geometry(1);
+        medium background_geometry;
+        background = make_unique<object>(background_geometry, background_material, vec(0,0));
         obj_list = {background.get()};
-        
+
         for (int i = 0; i != Nx; i++) {
             for (int j = 0; j != Ny; j++) {
                 Ez(i,j) = 0;
@@ -42,8 +49,8 @@ namespace qbox {
                 Hy(i,j) = 0;
                 Dz(i,j) = 0;
                 Iz(i,j) = 0;
-                double eps = obj_list[0]->eps;      
-                double conduc = obj_list[0]->conduc; 
+                double eps = obj_list[0]->get_material()->get_eps();      
+                double conduc = obj_list[0]->get_material()->get_conduc(); 
                 ca(i,j) = 1/(eps + conduc*dt/epsilon);
                 cb(i,j) = conduc*dt/epsilon;
                 obj(i,j) = obj_list[0];
@@ -196,14 +203,16 @@ namespace qbox {
 
     void Field2D::add_object(object &new_object) {
         obj_list.push_back(&new_object);
-        double eps = new_object.eps;
-        double conduc = new_object.conduc;
+        double eps = new_object.get_material()->get_eps();
+        double conduc = new_object.get_material()->get_conduc();
 
         for (int i = 0; i != Nx; i++) {
             for (int j = 0; j != Ny; j++) {
                 vector<int> pi = {i,j};
                 vector<int> p = grid.convertToReal(pi);
-                if (new_object.inside(p)) {
+                vec p_eigen(p[0], p[1]);
+
+                if (new_object.inside(p_eigen)) {
                     obj(i,j) = &new_object;
                     obj(i,j) = &new_object;
                         
