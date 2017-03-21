@@ -21,7 +21,7 @@ int main() {
     //surface_monitor m2(m1); 
     block c1(vec(50,35));
     simple_material d1(12);
-    object o1(c1, d1, vec(70,50));
+    object o1(c1, d1, vec(70,50), {1,1});
 
     test.add_object(o1);
 
