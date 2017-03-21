@@ -6,7 +6,7 @@ using namespace std;
 
 namespace qbox {
 
-    object::object(geometry& geometryType, material& materialType, vec center, vec orientation): 
+    object::object(const geometry& geometryType, const material& materialType, vec center, vec orientation): 
                   geometryType(geometryType.clone()), materialType(materialType.clone()), center(center), orientation(orientation) {}
 
     bool object::inside(const vec& v) const {

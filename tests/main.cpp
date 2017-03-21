@@ -19,9 +19,7 @@ int main() {
     //box_monitor m1("m1",{50,50}, {70,70}, (freq), 100); 
     //surface_monitor m1("m1",{50,50}, {50,70},0,5*f, 100); 
     //surface_monitor m2(m1); 
-    block c1(vec(50,35));
-    simple_material d1(12);
-    object o1(c1, d1, vec(70,50), {1,1});
+    object o1(block({50,35}), simple_material(12), {70,50}, {1,1});
 
     test.add_object(o1);
 

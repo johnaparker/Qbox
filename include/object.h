@@ -11,7 +11,7 @@ namespace qbox {
 
     class object {
     public:
-        object(geometry& geometryType, material& materialType, vec center, vec orientation = vec(0,1));
+        object(const geometry& geometryType, const material& materialType, vec center, vec orientation = vec(0,1));
 
         bool inside(const vec& p) const;
 
