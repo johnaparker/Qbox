@@ -14,8 +14,8 @@ namespace qbox {
     public:
         geometry() = default;
         geometry (const geometry& other) { 
-            bounding_box = other.bounding_box ? std::unique_ptr<vol>(new vol(*other.bounding_box)) : nullptr;
-            interior_box = other.interior_box ? std::unique_ptr<vol>(new vol(*other.interior_box)) : nullptr;
+            bounding_box = other.bounding_box ? std::unique_ptr<volume>(new volume(*other.bounding_box)) : nullptr;
+            interior_box = other.interior_box ? std::unique_ptr<volume>(new volume(*other.interior_box)) : nullptr;
         }
 
         virtual bool inside(const vec& v) const = 0;
@@ -24,15 +24,15 @@ namespace qbox {
 
     protected:
         void set_bounding_box(const vec& a, const vec& b) {
-            bounding_box = std::make_unique<vol>(a,b);
+            bounding_box = std::make_unique<volume>(a,b);
         }
         void set_interior_box(const vec& a, const vec& b) {
-            interior_box = std::make_unique<vol>(a,b);
+            interior_box = std::make_unique<volume>(a,b);
         }
 
     protected:
-        std::unique_ptr<vol> bounding_box = nullptr;
-        std::unique_ptr<vol> interior_box = nullptr;
+        std::unique_ptr<volume> bounding_box = nullptr;
+        std::unique_ptr<volume> interior_box = nullptr;
     };
 
 }
