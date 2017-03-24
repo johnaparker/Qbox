@@ -17,12 +17,12 @@ namespace qbox {
             dim = (a-b).cwiseAbs();
         }
 
-        volume(vec center, int lx, int ly): dim(vec(lx,ly)) {
+        volume(vec center, double lx, double ly): dim(vec(lx,ly)) {
             a = center - vec(lx,ly)/2;
             b = center + vec(lx,ly)/2;
         }
 
-        volume(vec center, int l): volume(center,l,l) {};
+        volume(vec center, double l): volume(center,l,l) {};
 
     public:
         vec a,b;
@@ -38,7 +38,7 @@ namespace qbox {
             else throw std::invalid_argument("vectors must have one component equal to each other");
         }
 
-        surface(vec center, vec normal_vec, int l, int sign = 1) {
+        surface(vec center, vec normal_vec, double l, int sign = 1) {
             if (normal_vec[0] == 0) {normal = sign*vec(0,1);}
             else if (normal_vec[1] == 0) {normal = sign*vec(1,0);}
             else throw std::invalid_argument("invalid normal vector");
