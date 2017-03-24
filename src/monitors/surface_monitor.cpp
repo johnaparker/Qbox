@@ -10,17 +10,17 @@ using namespace std;
 
 
 namespace qbox {
-    surface_monitor::surface_monitor(string name, vector<int> p1, vector<int> p2, shared_ptr<freq_data> freq, int N, bool extendable): monitor(name,freq,N,extendable), p1(p1), p2(p2), dir(0), length(0) {
+    surface_monitor::surface_monitor(string name, const surface &surf, shared_ptr<freq_data> freq, int N, bool extendable): monitor(name,freq,N,extendable), p1(surf.a.cast<int>()), p2(surf.b.cast<int>()), dir(0), length(0) {
         F = nullptr;
         prevE = nullptr;
     }
 
-    surface_monitor::surface_monitor(string name, vector<int> p1, vector<int> p2, double fmin, double fmax, int N, bool extendable): surface_monitor(name, p1, p2, nullptr, N, extendable) {
+    surface_monitor::surface_monitor(string name, const surface &surf, double fmin, double fmax, int N, bool extendable): surface_monitor(name, surf, nullptr, N, extendable) {
         freq = shared_ptr<freq_data> (new freq_data(fmin, fmax, N));
     }
 
-    surface_monitor::surface_monitor(string name, vector<int> p1, vector<int> p2, double f, bool extendable): 
-            surface_monitor(name, p1, p2, nullptr, 1, extendable) {
+    surface_monitor::surface_monitor(string name, const surface &surf, double f, bool extendable): 
+            surface_monitor(name, surf, nullptr, 1, extendable) {
         freq = shared_ptr<freq_data> (new freq_data(f));
     }
 

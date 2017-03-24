@@ -13,7 +13,7 @@ int main() {
 {
     Field2D norm(grid, "norm.h5");
 
-    box_monitor m1("m_norm",{50,50}, {70,70}, 1/30.0,3/30.0, 500); 
+    box_monitor m1("m_norm",volume({50,50}, {70,70}), 1/30.0,3/30.0, 500); 
     norm.add_monitor(m1);
 
     gaussian_point_source s1({30,60}, f, 1/200.0, 80);
@@ -35,7 +35,7 @@ int main() {
     object o1(c1, d1, vec(60,60));
     scat.add_object(o1);
 
-    box_monitor m2("m_scat",{50,50}, {70,70}, 1/30.0,3/30.0, 500); 
+    box_monitor m2("m_scat",volume({50,50}, {70,70}), 1/30.0,3/30.0, 500); 
     scat.add_monitor(m2);
 
     gaussian_point_source s2({30,60}, f, 1/200.0, 80);

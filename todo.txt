@@ -1,4 +1,28 @@
 
+
+[ ] separate field and grid classes into different files
+[ ] proper ivec vs vec support 
+    [ ] all monitors/sources/objects/etc. should take in vec (all user interface)
+    [ ] vec should get converted to ivec behind the scenes as needed (through grid properties)
+    [ ] we need an interpolation function
+    [ ] monitors can probably be cleaned up under this new framework
+
+[ ] We have volume/surface classes for real vecs ... what about for grid space?
+    [ ] all awkard casting between vecs and ivecs should be fixed
+
+[ ]  Definitely rethink the way sources are being done, with tfsf in mind
+    [ ] for tfsf, we need to remove field1 files in favor of something better
+
+[ ]  freq class should use smart pointers
+
+[ ] should IO be handled by its own class?
+
+
+
+
+################ OLD TODO ####################################################
+
+
 For all code: consider when to pass by reference
             : add destructors, etc.
 

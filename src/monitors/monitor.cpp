@@ -45,7 +45,7 @@ namespace qbox {
         return gName;
     }
 
-    int get_direction(vector<int> p1, vector<int> p2) {
+    int get_direction(ivec p1, ivec p2) {
         if (p1[0] == p2[0])
             return 1;
         else if (p1[1] == p2[1])

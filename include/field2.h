@@ -39,14 +39,14 @@ namespace qbox {
         grid_properties() = default;
 
         //functions to set TFSF
-        void set_tfsf(std::vector<int> p1_val, std::vector<int> p2_val);  //direct corner specification
+        void set_tfsf(ivec p1_val, ivec p2_val);  //direct corner specification
         void set_tfsf(int xbuff, int ybuff);   //xbuff is the length between simulation edge and start of TFSF
         void set_tfsf(int buff);    //xbuff = ybuff = buff
 
         //*** These should perhaps have <double> for real space, and a double res variable with it
         //conversions from grid to real, vice versa 
-        std::vector<int> convertToGrid(std::vector<int> p);     //take real p into grid 
-        std::vector<int> convertToReal(std::vector<int> pi);    //take grid pi into real
+        ivec convertToGrid(const ivec &p);     //take real p into grid 
+        ivec convertToReal(const ivec &pi);    //take grid pi into real
 
     public:
         bool totalFieldScatteredField;      //True if TFSF is in use
@@ -55,7 +55,7 @@ namespace qbox {
         double dx;           //Actual length between grid points; dx = 1/res, Nx*dx = Lx
         int res;             //grid resolution (points per 1 Lx unit); Nx = Lx*res
         int pml_thickness;   //The thickness of the pml in # of grid cells
-        std::vector<int> p1, p2;            //Vector positions of TFSF corners 
+        ivec p1, p2;            //Vector positions of TFSF corners 
         //*** This should be a separate (boundary) class, and p1,p2 should volumes
     };
 

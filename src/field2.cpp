@@ -208,8 +208,8 @@ namespace qbox {
 
         for (int i = 0; i != Nx; i++) {
             for (int j = 0; j != Ny; j++) {
-                vector<int> pi = {i,j};
-                vector<int> p = grid.convertToReal(pi);
+                ivec pi = {i,j};
+                ivec p = grid.convertToReal(pi);
                 vec p_eigen(p[0], p[1]);
 
                 if (new_object.inside(p_eigen)) {
@@ -278,15 +278,15 @@ namespace qbox {
         totalFieldScatteredField = false;       
     }
 
-    void grid_properties::set_tfsf(vector<int> p1_val, vector<int> p2_val){
+    void grid_properties::set_tfsf(ivec p1_val, ivec p2_val){
         p1 = convertToGrid(p1_val);
         p2 = convertToGrid(p2_val);
         totalFieldScatteredField = true;
     }
 
     void grid_properties::set_tfsf(int xbuff, int ybuff){
-        vector<int> p1_val = {xbuff, ybuff};
-        vector<int> p2_val = {Lx-xbuff, Ly-ybuff};
+        ivec p1_val = {xbuff, ybuff};
+        ivec p2_val = {Lx-xbuff, Ly-ybuff};
         set_tfsf(p1_val, p2_val);
     }
 
@@ -294,13 +294,13 @@ namespace qbox {
         set_tfsf(buff, buff);
     }
 
-    vector<int> grid_properties::convertToGrid(vector<int> p) {
-        vector<int> pi = {p[0]*res, p[1]*res};
+    ivec grid_properties::convertToGrid(const ivec &p) {
+        ivec pi = {p[0]*res, p[1]*res};
         return pi;
     }
 
-    vector<int> grid_properties::convertToReal(vector<int> pi) {
-        vector<int> p = {pi[0]/res, pi[1]/res};
+    ivec grid_properties::convertToReal(const ivec &pi) {
+        ivec p = {pi[0]/res, pi[1]/res};
         return p;
     }
 }

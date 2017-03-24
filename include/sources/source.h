@@ -1,7 +1,7 @@
 #ifndef GUARD_source_h
 #define GUARD_source_h
 
-#include <vector>
+#include "vec.h"
 
 //*** Think about whether this is the best way to do sources
 //*** Also think about how to add TFSF into these sources

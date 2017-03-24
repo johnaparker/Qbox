@@ -10,23 +10,23 @@
 using namespace std;
 
 namespace qbox {
-    box_monitor::box_monitor(string name, vector<int> p1, vector<int> p2, shared_ptr<freq_data> freq_in, int N, bool extendable):
-                    monitor(name, freq_in, N, extendable), p1(p1), p2(p2) {
+    box_monitor::box_monitor(string name, const volume &vol, shared_ptr<freq_data> freq_in, int N, bool extendable):
+                    monitor(name, freq_in, N, extendable), p1(vol.a.cast<int>()), p2(vol.b.cast<int>()) {
         
-        monitors[0] = surface_monitor(name + "_1", p1, {p2[0], p1[1]}, freq, N, extendable);
-        monitors[1] = surface_monitor(name + "_2", {p2[0], p1[1]}, p2, freq, N, extendable);
-        monitors[2] = surface_monitor(name + "_3", {p1[0], p2[1]}, p2, freq, N, extendable);
-        monitors[3] = surface_monitor(name + "_4", p1, {p1[0], p2[1]}, freq, N, extendable);
+        monitors[0] = surface_monitor(name + "_1", surface(p1.cast<double>(), vec(p2[0], p1[1])), freq, N, extendable);
+        monitors[1] = surface_monitor(name + "_2", surface(vec(p2[0], p1[1]), p2.cast<double>()), freq, N, extendable);
+        monitors[2] = surface_monitor(name + "_3", surface(vec(p1[0], p2[1]), p2.cast<double>()), freq, N, extendable);
+        monitors[3] = surface_monitor(name + "_4", surface(p1.cast<double>(), vec(p1[0], p2[1])), freq, N, extendable);
     }
 
-    box_monitor::box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double fmin, double fmax, int N, bool extendable):
-                box_monitor(name, p1, p2, nullptr, N, extendable) {
+    box_monitor::box_monitor(std::string name, const volume &vol, double fmin, double fmax, int N, bool extendable):
+                box_monitor(name, vol, nullptr, N, extendable) {
         freq = shared_ptr<freq_data> (new freq_data(fmin, fmax, N));
         set_freq(freq);
     }
 
-    box_monitor::box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double f, bool extendable):
-                box_monitor(name, p1, p2, nullptr, 1, extendable) {
+    box_monitor::box_monitor(std::string name, const volume &vol, double f, bool extendable):
+                box_monitor(name, vol, nullptr, 1, extendable) {
         freq = shared_ptr<freq_data>(new freq_data(f));
         set_freq(freq);
     }

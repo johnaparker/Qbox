@@ -1,7 +1,6 @@
 #ifndef GUARD_monitor_h
 #define GUARD_monitor_h
 
-#include <vector>
 #include <string>
 #include <memory>
 #include "../matrix.h"
@@ -43,7 +42,7 @@ namespace qbox {
     };
 
 
-    int get_direction(std::vector<int> p1, std::vector<int> p2);
+    int get_direction(ivec p1, ivec p2);
 
 }
 #endif

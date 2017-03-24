@@ -22,9 +22,9 @@ namespace qbox {
     public:
         //*** replace vectors with vol here
         //various ways to construct. p1,p2 = corners. 
-        surface_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, std::shared_ptr<freq_data> freq, int N, bool extendable=false);   //using freq data
-        surface_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double fmin, double fmax, int N, bool extendable=false);   //using N points between fmin and fmax
-        surface_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double f, bool extendable=false);    //at a single frequency
+        surface_monitor(std::string name, const surface &surf, std::shared_ptr<freq_data> freq, int N, bool extendable=false);   //using freq data
+        surface_monitor(std::string name, const surface &surf, double fmin, double fmax, int N, bool extendable=false);   //using N points between fmin and fmax
+        surface_monitor(std::string name, const surface &surf, double f, bool extendable=false);    //at a single frequency
 
         surface_monitor() = default;
         surface_monitor(const surface_monitor&) = default;
@@ -40,8 +40,8 @@ namespace qbox {
 
     private:
         bool extendable;
-        std::vector<int> p1g, p2g;        //grid points corners
-        std::vector<int> p1, p2;          //physical corners
+        ivec p1g, p2g;        //grid points corners
+        ivec p1, p2;          //physical corners
         matrix<double,2> rE, iE, rH, iH;    //DFT matrices
         int dir;    //orientation
         int length; //length of monitor in grid points

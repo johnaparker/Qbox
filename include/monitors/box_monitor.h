@@ -1,7 +1,6 @@
 #ifndef GUARD_box_monitor_h
 #define GUARD_box_monitor_h
 
-#include <vector>
 #include <string>
 #include <memory>
 #include "../matrix.h"
@@ -17,9 +16,9 @@ namespace qbox {
     class box_monitor: public monitor {
     public:
         //various constructors
-        box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, std::shared_ptr<freq_data> freq, int N, bool extendable=false);
-        box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double fmin, double fmax, int N, bool extendable=false);
-        box_monitor(std::string name, std::vector<int> p1, std::vector<int> p2, double f, bool extendable=false);
+        box_monitor(std::string name, const volume &vol, std::shared_ptr<freq_data> freq, int N, bool extendable=false);
+        box_monitor(std::string name, const volume &vol, double fmin, double fmax, int N, bool extendable=false);
+        box_monitor(std::string name, const volume &vol, double f, bool extendable=false);
 
         box_monitor() = default;
         box_monitor(const box_monitor&) = default;
@@ -37,7 +36,7 @@ namespace qbox {
 
     private:
         surface_monitor monitors[4];    //4 surface monitors
-        std::vector<int> p1, p2;
+        ivec p1, p2;
     };
 }
 
