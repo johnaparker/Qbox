@@ -11,12 +11,12 @@ using namespace std;
 
 namespace qbox {
     box_monitor::box_monitor(string name, const volume &vol, shared_ptr<freq_data> freq_in, int N, bool extendable):
-                    monitor(name, freq_in, N, extendable), p1(vol.a.cast<int>()), p2(vol.b.cast<int>()) {
+                    monitor(name, freq_in, N, extendable), p1(vol.a), p2(vol.b) {
         
-        monitors[0] = surface_monitor(name + "_1", surface(p1.cast<double>(), vec(p2[0], p1[1])), freq, N, extendable);
-        monitors[1] = surface_monitor(name + "_2", surface(vec(p2[0], p1[1]), p2.cast<double>()), freq, N, extendable);
-        monitors[2] = surface_monitor(name + "_3", surface(vec(p1[0], p2[1]), p2.cast<double>()), freq, N, extendable);
-        monitors[3] = surface_monitor(name + "_4", surface(p1.cast<double>(), vec(p1[0], p2[1])), freq, N, extendable);
+        monitors[0] = surface_monitor(name + "_1", surface(p1, vec(p2[0], p1[1])), freq, N, extendable);
+        monitors[1] = surface_monitor(name + "_2", surface(vec(p2[0], p1[1]), p2), freq, N, extendable);
+        monitors[2] = surface_monitor(name + "_3", surface(vec(p1[0], p2[1]), p2), freq, N, extendable);
+        monitors[3] = surface_monitor(name + "_4", surface(p1, vec(p1[0], p2[1])), freq, N, extendable);
     }
 
     box_monitor::box_monitor(std::string name, const volume &vol, double fmin, double fmax, int N, bool extendable):
@@ -44,9 +44,9 @@ namespace qbox {
 
         auto gName = get_group();
         auto dspace = h5cpp::dspace(vector<hsize_t>{2});
-        auto attr = gName.create_attribute("p1", h5cpp::dtype::Int, dspace);
+        auto attr = gName.create_attribute("p1", h5cpp::dtype::Double, dspace);
         attr.write(p1.data());
-        attr = gName.create_attribute("p2", h5cpp::dtype::Int, dspace);
+        attr = gName.create_attribute("p2", h5cpp::dtype::Double, dspace);
         attr.write(p2.data());
     }
 

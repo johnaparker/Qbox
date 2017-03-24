@@ -1,41 +1,40 @@
 #include "grid.h"
+#include "math.h"
 
 using namespace std;
 
 namespace qbox {
 
-    grid_properties::grid_properties(int Lx, int Ly, int res, int pml_thickness):
-            Lx(Lx), Ly(Ly), res(res), pml_thickness(pml_thickness) {
-        Nx = Lx*res;
-        Ny = Ly*res;
+    grid_properties::grid_properties(double _Lx, double _Ly, double res, int pml_thickness):
+            res(res), pml_thickness(pml_thickness) {
+        Nx = ceil(_Lx*res);
+        Ny = ceil(_Ly*res);
         dx = 1.0/res;
+        Lx = dx*(Nx-1);
+        Ly = dx*(Ny-1);
         totalFieldScatteredField = false;       
     }
 
-    void grid_properties::set_tfsf(ivec p1_val, ivec p2_val){
-        p1 = convertToGrid(p1_val);
-        p2 = convertToGrid(p2_val);
+    void grid_properties::set_tfsf(vec p1_val, vec p2_val){
+        p1 = to_ivec(p1_val);
+        p2 = to_ivec(p2_val);
         totalFieldScatteredField = true;
     }
 
-    void grid_properties::set_tfsf(int xbuff, int ybuff){
-        ivec p1_val = {xbuff, ybuff};
-        ivec p2_val = {Lx-xbuff, Ly-ybuff};
-        set_tfsf(p1_val, p2_val);
+    void grid_properties::set_tfsf(double xbuff, double ybuff){
+        set_tfsf({xbuff,ybuff}, {Lx-xbuff, Ly-ybuff});
     }
 
-    void grid_properties::set_tfsf(int buff){
+    void grid_properties::set_tfsf(double buff){
         set_tfsf(buff, buff);
     }
 
-    ivec grid_properties::convertToGrid(const ivec &p) {
-        ivec pi = {p[0]*res, p[1]*res};
-        return pi;
+    ivec grid_properties::to_ivec(const vec &p) {
+        return Eigen::round(p.array()/dx).cast<int>();
     }
 
-    ivec grid_properties::convertToReal(const ivec &pi) {
-        ivec p = {pi[0]/res, pi[1]/res};
-        return p;
+    vec grid_properties::to_vec(const ivec &pi) {
+        return dx*pi.cast<double>();
     }
 
 }

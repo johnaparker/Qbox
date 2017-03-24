@@ -6,10 +6,10 @@
 namespace qbox {
     class continuous_point_source: public source {
     public:
-        continuous_point_source(ivec p, double f);
+        continuous_point_source(vec p, double f);
         void pulse();
     private:
-        ivec p;    //vector position
+        vec p;    //vector position
         double freq;           //frequency
     };
 }

@@ -36,7 +36,7 @@ namespace qbox {
 
     private:
         surface_monitor monitors[4];    //4 surface monitors
-        ivec p1, p2;
+        vec p1, p2;          //physical corners
     };
 }
 

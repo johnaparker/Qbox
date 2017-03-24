@@ -10,7 +10,7 @@ using namespace std;
 
 
 namespace qbox {
-    surface_monitor::surface_monitor(string name, const surface &surf, shared_ptr<freq_data> freq, int N, bool extendable): monitor(name,freq,N,extendable), p1(surf.a.cast<int>()), p2(surf.b.cast<int>()), dir(0), length(0) {
+    surface_monitor::surface_monitor(string name, const surface &surf, shared_ptr<freq_data> freq, int N, bool extendable): monitor(name,freq,N,extendable), p1(surf.a), p2(surf.b), dir(0), length(0) {
         F = nullptr;
         prevE = nullptr;
     }
@@ -26,8 +26,8 @@ namespace qbox {
 
     void surface_monitor::set_F(Field2D *newF) {
         monitor::set_F(newF);
-        p1g = (F->grid).convertToGrid(p1);
-        p2g = (F->grid).convertToGrid(p2);
+        p1g = (F->grid).to_ivec(p1);
+        p2g = (F->grid).to_ivec(p2);
         dir = get_direction(p1g, p2g);
         length = p2g[dir] - p1g[dir];
         prevE = unique_ptr<double[]>(new double[length+1]);
@@ -48,9 +48,9 @@ namespace qbox {
 
         auto gName = get_group();
         auto dspace = h5cpp::dspace(vector<hsize_t>{2});
-        auto attr = gName.create_attribute("p1", h5cpp::dtype::Int, dspace);
+        auto attr = gName.create_attribute("p1", h5cpp::dtype::Double, dspace);
         attr.write(p1.data());
-        attr = gName.create_attribute("p2", h5cpp::dtype::Int, dspace);
+        attr = gName.create_attribute("p2", h5cpp::dtype::Double, dspace);
         attr.write(p2.data());
     }
 

@@ -41,7 +41,7 @@ namespace qbox {
     private:
         bool extendable;
         ivec p1g, p2g;        //grid points corners
-        ivec p1, p2;          //physical corners
+        vec p1, p2;          //physical corners
         matrix<double,2> rE, iE, rH, iH;    //DFT matrices
         int dir;    //orientation
         int length; //length of monitor in grid points

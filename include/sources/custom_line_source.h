@@ -9,7 +9,7 @@ namespace qbox {
         custom_line_source(const surface &surf, double (*time_func)(double));
         void pulse();
     private:
-        ivec p1, p2;
+        vec p1, p2;
         double (*time_func)(double);
     };
 }

@@ -6,10 +6,10 @@
 namespace qbox {
     class custom_point_source: public source {
     public:
-        custom_point_source(ivec p, double (*time_func)(double));
+        custom_point_source(vec p, double (*time_func)(double));
         void pulse();
     private:
-        ivec p;
+        vec p;
         double (*time_func)(double);
     };
 }

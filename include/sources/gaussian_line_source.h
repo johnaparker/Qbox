@@ -9,7 +9,7 @@ namespace qbox {
         gaussian_line_source(const surface &surf, double T0, double sig);
         void pulse();
     private:
-        ivec p1, p2;
+        vec p1, p2;
         double T0, sig;
     };
 }

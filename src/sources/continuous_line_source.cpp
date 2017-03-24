@@ -7,11 +7,11 @@ using namespace std;
 
 namespace qbox {
 
-    continuous_line_source::continuous_line_source(const surface &surf, double freq): p1(surf.a.cast<int>()), p2(surf.b.cast<int>()), freq(freq) {};
+    continuous_line_source::continuous_line_source(const surface &surf, double freq): p1(surf.a), p2(surf.b), freq(freq) {};
 
     void continuous_line_source::pulse() {
-        static ivec p1i = (F->grid).convertToGrid(p1);
-        static ivec p2i = (F->grid).convertToGrid(p2);
+        static ivec p1i = (F->grid).to_ivec(p1);
+        static ivec p2i = (F->grid).to_ivec(p2);
 
         int start = 0, end = 0;
         bool vertical = false;

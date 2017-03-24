@@ -10,7 +10,7 @@ namespace qbox {
         continuous_line_source(const surface &surf, double f);
         void pulse();
     private:
-        ivec p1, p2;
+        vec p1, p2;
         double freq;
     };
 }
