@@ -8,6 +8,7 @@ namespace qbox {
     class Field1D;
     class Field2D;
     class grid_properties;
+    //class grid_properties;
 
 /// Total Field/Scattered Field class
 /** 

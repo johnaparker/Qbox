@@ -1,8 +1,8 @@
 #ifndef GUARD_pml_h
 #define GUARD_pml_h
 
-#include "matrix.h"
 #include <memory>
+#include "matrix.h"
 
 namespace qbox {
     class grid_properties;
