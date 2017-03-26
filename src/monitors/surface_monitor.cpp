@@ -17,7 +17,7 @@ namespace qbox {
     void surface_monitor::set_F(Field2D *newF) {
         monitor::set_F(newF);
         auto isurf = newF->grid.to_grid(surf);
-        int length = isurf.dim.norm();
+        length = isurf.dim.norm();
 
         prevE = matrix<double,1>(length+1);
         rE = matrix<double,2>(length, freq.size());
@@ -53,7 +53,6 @@ namespace qbox {
         double H = 0;
         freq.update(F->t);
 
-        //this if check could be done outside the for loop somehow
         int i = 0;
         for (ivec p = isurf.a; p != isurf.b; p += isurf.tangent) {
             H = ((*Hfield)(p)+ (*Hfield)(p - isurf.normal)
@@ -71,7 +70,7 @@ namespace qbox {
             }
             i += 1;
         }
-        prevE(length) = F->Ez(isurf.b + isurf.tangent);
+        prevE(length) = F->Ez(isurf.b);
     }
 
     Eigen::ArrayXd surface_monitor::compute_flux() const {
