@@ -209,7 +209,7 @@ namespace qbox {
         for (int i = 0; i != Nx; i++) {
             for (int j = 0; j != Ny; j++) {
                 ivec pi = {i,j};
-                vec p = grid.to_vec(pi);
+                vec p = grid.to_real(pi);
                 vec p_eigen(p[0], p[1]);
 
                 if (new_object.inside(p_eigen)) {

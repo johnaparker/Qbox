@@ -16,8 +16,8 @@ namespace qbox {
     }
 
     void grid_properties::set_tfsf(vec p1_val, vec p2_val){
-        p1 = to_ivec(p1_val);
-        p2 = to_ivec(p2_val);
+        p1 = to_grid(p1_val);
+        p2 = to_grid(p2_val);
         totalFieldScatteredField = true;
     }
 
@@ -29,12 +29,28 @@ namespace qbox {
         set_tfsf(buff, buff);
     }
 
-    ivec grid_properties::to_ivec(const vec &p) {
+    ivec grid_properties::to_grid(const vec &p) {
         return Eigen::round(p.array()/dx).cast<int>();
     }
 
-    vec grid_properties::to_vec(const ivec &pi) {
+    vec grid_properties::to_real(const ivec &pi) {
         return dx*pi.cast<double>();
+    }
+
+    isurface grid_properties::to_grid(const surface &surf) {
+        return isurface(to_grid(surf.a), to_grid(surf.b), surf.sign);
+    }
+
+    surface grid_properties::to_real(const isurface &surf) {
+        return surface(to_real(surf.a), to_real(surf.b), surf.sign);
+    }
+
+    ivolume grid_properties::to_grid(const volume &vol) {
+        return ivolume(to_grid(vol.a), to_grid(vol.b));
+    }
+
+    volume grid_properties::to_real(const ivolume &vol) {
+        return volume(to_real(vol.a), to_real(vol.b));
     }
 
 }

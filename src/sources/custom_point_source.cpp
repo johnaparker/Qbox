@@ -10,7 +10,7 @@ namespace qbox {
         p(p), time_func(time_func) {};
 
     void custom_point_source::pulse() {
-        static ivec pi = (F->grid).to_ivec(p);
+        static ivec pi = (F->grid).to_grid(p);
         F->Ez(pi[0],pi[1]) += time_func(*t);
     }
 }

@@ -22,12 +22,13 @@ int main() {
     //surface_monitor m2(m1); 
     object o1(block({50,35}), simple_material(12), {70,50}, {1,1});
 
-    test.add_object(o1);
+    //test.add_object(o1);
 
     test.add_monitor(m1);
 
-    gaussian_point_source s1({30,30}, f, 1/200.0, 80);
+    //gaussian_point_source s1({30,30}, f, 1/200.0, 80);
     //continuous_point_source s1({60,60}, 1/20.0);
+    gaussian_line_source s1(surface({30,0}, {30,120}), f, 1/200.0, 80);
     test.add_source(s1);
 
     for (int i = 0; i != 1000; i++) {

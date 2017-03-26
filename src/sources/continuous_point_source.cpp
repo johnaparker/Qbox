@@ -10,7 +10,7 @@ namespace qbox {
     continuous_point_source::continuous_point_source(vec p, double freq): p(p), freq(freq) {};
 
     void continuous_point_source::pulse() {
-        static ivec pi = (F->grid).to_ivec(p);
+        static ivec pi = (F->grid).to_grid(p);
         F->Ez(pi[0],pi[1]) += sin(2*M_PI*freq*(*t));
     }
 }

@@ -26,8 +26,8 @@ namespace qbox {
 
     void surface_monitor::set_F(Field2D *newF) {
         monitor::set_F(newF);
-        p1g = (F->grid).to_ivec(p1);
-        p2g = (F->grid).to_ivec(p2);
+        p1g = (F->grid).to_grid(p1);
+        p2g = (F->grid).to_grid(p2);
         dir = get_direction(p1g, p2g);
         length = p2g[dir] - p1g[dir];
         prevE = unique_ptr<double[]>(new double[length+1]);

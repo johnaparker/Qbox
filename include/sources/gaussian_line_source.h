@@ -6,11 +6,11 @@
 namespace qbox {
     class gaussian_line_source: public source {
     public:
-        gaussian_line_source(const surface &surf, double T0, double sig);
+        gaussian_line_source(const surface &surf, double f, double sig, double T0);
         void pulse();
     private:
         vec p1, p2;
-        double T0, sig;
+        double f, sig, T0;
     };
 }
 

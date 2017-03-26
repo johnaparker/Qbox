@@ -1,10 +1,7 @@
 
 
-[ ] proper ivec vs vec support 
-    [ ] all monitors/sources/objects/etc. should take in vec (all user interface)
-    [ ] vec should get converted to ivec behind the scenes as needed (through grid properties)
-    [ ] we need an interpolation function
-    [ ] monitors can probably be cleaned up under this new framework
+[ ] we need an interpolation function
+[ ] monitors can probably be cleaned up under this new framework
 
 [ ] We have volume/surface classes for real vecs ... what about for grid space?
     [ ] all awkard casting between vecs and ivecs should be fixed
@@ -16,8 +13,10 @@
 
 [ ] should IO be handled by its own class?
 
+[ ] sources, monitors, objects... what to do when these fall out of main's scope?
 
 
+[ ] for monitors, consider a struct to specify the frequencies over which to fourier transform (simplifies constructor arguments)
 
 ################ OLD TODO ####################################################
 

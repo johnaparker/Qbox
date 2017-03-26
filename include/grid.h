@@ -16,10 +16,15 @@ namespace qbox {
         void set_tfsf(double xbuff, double ybuff);   //xbuff is the length between simulation edge and start of TFSF
         void set_tfsf(double buff);    //xbuff = ybuff = buff
 
-        //*** These should perhaps have <double> for real space, and a double res variable with it
         //conversions from grid to real, vice versa 
-        ivec to_ivec(const vec &p);     //take real p into grid 
-        vec to_vec(const ivec &pi);    //take grid pi into real
+        ivec to_grid(const vec &p);     //take real p into grid 
+        vec to_real(const ivec &pi);    //take grid pi into real
+
+        isurface to_grid(const surface &surf);     //take real p into grid 
+        surface to_real(const isurface &surf);    //take grid pi into real
+
+        ivolume to_grid(const volume &vol);     //take real p into grid 
+        volume to_real(const ivolume &vol);    //take grid pi into real
 
     public:
         bool totalFieldScatteredField;      //True if TFSF is in use
