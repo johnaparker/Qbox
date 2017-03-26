@@ -3,13 +3,8 @@
 [ ] we need an interpolation function
 [ ] monitors can probably be cleaned up under this new framework
 
-[ ] We have volume/surface classes for real vecs ... what about for grid space?
-    [ ] all awkard casting between vecs and ivecs should be fixed
-
 [ ]  Definitely rethink the way sources are being done, with tfsf in mind
     [ ] for tfsf, we need to remove field1 files in favor of something better
-
-[ ]  freq class should use smart pointers
 
 [ ] should IO be handled by its own class?
 
