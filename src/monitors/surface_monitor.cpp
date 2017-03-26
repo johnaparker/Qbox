@@ -10,107 +10,79 @@ using namespace std;
 
 
 namespace qbox {
-    surface_monitor::surface_monitor(string name, const surface &surf, shared_ptr<freq_data> freq, int N, bool extendable): monitor(name,freq,N,extendable), p1(surf.a), p2(surf.b), dir(0), length(0) {
+    surface_monitor::surface_monitor(string name, const surface &surf, const freq_data &freq, bool extendable): monitor(name,freq,extendable), surf(surf), dir(0), length(0) {
         F = nullptr;
-        prevE = nullptr;
-    }
-
-    surface_monitor::surface_monitor(string name, const surface &surf, double fmin, double fmax, int N, bool extendable): surface_monitor(name, surf, nullptr, N, extendable) {
-        freq = shared_ptr<freq_data> (new freq_data(fmin, fmax, N));
-    }
-
-    surface_monitor::surface_monitor(string name, const surface &surf, double f, bool extendable): 
-            surface_monitor(name, surf, nullptr, 1, extendable) {
-        freq = shared_ptr<freq_data> (new freq_data(f));
     }
 
     void surface_monitor::set_F(Field2D *newF) {
         monitor::set_F(newF);
-        p1g = (F->grid).to_grid(p1);
-        p2g = (F->grid).to_grid(p2);
-        dir = get_direction(p1g, p2g);
-        length = p2g[dir] - p1g[dir];
-        prevE = unique_ptr<double[]>(new double[length+1]);
-        rE = matrix<double,2>(length, N);
-        iE = matrix<double,2>(length, N);
-        rH = matrix<double,2>(length, N);
-        iH = matrix<double,2>(length, N);
+        auto isurf = newF->grid.to_grid(surf);
+        int length = isurf.dim.norm();
+
+        prevE = matrix<double,1>(length+1);
+        rE = matrix<double,2>(length, freq.size());
+        iE = matrix<double,2>(length, freq.size());
+        rH = matrix<double,2>(length, freq.size());
+        iH = matrix<double,2>(length, freq.size());
+
         for (int i = 0; i != length; i++) {
-            prevE[i] = 0;
-            for (int j = 0; j!= N; j++) {
+            prevE(i) = 0;
+            for (int j = 0; j!= freq.size(); j++) {
                 rE(i,j) = 0;
                 iE(i,j) = 0;
                 rH(i,j) = 0;
                 iH(i,j) = 0;
             }
         }
-        prevE[length] = 0;
+        prevE(length) = 0;
 
         auto gName = get_group();
         auto dspace = h5cpp::dspace(vector<hsize_t>{2});
         auto attr = gName.create_attribute("p1", h5cpp::dtype::Double, dspace);
-        attr.write(p1.data());
+        attr.write(surf.a.data());
         attr = gName.create_attribute("p2", h5cpp::dtype::Double, dspace);
-        attr.write(p2.data());
+        attr.write(surf.b.data());
     }
 
     void surface_monitor::update() {
         //*** this dir, Hfield combo is bad design (maybe use enum)
-        matrix<double,2> *Hfield = nullptr;
-        if (dir == 0)
-            Hfield = &F->Hx;
-        else if (dir == 1)
-            Hfield = &F->Hy;
+        auto isurf = F->grid.to_grid(surf);
+        auto *Hfield = isurf.dim[0] == 0 ? &F->Hy : &F->Hx;
 
-        int a = p1g[0];
-        int b = p1g[1];
         double E = 0;
         double H = 0;
-        (*freq).update(F->t);
+        freq.update(F->t);
 
         //this if check could be done outside the for loop somehow
-        for (int i = 0; i != length; i++) {
-            if (dir == 0) {
-                a = p1g[0] + i;
-                H = ((*Hfield)({a,b})+ (*Hfield)({a,b-1})
-                        + (*Hfield)({a+1,b}) + (*Hfield)({a+1,b-1}))/4;
-                E = (F->Ez({a,b}) + F->Ez({a+1,b})
-                        + prevE[i] + prevE[i+1])/4;
-            }
-            else if (dir == 1) {
-                b = p1g[1] + i;
-                H = ((*Hfield)({a,b}) + (*Hfield)({a-1,b})
-                        + (*Hfield)({a,b+1}) + (*Hfield)({a-1,b+1}))/4;
-                E = (F->Ez({a,b}) + F->Ez({a,b+1})
-                        + prevE[i] + prevE[i+1])/4;
-            }
-            prevE[i] = F->Ez({a,b});
+        int i = 0;
+        for (ivec p = isurf.a; p != isurf.b; p += isurf.tangent) {
+            H = ((*Hfield)(p)+ (*Hfield)(p - isurf.normal)
+                    + (*Hfield)(p + isurf.tangent) + (*Hfield)(p - isurf.normal + isurf.tangent))/4;
+            E = (F->Ez(p) + F->Ez(p + isurf.tangent)
+                    + prevE(i) + prevE(i+1))/4;
 
-            for (int j = 0; j != N; j++) {
-                rE(i,j) += E*(*freq).get_cosf(j);
-                iE(i,j) += E*(*freq).get_sinf(j);
-                rH(i,j) += H*(*freq).get_cosf(j);
-                iH(i,j) += H*(*freq).get_sinf(j);
+            prevE(i) = F->Ez(p);
+
+            for (int j = 0; j != freq.size(); j++) {
+                rE(i,j) += E*freq.get_cosf(j);
+                iE(i,j) += E*freq.get_sinf(j);
+                rH(i,j) += H*freq.get_cosf(j);
+                iH(i,j) += H*freq.get_sinf(j);
             }
+            i += 1;
         }
-        if (dir == 0)
-            a += 1;
-        else
-            b += 1;
-        prevE[length] = F->Ez({a,b});
+        prevE(length) = F->Ez(isurf.b + isurf.tangent);
     }
 
-    unique_ptr<double[]> surface_monitor::compute_flux() const {
-        auto S = make_unique<double[]>(N);
-        for (int i = 0; i != N; i++) 
-            S[i] = 0;
+    Eigen::ArrayXd surface_monitor::compute_flux() const {
+        Eigen::ArrayXd S = Eigen::ArrayXd::Zero(freq.size());
 
-        for (int j = 0; j != N; j++) {
+        for (int j = 0; j != freq.size(); j++) {
             for (int i = 0; i != length; i++) {
                 S[j] += rE(i,j)*rH(i,j) + iE(i,j)*iH(i,j);
             }
-            S[j] *= F->dx;
         }
+        S *= F->dx;
         return S;
     }
 
@@ -120,8 +92,8 @@ namespace qbox {
 
         h5cpp::h5dset dset;
         if (!gName.object_exists("flux")) {
-            vector<hsize_t> dims = {hsize_t(N)};
-            vector<hsize_t> max_dims = {hsize_t(N)};
+            vector<hsize_t> dims = {hsize_t(freq.size())};
+            vector<hsize_t> max_dims = {hsize_t(freq.size())};
             if (!extendable) {
                 h5cpp::dspace ds(dims, max_dims);
                 dset = gName.create_dataset("flux", 
@@ -135,11 +107,11 @@ namespace qbox {
                 dset = gName.create_dataset("flux", 
                              h5cpp::dtype::Double, ds); 
             }
-            dset.write(S.get());
+            dset.write(S.data());
         }
         else {
             dset = gName.open_dataset("flux");
-            dset.append(S.get());
+            dset.append(S.data());
         }
     }
 }

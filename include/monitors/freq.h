@@ -17,11 +17,11 @@ namespace qbox {
         void update(double tnew);
 
         //getter functions
-        Eigen::ArrayXd get_freq() {return freq;}
-        double get_freq(int i) {return freq[i];}
-        double get_cosf(int i) {return cosf[i];}
-        double get_sinf(int i) {return sinf[i];}
-        int size() {return freq.size();}
+        Eigen::ArrayXd get_freq() const {return freq;}
+        double get_freq(int i) const {return freq[i];}
+        double get_cosf(int i) const {return cosf[i];}
+        double get_sinf(int i) const {return sinf[i];}
+        int size() const {return freq.size();}
 
     private:
         double t;   ///< current time

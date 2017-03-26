@@ -16,7 +16,7 @@ int main() {
     Field2D test(grid, "out.h5");
     
     double f = 1/30.0;
-    box_monitor m1("m1",volume({50,50}, {70,70}), 0,5*f, 100); 
+    box_monitor m1("m1",volume({50,50}, {70,70}), freq_data(0,5*f, 100)); 
     //box_monitor m1("m1",{50,50}, {70,70}, (freq), 100); 
     //surface_monitor m1("m1",{50,50}, {50,70},0,5*f, 100); 
     //surface_monitor m2(m1); 

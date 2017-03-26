@@ -1,6 +1,7 @@
 
 
 [ ] we need an interpolation function
+    [ ] access matrices by ivec (grid) and vec (intepolation)
 [ ] monitors can probably be cleaned up under this new framework
 
 [ ]  Definitely rethink the way sources are being done, with tfsf in mind
@@ -9,11 +10,21 @@
 [ ] should IO be handled by its own class?
 
 [ ] sources, monitors, objects... what to do when these fall out of main's scope?
+    [ ] consider this: object has a pointer to field, which defaults to null.
+        when object is added, pointer points to this
+        when object destructor is called, have field copy the object first (this may cause problems if C++ has already deallocated some resources)
+        these allocated objects will destruct when field falls out of scope
 
 
 [ ] for monitors, consider a struct to specify the frequencies over which to fourier transform (simplifies constructor arguments)
 
 [ ] vec,ivec,surface,isurface, etc. should all have write functions, write(h5group, obj)
+
+[ ] two monitor's with the same name -- seg fault
+
+[ ] replace background object with background material
+
+[ ] vol class should be able to create bounding surfaces
 
 ################ OLD TODO ####################################################
 

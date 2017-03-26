@@ -16,27 +16,20 @@ namespace qbox {
     class box_monitor: public monitor {
     public:
         //various constructors
-        box_monitor(std::string name, const volume &vol, std::shared_ptr<freq_data> freq, int N, bool extendable=false);
-        box_monitor(std::string name, const volume &vol, double fmin, double fmax, int N, bool extendable=false);
-        box_monitor(std::string name, const volume &vol, double f, bool extendable=false);
+        box_monitor(std::string name, const volume &vol, const freq_data &freq, bool extendable=false);
 
-        box_monitor() = default;
-        box_monitor(const box_monitor&) = default;
-        box_monitor(box_monitor&&) = default;
-        box_monitor& operator=(box_monitor&&) = default;
-        
         //same as surface_monitor 
-        void set_freq(std::shared_ptr<freq_data> new_freq);
+        void set_freq(const freq_data &new_freq);
         void set_F(Field2D *newF);
         void update();
-        std::unique_ptr<double[]> compute_flux() const;
+        Eigen::ArrayXd compute_flux() const;
         void write_flux();
 
         void write_flux_sides();  //call write for all surface_monitors
 
     private:
         surface_monitor monitors[4];    //4 surface monitors
-        vec p1, p2;          //physical corners
+        volume vol;
     };
 }
 

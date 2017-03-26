@@ -1,11 +1,11 @@
 #ifndef GUARD_surface_monitor_h
 #define GUARD_surface_monitor_h
 
-#include <vector>
 #include <string>
 #include <memory>
 #include "../matrix.h"
 #include "monitor.h"
+#include "vec.h"
 
 
 namespace qbox {
@@ -22,27 +22,21 @@ namespace qbox {
     public:
         //*** replace vectors with vol here
         //various ways to construct. p1,p2 = corners. 
-        surface_monitor(std::string name, const surface &surf, std::shared_ptr<freq_data> freq, int N, bool extendable=false);   //using freq data
-        surface_monitor(std::string name, const surface &surf, double fmin, double fmax, int N, bool extendable=false);   //using N points between fmin and fmax
-        surface_monitor(std::string name, const surface &surf, double f, bool extendable=false);    //at a single frequency
-
         surface_monitor() = default;
-        surface_monitor(const surface_monitor&) = default;
-        surface_monitor(surface_monitor&&) = default;
-        surface_monitor& operator=(surface_monitor&) = delete;
-        surface_monitor& operator=(surface_monitor&&) = default; 
-        void update();   //update the DFT matrices
+        surface_monitor(std::string name, const surface &surf, const freq_data &freq, bool extendable=false);   //using freq data
+
         void set_F(Field2D *newF);    //set ownership
+        void update();   //update the DFT matrices
         //*** smart pointer here for S probably
-        std::unique_ptr<double[]> compute_flux() const; //compute flux though face
+        Eigen::ArrayXd compute_flux() const; //compute flux though face
         //*** should be through IO class. See field2.h
         void write_flux();   //write to filename. Extendable=True means to append, and not overwrite
 
     private:
         bool extendable;
-        ivec p1g, p2g;        //grid points corners
-        vec p1, p2;          //physical corners
+        surface surf;
         matrix<double,2> rE, iE, rH, iH;    //DFT matrices
+        matrix<double,1> prevE;             ///< previous electric field values
         int dir;    //orientation
         int length; //length of monitor in grid points
         //*** move these into base class. Find out a way to not compute 4x

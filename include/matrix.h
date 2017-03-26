@@ -9,6 +9,7 @@
 #include <cstdarg>
 #include <algorithm>
 #include <numeric>
+#include <eigen3/Eigen/Core>
 
 namespace qbox {
 
@@ -39,6 +40,7 @@ namespace qbox {
             reverse(offsets.begin(), offsets.end());
         };
 
+        matrix(int Nx): matrix({Nx}) { (*this)(0); }
         matrix(int Nx, int Ny): matrix({Nx,Ny}) { (*this)(0,0); }
         matrix(int Nx, int Ny, int Nz): matrix({Nx,Ny,Nz}) {(*this)(0,0,0);}
         matrix(int Nx, int Ny, int Nz, int Nt): matrix({Nx,Ny,Nz,Nt}) {(*this)(0,0,0,0);}
@@ -53,9 +55,26 @@ namespace qbox {
             return *(mData.get() + index);
         }
 
+        T& operator() (const Eigen::Matrix<int,D,1> &i) {
+            int index = std::inner_product(i.data(), i.data() + i.size(), offsets.begin(), 0);
+            return *(mData.get() + index);
+        }
+
         const T& operator() (const std::initializer_list<int>& i) const {
             int index = std::inner_product(i.begin(), i.end(), offsets.begin(), 0);
             return *(mData.get() + index);
+        }
+
+        const T& operator() (const Eigen::Matrix<int,D,1> &i) const {
+            int index = std::inner_product(i.data(), i.data() + i.size(), offsets.begin(), 0);
+            return *(mData.get() + index);
+        }
+
+        T& operator() (int Nx) {
+            return f1(*this, {Nx});
+        }
+        const T& operator() (int Nx) const {
+            return f1(*this, {Nx});
         }
 
         T& operator() (int Nx, int Ny) {
@@ -101,6 +120,13 @@ namespace qbox {
         std::unique_ptr<T[]> mData; ///<  Pointer to data
         std::vector<int> dims;
         std::vector<int> offsets;
+
+        T& f1 (matrix<T,1>& m, const std::initializer_list<int>& i) {
+            return m(i);
+        }
+        const T& f1 (const matrix<T,1>& m, const std::initializer_list<int>& i) const {
+            return m(i);
+        }
 
         T& f2 (matrix<T,2>& m, const std::initializer_list<int>& i) {
             return m(i);

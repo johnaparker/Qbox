@@ -14,6 +14,7 @@ namespace qbox {
 
     template<class T>
     struct volume_template {
+        volume_template() = default;
         volume_template(Eigen::Matrix<T,2,1> a, Eigen::Matrix<T,2,1> b): a(a), b(b) {
             dim = (a-b).cwiseAbs();
         }
@@ -33,6 +34,7 @@ namespace qbox {
 
     template<class T>
     struct surface_template {
+        surface_template() = default;
         surface_template(Eigen::Matrix<T,2,1> a, Eigen::Matrix<T,2,1> b, int sign = 1): a(a), b(b), sign(sign) {
             dim = (a-b).cwiseAbs();
 
