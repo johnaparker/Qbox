@@ -18,6 +18,8 @@
 
 [ ] for monitors, consider a struct to specify the frequencies over which to fourier transform (simplifies constructor arguments)
 
+[ ] vec,ivec,surface,isurface, etc. should all have write functions, write(h5group, obj)
+
 ################ OLD TODO ####################################################
 
 

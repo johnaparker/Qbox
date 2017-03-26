@@ -39,6 +39,7 @@ namespace qbox {
             if (dim[0] == 0) {normal = sign*Eigen::Matrix<T,2,1>(1,0);}
             else if (dim[1] == 0) {normal = sign*Eigen::Matrix<T,2,1>(0,1);}
             else throw std::invalid_argument("vectors must have one component equal to each other");
+            tangent = (b-a)/(b-a).norm();
         }
 
         //surface_template(Eigen::Matrix<T,2,1> center, Eigen::Matrix<T,2,1> normal_vec, T l, int sign = 1): sign(sign) {
@@ -57,7 +58,7 @@ namespace qbox {
         int sign;                       ///< 
         Eigen::Matrix<T,2,1> dim;       ///< vector containing the dimensions
         Eigen::Matrix<T,2,1> normal;    ///< unit vector normal to the surface
-        //Eigen::Matrix<T,2,1> tangent;   ///< unit vector that points from a to b
+        Eigen::Matrix<T,2,1> tangent;   ///< unit vector that points from a to b
     };
 
     using surface = surface_template<double>;

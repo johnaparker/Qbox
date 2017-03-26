@@ -7,30 +7,14 @@ using namespace std;
 
 namespace qbox {
 
-    continuous_line_source::continuous_line_source(const surface &surf, double freq): p1(surf.a), p2(surf.b), freq(freq) {};
+    continuous_line_source::continuous_line_source(const surface &surf, double freq): surf(surf), freq(freq) {};
 
     void continuous_line_source::pulse() {
-        static ivec p1i = (F->grid).to_grid(p1);
-        static ivec p2i = (F->grid).to_grid(p2);
-
-        int start = 0, end = 0;
-        bool vertical = false;
-        if (p1i[0] == p2i[0]) {
-            start = p1i[1];
-            end = p2i[1];
-            vertical = true;
-        }
-        else if (p1i[1] == p2i[1]) {
-            start = p1i[0];
-            end = p2i[0];
-        }
+        static isurface isurf = (F->grid).to_grid(surf);
         double pulse_amp = sin(2*M_PI*freq*(*t));
-        for (int i = start; i != end; i++) {
-            if (vertical)
-                F->Ez(p1i[0],i) += pulse_amp;
-            else
-                F->Ez(i,p2i[1]) += pulse_amp;
-        }
+
+        for (ivec p = isurf.a; p != isurf.b; p += isurf.tangent)
+            F->Ez(p[0],p[1]) += pulse_amp;
     }
 }
 
