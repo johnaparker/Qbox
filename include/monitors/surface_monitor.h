@@ -30,7 +30,6 @@ namespace qbox {
         //*** smart pointer here for S probably
         Eigen::ArrayXd compute_flux() const; //compute flux though face
         //*** should be through IO class. See field2.h
-        void write_flux();   //write to filename. Extendable=True means to append, and not overwrite
 
     private:
         bool extendable;

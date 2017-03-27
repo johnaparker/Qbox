@@ -4,6 +4,8 @@
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Geometry>
 #include <stdexcept>
+#include "h5cpp.h"
+#include <vector>
 
 namespace qbox {
 
@@ -25,6 +27,14 @@ namespace qbox {
         }
 
         volume_template(Eigen::Matrix<T,2,1> center, T l): volume_template(center,l,l) {};
+
+        void write(h5cpp::h5group &group) const {
+            auto dspace = h5cpp::dspace(std::vector<hsize_t>{2});
+            auto attr = group.create_attribute("p1", h5cpp::dtype::Double, dspace);
+            attr.write(a.data());
+            attr = group.create_attribute("p2", h5cpp::dtype::Double, dspace);
+            attr.write(b.data());
+        }
 
     public:
         Eigen::Matrix<T,2,1> a,b;
@@ -54,6 +64,13 @@ namespace qbox {
             //dim = (a-b).cwiseAbs();
         //}
 
+        void write(h5cpp::h5group &group) const {
+            auto dspace = h5cpp::dspace(std::vector<hsize_t>{2});
+            auto attr = group.create_attribute("p1", h5cpp::dtype::Double, dspace);
+            attr.write(a.data());
+            attr = group.create_attribute("p2", h5cpp::dtype::Double, dspace);
+            attr.write(b.data());
+        }
 
     public:
         Eigen::Matrix<T,2,1> a,b;       ///< vector coordinates of two corners

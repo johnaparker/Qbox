@@ -42,4 +42,32 @@ namespace qbox {
         return gName;
     }
 
+    void monitor::write_flux() {
+        auto S = compute_flux();
+        auto gName = get_group();
+
+        h5cpp::h5dset dset;
+        if (!gName.object_exists("flux")) {
+            vector<hsize_t> dims = {hsize_t(freq.size())};
+            vector<hsize_t> max_dims = {hsize_t(freq.size())};
+            if (!extendable) {
+                h5cpp::dspace ds(dims, max_dims);
+                dset = gName.create_dataset("flux", 
+                             h5cpp::dtype::Double, ds); 
+            }
+            else {
+                dims.push_back(1);
+                max_dims.push_back(h5cpp::inf);
+                vector<hsize_t> chunk_dims = dims;
+                h5cpp::dspace ds(dims, max_dims, chunk_dims);
+                dset = gName.create_dataset("flux", 
+                             h5cpp::dtype::Double, ds); 
+            }
+            dset.write(S.data());
+        }
+        else {
+            dset = gName.open_dataset("flux");
+            dset.append(S.data());
+        }
+    }
 }

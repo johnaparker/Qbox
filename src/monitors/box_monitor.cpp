@@ -30,12 +30,8 @@ namespace qbox {
         for (int i = 0; i != 4; i++) 
             monitors[i].set_F(newF);
 
-        auto gName = get_group();
-        auto dspace = h5cpp::dspace(vector<hsize_t>{2});
-        auto attr = gName.create_attribute("p1", h5cpp::dtype::Double, dspace);
-        attr.write(vol.a.data());
-        attr = gName.create_attribute("p2", h5cpp::dtype::Double, dspace);
-        attr.write(vol.b.data());
+        auto group = get_group();
+        vol.write(group);
     }
 
     void box_monitor::update() {
@@ -52,35 +48,6 @@ namespace qbox {
             S += Sm;
         }
         return S;
-    }
-
-    void box_monitor::write_flux() {
-        auto S = compute_flux();
-        auto gName = get_group();
-
-        h5cpp::h5dset dset;
-        if (!gName.object_exists("flux")) {
-            vector<hsize_t> dims = {hsize_t(freq.size())};
-            vector<hsize_t> max_dims = {hsize_t(freq.size())};
-            if (!extendable) {
-                h5cpp::dspace ds(dims, max_dims);
-                dset = gName.create_dataset("flux", 
-                             h5cpp::dtype::Double, ds); 
-            }
-            else {
-                dims.push_back(1);
-                max_dims.push_back(h5cpp::inf);
-                vector<hsize_t> chunk_dims = dims;
-                h5cpp::dspace ds(dims, max_dims, chunk_dims);
-                dset = gName.create_dataset("flux", 
-                             h5cpp::dtype::Double, ds); 
-            }
-            dset.write(S.data());
-        }
-        else {
-            dset = gName.open_dataset("flux");
-            dset.append(S.data());
-        }
     }
 
     void box_monitor::write_flux_sides() {

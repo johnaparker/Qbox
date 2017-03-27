@@ -44,11 +44,6 @@ namespace qbox {
 
         for (int i = 0; i != Nx; i++) {
             for (int j = 0; j != Ny; j++) {
-                Ez(i,j) = 0;
-                Hx(i,j) = 0;
-                Hy(i,j) = 0;
-                Dz(i,j) = 0;
-                Iz(i,j) = 0;
                 double eps = obj_list[0]->get_material()->get_eps();      
                 double conduc = obj_list[0]->get_material()->get_conduc(); 
                 ca(i,j) = 1/(eps + conduc*dt/epsilon);
