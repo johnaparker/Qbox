@@ -19,7 +19,6 @@ namespace qbox {
         box_monitor(std::string name, const volume &vol, const freq_data &freq, bool extendable=false);
 
         //same as surface_monitor 
-        void set_freq(const freq_data &new_freq);
         void set_F(Field2D *newF);
         void update();
         Array compute_flux() const;

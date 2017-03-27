@@ -19,12 +19,6 @@ namespace qbox {
         monitors[3] = surface_monitor(name + "_4", surface(vol.a, vec(vol.a[0], vol.b[1])), freq, extendable);
     }
 
-    void box_monitor::set_freq(const freq_data &new_freq) {
-        monitor::set_freq(new_freq);
-        for (int i = 0; i != 4; i++) 
-            monitors[i].set_freq(new_freq);
-    }
-
     void box_monitor::set_F(Field2D *newF) {
         monitor::set_F(newF);
         for (int i = 0; i != 4; i++) 

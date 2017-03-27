@@ -38,8 +38,8 @@ namespace qbox {
         double H = 0;
         freq.update(F->t);
 
-        int i = 0;
-        for (ivec p = isurf.a; p != isurf.b; p += isurf.tangent) {
+        for (int i = 0; i != length; i++) {
+            ivec p = isurf.a + i*isurf.tangent;
             H = ((*Hfield)(p)+ (*Hfield)(p - isurf.normal)
                     + (*Hfield)(p + isurf.tangent) + (*Hfield)(p - isurf.normal + isurf.tangent))/4;
             E = (F->Ez(p) + F->Ez(p + isurf.tangent)
@@ -53,7 +53,6 @@ namespace qbox {
                 rH(i,j) += H*freq.get_cosf(j);
                 iH(i,j) += H*freq.get_sinf(j);
             }
-            i += 1;
         }
         prevE(length) = F->Ez(isurf.b);
     }

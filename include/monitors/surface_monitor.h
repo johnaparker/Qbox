@@ -27,9 +27,7 @@ namespace qbox {
 
         void set_F(Field2D *newF);    //set ownership
         void update();   //update the DFT matrices
-        //*** smart pointer here for S probably
         Array compute_flux() const; //compute flux though face
-        //*** should be through IO class. See field2.h
 
     private:
         bool extendable;
@@ -38,8 +36,8 @@ namespace qbox {
         matrix<double,1> prevE;             ///< previous electric field values
         int dir;    //orientation
         int length; //length of monitor in grid points
-        //*** move these into base class. Find out a way to not compute 4x
     };
+
 }
 
 #endif

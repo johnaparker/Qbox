@@ -13,10 +13,6 @@ using namespace std;
 
 namespace qbox {
 
-    void monitor::set_freq(const freq_data &new_freq) {
-        freq = new_freq;
-    }
-
     void monitor::set_F(Field2D *newF) {
         F = newF;
         outFile = make_unique<h5cpp::h5file>(*newF->outFile.get());

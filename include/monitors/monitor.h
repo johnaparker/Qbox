@@ -20,7 +20,6 @@ namespace qbox {
 
     public:
         monitor(std::string name, const freq_data &freq, bool extendable): name(name), freq(freq), extendable(extendable) {};
-        virtual void set_freq(const freq_data &new_freq); //set the frequencies
         //*** should probably be private:
         virtual void set_F(Field2D *newF);       //set the owning field
         virtual void update() = 0;                //update the DFT values

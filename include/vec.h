@@ -17,7 +17,7 @@ namespace qbox {
 
     template<class T, h5cpp::dtype M>
     void write_vec(h5cpp::h5group &group, const Eigen::Matrix<T,Eigen::Dynamic,1> &p, std::string name) {
-        auto dspace = h5cpp::dspace(std::vector<hsize_t>{p.size()});
+        auto dspace = h5cpp::dspace(std::vector<hsize_t>{static_cast<unsigned long int>(p.size())});
         auto attr = group.create_attribute(name, M, dspace);
         attr.write(p.data());
     }
