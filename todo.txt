@@ -2,7 +2,6 @@
 
 [ ] we need an interpolation function
     [ ] access matrices by ivec (grid) and vec (intepolation)
-[ ] monitors can probably be cleaned up under this new framework
 
 [ ]  Definitely rethink the way sources are being done, with tfsf in mind
     [ ] for tfsf, we need to remove field1 files in favor of something better
@@ -15,10 +14,6 @@
         when object destructor is called, have field copy the object first (this may cause problems if C++ has already deallocated some resources)
         these allocated objects will destruct when field falls out of scope
 
-
-[ ] for monitors, consider a struct to specify the frequencies over which to fourier transform (simplifies constructor arguments)
-
-[ ] vec,ivec,surface,isurface, etc. should all have write functions, write(h5group, obj)
 
 [ ] two monitor's with the same name -- seg fault
 

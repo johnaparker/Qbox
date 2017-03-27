@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include "h5cpp.h"
 #include <vector>
+#include <string>
 
 namespace qbox {
 
@@ -14,8 +15,14 @@ namespace qbox {
     using quat = Eigen::Quaterniond;
     using Array = Eigen::ArrayXd;
 
+    template<class T, h5cpp::dtype M>
+    void write_vec(h5cpp::h5group &group, const Eigen::Matrix<T,Eigen::Dynamic,1> &p, std::string name) {
+        auto dspace = h5cpp::dspace(std::vector<hsize_t>{p.size()});
+        auto attr = group.create_attribute(name, M, dspace);
+        attr.write(p.data());
+    }
 
-    template<class T>
+    template<class T, h5cpp::dtype M>
     struct volume_template {
         volume_template() = default;
         volume_template(Eigen::Matrix<T,2,1> a, Eigen::Matrix<T,2,1> b): a(a), b(b) {
@@ -30,11 +37,8 @@ namespace qbox {
         volume_template(Eigen::Matrix<T,2,1> center, T l): volume_template(center,l,l) {};
 
         void write(h5cpp::h5group &group) const {
-            auto dspace = h5cpp::dspace(std::vector<hsize_t>{2});
-            auto attr = group.create_attribute("p1", h5cpp::dtype::Double, dspace);
-            attr.write(a.data());
-            attr = group.create_attribute("p2", h5cpp::dtype::Double, dspace);
-            attr.write(b.data());
+            write_vec<T,M>(group, a, "p1");
+            write_vec<T,M>(group, b, "p2");
         }
 
     public:
@@ -43,7 +47,7 @@ namespace qbox {
     };
 
 
-    template<class T>
+    template<class T, h5cpp::dtype M>
     struct surface_template {
         surface_template() = default;
         surface_template(Eigen::Matrix<T,2,1> a, Eigen::Matrix<T,2,1> b, int sign = 1): a(a), b(b), sign(sign) {
@@ -66,11 +70,8 @@ namespace qbox {
         //}
 
         void write(h5cpp::h5group &group) const {
-            auto dspace = h5cpp::dspace(std::vector<hsize_t>{2});
-            auto attr = group.create_attribute("p1", h5cpp::dtype::Double, dspace);
-            attr.write(a.data());
-            attr = group.create_attribute("p2", h5cpp::dtype::Double, dspace);
-            attr.write(b.data());
+            write_vec<T,M>(group, a, "p1");
+            write_vec<T,M>(group, b, "p2");
         }
 
     public:
@@ -81,10 +82,10 @@ namespace qbox {
         Eigen::Matrix<T,2,1> tangent;   ///< unit vector that points from a to b
     };
 
-    using surface = surface_template<double>;
-    using isurface = surface_template<int>;
-    using volume = volume_template<double>;
-    using ivolume = volume_template<int>;
+    using surface = surface_template<double, h5cpp::dtype::Double>;
+    using isurface = surface_template<int, h5cpp::dtype::Int>;
+    using volume = volume_template<double, h5cpp::dtype::Double>;
+    using ivolume = volume_template<int, h5cpp::dtype::Int>;
 
 }
 
