@@ -40,10 +40,14 @@ namespace qbox {
 
         for (int i = 0; i != length; i++) {
             ivec p = isurf.a + i*isurf.tangent;
-            H = ((*Hfield)(p)+ (*Hfield)(p - isurf.normal)
-                    + (*Hfield)(p + isurf.tangent) + (*Hfield)(p - isurf.normal + isurf.tangent))/4;
-            E = (F->Ez(p) + F->Ez(p + isurf.tangent)
-                    + prevE(i) + prevE(i+1))/4;
+            //ivec u(0,0);     //0.023
+            ivec u(-1,0);  //0.014
+            //ivec u(0,-1);  // 0.014
+            H = ((*Hfield)(p+u)+ (*Hfield)(p+u - isurf.normal)
+                    + (*Hfield)(p+u + isurf.tangent) + (*Hfield)(p+u - isurf.normal + isurf.tangent))/4;
+            //E = (F->Ez(p) + F->Ez(p + isurf.tangent)
+                    //+ prevE(i) + prevE(i+1))/4;
+            E = (F->Ez(p) + prevE(i))/2;   //0.0013
 
             prevE(i) = F->Ez(p);
 

@@ -1,4 +1,10 @@
 
+[ ] For surface monitor... use a grid to half-grid conversion function in fields class to intepolate fields
+    Figure out how the grid is staggered
+    check zero flux and mie theory
+    compare (and benchmark) with a 2D meep calculation
+
+[ ] Do we need to interpolate the monitors as we DFT them? We could just interpolate at the end (as we compute flux)
 
 [ ] we need an interpolation function
     [ ] access matrices by ivec (grid) and vec (intepolation)
@@ -15,11 +21,14 @@
         these allocated objects will destruct when field falls out of scope
 
 
-[ ] two monitor's with the same name -- seg fault
+[ ] two monitor's with the same name -- seg fault 
+    [ ] should monitors even have names? instead, name at write time?
 
 [ ] replace background object with background material
 
 [ ] vol class should be able to create bounding surfaces
+
+[ ] For non-extendable monitor... writing multiple time gives seg fault
 
 ################ OLD TODO ####################################################
 
