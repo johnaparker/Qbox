@@ -24,11 +24,11 @@ namespace qbox {
         std::unique_ptr<material> get_material() {return materialType->clone();}
 
     private:
-        vec center;
-        vec orientation;
-
         std::unique_ptr<geometry> geometryType;
         std::unique_ptr<material> materialType;
+
+        vec center;
+        vec orientation;
     };
 
 }
