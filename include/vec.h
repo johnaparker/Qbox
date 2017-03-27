@@ -12,6 +12,7 @@ namespace qbox {
     using vec = Eigen::Vector2d;
     using ivec = Eigen::Vector2i;
     using quat = Eigen::Quaterniond;
+    using Array = Eigen::ArrayXd;
 
 
     template<class T>

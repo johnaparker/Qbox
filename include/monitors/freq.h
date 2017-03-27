@@ -9,7 +9,7 @@ namespace qbox {
     class freq_data {
     public:
         freq_data() = default;
-        freq_data(const Eigen::ArrayXd &freq);    ///< custom frequency
+        freq_data(const Array &freq);    ///< custom frequency
         freq_data(double fmin, double fmax, int N);    ///< N frequencies between fmin,fmax
         freq_data(double f);    ///< single frequency
 
@@ -17,7 +17,7 @@ namespace qbox {
         void update(double tnew);
 
         //getter functions
-        Eigen::ArrayXd get_freq() const {return freq;}
+        Array get_freq() const {return freq;}
         double get_freq(int i) const {return freq[i];}
         double get_cosf(int i) const {return cosf[i];}
         double get_sinf(int i) const {return sinf[i];}
@@ -25,9 +25,9 @@ namespace qbox {
 
     private:
         double t;   ///< current time
-        Eigen::ArrayXd freq;   ///< frequency data
-        Eigen::ArrayXd cosf;   ///< cosine values
-        Eigen::ArrayXd sinf;   ///< sine values
+        Array freq;   ///< frequency data
+        Array cosf;   ///< cosine values
+        Array sinf;   ///< sine values
     };
 
 }

@@ -58,8 +58,8 @@ namespace qbox {
         prevE(length) = F->Ez(isurf.b);
     }
 
-    Eigen::ArrayXd surface_monitor::compute_flux() const {
-        Eigen::ArrayXd S = Eigen::ArrayXd::Zero(freq.size());
+    Array surface_monitor::compute_flux() const {
+        Array S = Array::Zero(freq.size());
 
         for (int j = 0; j != freq.size(); j++) {
             for (int i = 0; i != length; i++) {

@@ -28,7 +28,7 @@ namespace qbox {
         void set_F(Field2D *newF);    //set ownership
         void update();   //update the DFT matrices
         //*** smart pointer here for S probably
-        Eigen::ArrayXd compute_flux() const; //compute flux though face
+        Array compute_flux() const; //compute flux though face
         //*** should be through IO class. See field2.h
 
     private:

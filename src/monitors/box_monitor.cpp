@@ -39,9 +39,9 @@ namespace qbox {
             monitors[i].update();
     }
 
-    Eigen::ArrayXd box_monitor::compute_flux() const {
+    Array box_monitor::compute_flux() const {
         double sign_values[] = {-1, -1, 1, 1};
-        Eigen::ArrayXd S = Eigen::ArrayXd::Zero(freq.size());
+        Array S = Array::Zero(freq.size());
 
         for (int i = 0; i != 4; i++) {
             auto Sm = sign_values[i]*monitors[i].compute_flux();

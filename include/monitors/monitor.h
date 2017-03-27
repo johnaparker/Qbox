@@ -24,7 +24,7 @@ namespace qbox {
         //*** should probably be private:
         virtual void set_F(Field2D *newF);       //set the owning field
         virtual void update() = 0;                //update the DFT values
-        virtual Eigen::ArrayXd compute_flux() const = 0;
+        virtual Array compute_flux() const = 0;
         void write_flux();
 
         h5cpp::h5group get_group();

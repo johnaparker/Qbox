@@ -22,7 +22,7 @@ namespace qbox {
         void set_freq(const freq_data &new_freq);
         void set_F(Field2D *newF);
         void update();
-        Eigen::ArrayXd compute_flux() const;
+        Array compute_flux() const;
 
         void write_flux_sides();  //call write for all surface_monitors
 
