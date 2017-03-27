@@ -25,6 +25,10 @@ namespace qbox {
 
         void write_flux_sides();  //call write for all surface_monitors
 
+        void operator-=(const box_monitor& other) {
+            for (int i = 0; i != 4; i++)
+                monitors[i] -= other.monitors[i];
+        }
     private:
         surface_monitor monitors[4];    //4 surface monitors
         volume vol;

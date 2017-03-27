@@ -35,7 +35,7 @@ int main() {
 
     for (int i = 0; i != 4000; i++) {
         test.update();
-        test.writeE();
+        //test.writeE();
     }
     m1.write_flux();
     m2.write_flux();

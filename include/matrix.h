@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <functional>
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -44,6 +45,12 @@ namespace qbox {
         matrix(int Nx, int Ny): matrix({Nx,Ny}) { (*this)(0,0); }
         matrix(int Nx, int Ny, int Nz): matrix({Nx,Ny,Nz}) {(*this)(0,0,0);}
         matrix(int Nx, int Ny, int Nz, int Nt): matrix({Nx,Ny,Nz,Nt}) {(*this)(0,0,0,0);}
+
+        void operator-=(const matrix& other) {
+            int size = std::accumulate(dims.begin(), dims.end(), 1, std::multiplies<int>());
+            for (int i = 0; i != size; i++)
+                mData[i] -= other.mData[i];
+        }
 
         /// get reference to row i
         /**

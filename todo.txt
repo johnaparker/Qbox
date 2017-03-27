@@ -30,6 +30,8 @@
 
 [ ] For non-extendable monitor... writing multiple time gives seg fault
 
+[ ] Consider the move from matrix to Eigen::tensor
+
 ################ OLD TODO ####################################################
 
 

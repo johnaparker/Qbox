@@ -29,6 +29,13 @@ namespace qbox {
         void update();   //update the DFT matrices
         Array compute_flux() const; //compute flux though face
 
+        void operator-=(const surface_monitor& other) {
+            rE -= other.rE;
+            iE -= other.iE;
+            rH -= other.rH;
+            iH -= other.iH;
+        }
+
     private:
         bool extendable;
         surface surf;
