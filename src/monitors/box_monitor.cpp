@@ -12,11 +12,11 @@ using namespace std;
 namespace qbox {
     box_monitor::box_monitor(string name, const volume &vol, const freq_data &freq_in, bool extendable):
                     monitor(name, freq_in, extendable), vol(vol) {
-        
-        monitors[0] = surface_monitor(name + "_1", surface(vol.a, vec(vol.b[0], vol.a[1])), freq, extendable);
-        monitors[1] = surface_monitor(name + "_2", surface(vec(vol.b[0], vol.a[1]), vol.b), freq, extendable);
-        monitors[2] = surface_monitor(name + "_3", surface(vec(vol.a[0], vol.b[1]), vol.b), freq, extendable);
-        monitors[3] = surface_monitor(name + "_4", surface(vol.a, vec(vol.a[0], vol.b[1])), freq, extendable);
+
+        monitors[0] = surface_monitor(name + "_1", vol.get_surface(direction::y_bottom), freq, extendable);
+        monitors[1] = surface_monitor(name + "_2", vol.get_surface(direction::x_top),    freq, extendable);
+        monitors[2] = surface_monitor(name + "_3", vol.get_surface(direction::y_top),    freq, extendable);
+        monitors[3] = surface_monitor(name + "_4", vol.get_surface(direction::x_bottom), freq, extendable);
     }
 
     void box_monitor::set_F(Field2D *newF) {

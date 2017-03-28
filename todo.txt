@@ -1,5 +1,8 @@
 
-[ ] vol class should be able to create bounding surfaces
+[ ] vol's get_surface really should be outward normals
+    but box_monitor needs positive normals?
+    surface monitor should yield positive/negative flux according to normal vector
+    consider also replacing monitors[4] with some sort of map direction->surface_monitor
 
 [ ] For surface monitor... use a grid to half-grid conversion function in fields class to intepolate fields
     Figure out how the grid is staggered
