@@ -2,6 +2,7 @@
 #define GUARD_tfsf_h
 
 #include <memory>
+#include "vec.h"
 
 namespace qbox {
 

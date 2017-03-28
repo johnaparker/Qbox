@@ -6,6 +6,7 @@ using namespace meep;
 
 double radius = 20;
 int Nfreq = 200;
+double pml_thickness = 1;
 
 double eps(const vec &p) {
   if (pow(p.x()-60,2) + pow(p.y()-60,2) < pow(radius,2))
@@ -13,14 +14,15 @@ double eps(const vec &p) {
   return 1.0;
 }
 
+
 double vaccum(const vec&p) {return 1.0;}
 
 int main(int argc, char **argv) {
   initialize mpi(argc, argv); // do this even for non-MPI Meep
   double resolution = 2; // pixels per distance
   grid_volume v = vol2d(120,120, resolution); // 5x10 2d cell
-  structure s(v, vaccum, pml(10));
-  structure sg(v, eps, pml(10));
+  structure s(v, vaccum, pml(pml_thickness));
+  structure sg(v, eps, pml(pml_thickness));
 
   fields f(&s);
   f.use_real_fields();
@@ -35,7 +37,7 @@ int main(int argc, char **argv) {
   g.add_volume_source(Ez, src, volume(vec(0,30), vec(120,30)));
 
 
-  auto inc = f.add_dft_flux_plane(volume(vec(50,60), vec(60,60)), 1/30.0, 3/30.0, Nfreq);
+  auto inc = f.add_dft_flux_plane(volume(vec(40,60), vec(80,60)), 1/30.0, 3/30.0, Nfreq);
   auto box_inc = f.add_dft_flux_box(volume(vec(40,40), vec(80,80)), 1/30.0, 3/30.0, Nfreq);
   auto box_scat = g.add_dft_flux_box(volume(vec(40,40), vec(80,80)), 1/30.0, 3/30.0, Nfreq);
 

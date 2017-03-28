@@ -3,6 +3,7 @@
 
 #include <memory>
 #include "matrix.h"
+#include "vec.h"
 
 namespace qbox {
     class grid_properties;
@@ -10,15 +11,13 @@ namespace qbox {
     //PML boundary object
     class pml {
     public:
-        //*** This class needs rule of 3 (or Zero)
         pml(grid_properties grid);
         pml() = default;
 
     public:
-        //*** Smart Pointers
         //PML array and matrix properties
-        std::unique_ptr<double[]> fi1,fi2,fi3,fj1,fj2,fj3;
-        std::unique_ptr<double[]> gi2,gi3,gj2,gj3;
+        Array fi1,fi2,fi3,fj1,fj2,fj3;
+        Array gi2,gi3,gj2,gj3;
         matrix<double,2> Ihx, Ihy;
 
     private:

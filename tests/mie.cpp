@@ -13,7 +13,7 @@ int main() {
 
     Field2D norm(grid, "inc.h5");
 
-    box_monitor box_inc("box_inc",volume({60,60}, 50), freq_data(1/30.0,3/30.0, 200)); 
+    box_monitor box_inc("box_inc",volume({60,60}, 40), freq_data(1/30.0,3/30.0, 200)); 
     surface_monitor inc("inc",surface({40,60}, {80,60}), freq_data(1/30.0,3/30.0, 200)); 
     norm.add_monitor(box_inc);
     norm.add_monitor(inc);
@@ -36,7 +36,7 @@ int main() {
     object o1(c1, d1, vec(60,60));
     scat.add_object(o1);
 
-    box_monitor box_scat("box_scat",volume({60,60}, 50), freq_data(1/30.0,3/30.0, 200)); 
+    box_monitor box_scat("box_scat",volume({60,60}, 40), freq_data(1/30.0,3/30.0, 200)); 
     scat.add_monitor(box_scat);
     box_scat -= box_inc;
 

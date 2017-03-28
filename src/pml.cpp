@@ -22,24 +22,17 @@ namespace qbox {
         Ihx = matrix<double,2>(Nx, Ny); 
         Ihy = matrix<double,2>(Nx, Ny);
 
-        fi1 = make_unique<double[]>(Nx);
-        fi2 = make_unique<double[]>(Nx);
-        fi3 = make_unique<double[]>(Nx);
-        gi2 = make_unique<double[]>(Nx);
-        gi3 = make_unique<double[]>(Nx);
+        fi1 = Array::Zero(Nx);
+        fi2 = Array::Zero(Nx);
+        fi3 = Array::Zero(Nx);
+        gi2 = Array::Zero(Nx);
+        gi3 = Array::Zero(Nx);
 
-        fj1 = make_unique<double[]>(Ny);
-        fj2 = make_unique<double[]>(Ny);
-        fj3 = make_unique<double[]>(Ny);
-        gj2 = make_unique<double[]>(Ny);
-        gj3 = make_unique<double[]>(Ny);
-
-        for (int i = 0; i != Nx; i++) {
-            for (int j = 0; j != Ny; j++) {
-                Ihx(i,j) = 0;
-                Ihy(i,j) = 0;
-            }
-        }
+        fj1 = Array::Zero(Ny);
+        fj2 = Array::Zero(Ny);
+        fj3 = Array::Zero(Ny);
+        gj2 = Array::Zero(Ny);
+        gj3 = Array::Zero(Ny);
 
         double xn1;
         double xn2;
