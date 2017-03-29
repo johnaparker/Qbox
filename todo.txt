@@ -7,8 +7,6 @@
 [ ] For surface monitor... use a grid to half-grid conversion function in fields class to intepolate fields
     Figure out how the grid is staggered
 
-[ ] Sources: any field component to drive
-
 [ ] we need an interpolation function
     [ ] access matrices by ivec (grid) and vec (intepolation)
 

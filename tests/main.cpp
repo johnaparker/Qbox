@@ -27,7 +27,7 @@ int main() {
     box_monitor m2("m2", volume({90,90}, 20,20), freq_data(1/30.0,3/30.0, 500), false); 
     test.add_monitor(m2);
 
-    gaussian_point_source s1({60,60}, f, 1/200.0, 80);
+    gaussian_point_source s1(fields::Ez, {60,60}, f, 1/200.0, 80);
     //continuous_point_source s1({60,60}, 1/20.0);
     //gaussian_line_source s1(surface({30,0}, {30,120}), f, 1/200.0, 80);
     //continuous_line_source s1(surface({110,30}, {10,30}), f);

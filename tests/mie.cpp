@@ -18,7 +18,7 @@ int main() {
     norm.add_monitor(box_inc);
     norm.add_monitor(inc);
 
-    gaussian_line_source s1(surface({0,30},{120,30}), f, 1/200.0, 80);
+    gaussian_line_source s1(fields::Ez, surface({0,30},{120,30}), f, 1/200.0, 80);
     norm.add_source(s1);
 
     for (int i = 0; i != 4000; i++) {
@@ -40,7 +40,7 @@ int main() {
     scat.add_monitor(box_scat);
     box_scat -= box_inc;
 
-    gaussian_line_source s2(surface({0,30},{120,30}), f, 1/200.0, 80);
+    gaussian_line_source s2(fields::Ez, surface({0,30},{120,30}), f, 1/200.0, 80);
     scat.add_source(s2);
 
     for (int i = 0; i != 4000; i++) {

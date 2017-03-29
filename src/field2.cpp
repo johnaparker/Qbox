@@ -228,6 +228,13 @@ namespace qbox {
         monitor_list.push_back(&new_monitor);
     } 
 
+    matrix<double,2>& Field2D::get_field_ref(fields F) {
+        switch(F) {
+            case fields::Ez:  return Ez; break; 
+            case fields::Hx:  return Hx; break; 
+            case fields::Hy:  return Hy; break; 
+        }
+    }
 
     void Field2D::create_fields_dataset(fields field) {
         h5cpp::h5group gFields;

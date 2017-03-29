@@ -23,11 +23,6 @@
 
 namespace qbox {
 
-    enum class fields {
-        Ez,
-        Hx,
-        Hy
-    };
     class source;
     class tfsf;
 
@@ -49,6 +44,7 @@ namespace qbox {
         void write_monitor(monitor& mon);   //write a monitor
         void writeE();    //write the E fields
         void writeH();    //write the H fields
+        matrix<double,2>& get_field_ref(fields F);
     private:
         void create_fields_dataset(fields field);
 

@@ -7,9 +7,10 @@
 namespace qbox {
     class continuous_line_source: public source {
     public:
-        continuous_line_source(const surface &surf, double f);
+        continuous_line_source(fields C, const surface &surf, double f);
         void pulse();
     private:
+        fields C;
         surface surf;
         double freq;
     };

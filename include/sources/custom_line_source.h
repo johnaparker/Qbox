@@ -6,9 +6,10 @@
 namespace qbox {
     class custom_line_source: public source {
     public:
-        custom_line_source(const surface &surf, double (*time_func)(double));
+        custom_line_source(fields C, const surface &surf, double (*time_func)(double));
         void pulse();
     private:
+        fields C;
         surface surf;
         double (*time_func)(double);
     };

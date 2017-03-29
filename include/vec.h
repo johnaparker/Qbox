@@ -21,6 +21,12 @@ namespace qbox {
         //z_bottom, z_top,
     };
 
+    enum class fields {
+        Ez,
+        Hx,
+        Hy
+    };
+
     template<class T, h5cpp::dtype M>
     void write_vec(h5cpp::h5group &group, const Eigen::Matrix<T,Eigen::Dynamic,1> &p, std::string name) {
         auto dspace = h5cpp::dspace(std::vector<hsize_t>{static_cast<unsigned long int>(p.size())});
