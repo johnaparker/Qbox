@@ -16,7 +16,6 @@
 
 #include "materials/simple_material.h"
 #include "geometry/cylinder.h"
-#include "geometry/medium.h"
 
 using namespace std;
 
@@ -36,19 +35,15 @@ namespace qbox {
 
         obj  = matrix<object*,2>(Nx, Ny); 
 
-        simple_material background_material(1);
-        //cylinder background_geometry(1);
-        medium background_geometry;
-        background = make_unique<object>(background_geometry, background_material, vec(0,0));
-        obj_list = {background.get()};
+        background = make_unique<simple_material>(1);
 
         for (int i = 0; i != Nx; i++) {
             for (int j = 0; j != Ny; j++) {
-                double eps = obj_list[0]->get_material()->get_eps();      
-                double conduc = obj_list[0]->get_material()->get_conduc(); 
+                double eps = background->get_eps();      
+                double conduc = background->get_conduc(); 
                 ca(i,j) = 1/(eps + conduc*dt/epsilon);
                 cb(i,j) = conduc*dt/epsilon;
-                obj(i,j) = obj_list[0];
+                obj(i,j) = nullptr;
              }
         }
 
@@ -205,14 +200,13 @@ namespace qbox {
             for (int j = 0; j != Ny; j++) {
                 ivec pi = {i,j};
                 vec p = grid.to_real(pi);
-                vec p_eigen(p[0], p[1]);
 
-                if (new_object.inside(p_eigen)) {
-                    obj(i,j) = &new_object;
-                    obj(i,j) = &new_object;
+                if (new_object.inside(p)) {
+                    obj(pi) = &new_object;
+                    obj(pi) = &new_object;
                         
-                    ca(i,j) = 1/(eps + conduc*dt/epsilon);
-                    cb(i,j) = conduc*dt/epsilon;
+                    ca(pi) = 1/(eps + conduc*dt/epsilon);
+                    cb(pi) = conduc*dt/epsilon;
                 }
             }
         }

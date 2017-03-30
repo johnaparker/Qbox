@@ -72,7 +72,7 @@ namespace qbox {
         std::vector<source*> source_list;
         std::vector<monitor*> monitor_list;
 
-        std::unique_ptr<object> background;
+        std::unique_ptr<material> background;
 
         //Physical timestep, time
         double dt,t;

@@ -21,13 +21,13 @@
 [ ] two monitor's with the same name -- seg fault 
     [ ] should monitors even have names? instead, name at write time?
 
-[ ] replace background object with background material
-
 [ ] For non-extendable monitor... writing multiple time gives seg fault
 
 [ ] Consider the move from matrix to Eigen::tensor
 
 [ ] Do full TEM fields
+
+[ ] set background material
 
 ################ OLD TODO ####################################################
 

@@ -33,9 +33,9 @@ int main() {
     //continuous_line_source s1(surface({110,30}, {10,30}), f);
     test.add_source(s1);
 
-    for (int i = 0; i != 4000; i++) {
+    for (int i = 0; i != 1000; i++) {
         test.update();
-        //test.writeE();
+        test.writeE();
     }
     m1.write_flux();
     m2.write_flux();
