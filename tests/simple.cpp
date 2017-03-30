@@ -16,7 +16,7 @@ int main() {
     double f = 2/30.0;
     box_monitor m1("m1", volume({60,60}, 20,20), freq_data(1/30.0,3/30.0, 500), false); 
     test.add_monitor(m1);
-    box_monitor m2("m2", volume({90,90}, 20,20), freq_data(1/30.0,3/30.0, 500), false); 
+    box_monitor m2("m2", volume({95,95}, 20,20), freq_data(1/30.0,3/30.0, 500), false); 
     test.add_monitor(m2);
 
     gaussian_point_source s1(fields::Ez, {60,60}, f, 1/200.0, 80);
@@ -28,4 +28,5 @@ int main() {
     }
     m1.write_flux();
     m2.write_flux();
+    m2.write_flux_sides();
 }

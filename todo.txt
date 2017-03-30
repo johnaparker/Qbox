@@ -7,12 +7,6 @@
 [ ] For surface monitor... use a grid to half-grid conversion function in fields class to intepolate fields
     Figure out how the grid is staggered
 
-[ ] we need an interpolation function
-    [ ] access matrices by ivec (grid) and vec (intepolation)
-
-[ ] Do we need to interpolate the monitors as we DFT them? We could just interpolate at the end (as we compute flux)
-
-
 [ ]  Definitely rethink the way sources are being done, with tfsf in mind
     [ ] for tfsf, we need to remove field1 files in favor of something better
 
@@ -28,7 +22,6 @@
     [ ] should monitors even have names? instead, name at write time?
 
 [ ] replace background object with background material
-
 
 [ ] For non-extendable monitor... writing multiple time gives seg fault
 
@@ -69,16 +62,6 @@ Separte classes in:
 
 Data members need to be made private and/or protected
     When doing so, consider design choices in regards to get/set functions
-
-All position vectors will become eigen vectors:
-    Vector2d for real space
-    Vector2i for grid space
-    -performance?
-
-Class volume will contain two vecs
-Class surface will contain two vecs:
-    -checking to ensure one is the same
-    -having a known orientation
 
 Bug in box_monitor... when extendable, surface monitor m1_1 is not extendable.
     A quick way to find solution: replace bool extendable with an enum class

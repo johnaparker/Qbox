@@ -40,10 +40,21 @@ namespace qbox {
 
         for (int i = 0; i != length; i++) {
             ivec p = isurf.a + i*isurf.tangent;
-            H = ((*Hfield)(p)+ (*Hfield)(p - isurf.normal)
-                    + (*Hfield)(p + isurf.tangent) + (*Hfield)(p - isurf.normal + isurf.tangent))/4;
-            E = (F->Ez(p) + F->Ez(p + isurf.tangent)
-                    + prevE(i) + prevE(i+1))/4;
+            //H = ((*Hfield)(p)+ (*Hfield)(p - isurf.normal)
+                    //+ (*Hfield)(p + isurf.tangent) + (*Hfield)(p - isurf.normal + isurf.tangent))/4;
+            //E = (F->Ez(p) + F->Ez(p + isurf.tangent)
+                    //+ prevE(i) + prevE(i+1))/4;
+                    
+            H = ((*Hfield)(p)+ (*Hfield)(p - isurf.normal))/2;
+            E = (F->Ez(p) + prevE(i))/2;
+
+            //H = isurf.normal[0] == 0 ? F->to_xgrid(fields::Hx, p) : F->to_ygrid(fields::Hy, p); 
+            //E = isurf.normal[0] == 0 ? F->to_xgrid(fields::Ez, p) : F->to_ygrid(fields::Ez, p); 
+
+            //vec pr = F->grid.to_real(p) + surf.tangent*F->dx/2.0;
+            //H = isurf.normal[0] == 0 ? F->interpolate(fields::Hx, pr) : F->interpolate(fields::Hy, pr);
+            //E = F->interpolate(fields::Ez, pr);
+            //E = (2*E + prevE(i) + prevE(i+1))/4;
 
             prevE(i) = F->Ez(p);
 

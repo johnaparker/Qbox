@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
 
   int Nfreq = 500;
   auto b1 = f.add_dft_flux_box(volume(vec(50,50), vec(70,70)), 1/30.0, 3/30.0, Nfreq);
-  auto b2 = f.add_dft_flux_box(volume(vec(80,80), vec(100,100)), 1/30.0, 3/30.0, Nfreq);
+  auto b2 = f.add_dft_flux_box(volume(vec(15,15), vec(35,35)), 1/30.0, 3/30.0, Nfreq);
 
   //h5file io("test.h5", h5file::WRITE);
   for (int i = 0; i != 4000; i++) {

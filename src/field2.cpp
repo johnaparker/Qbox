@@ -228,6 +228,56 @@ namespace qbox {
         monitor_list.push_back(&new_monitor);
     } 
 
+    double Field2D::interpolate(fields C, const vec &p) {
+        vec ps = p/dx; 
+        auto &F = get_field_ref(C);
+
+        switch(C) {
+            case fields::Ez: ps -= vec(dx/2.0, dx/2.0); break;
+            case fields::Hx: ps -= vec(0, dx/2.0); break;
+            case fields::Hy: ps -= vec(dx/2.0, 0); break;
+        }
+
+        ivec c1(floor(ps[0]), floor(ps[1]));
+        ivec c2(ceil(ps[0]), floor(ps[1]));
+        ivec c3(ceil(ps[0]), ceil(ps[1]));
+        ivec c4(floor(ps[0]), ceil(ps[1]));
+
+        double x = ps[0] - c1[0];
+        double y = ps[1] - c1[1];
+
+        double a1 = (1 - x)*(1 - y);
+        double a2 = x*(1 - y);
+        double a3 = x*y;
+        double a4 = (1 - x)*y;
+
+        return a1*F(c1) + a2*F(c2) + a3*F(c3) + a4*F(c4);
+    }
+
+    double Field2D::to_grid(fields C, const ivec &pi) {
+        switch(C) {
+            case fields::Ez:  return Ez(pi); break; 
+            case fields::Hx:  return (Hx(pi) + Hx(pi - ivec(0,1)))/2; break; 
+            case fields::Hy:  return (Hy(pi) + Hy(pi - ivec(1,0)))/2; break; 
+        }
+    }
+
+    double Field2D::to_xgrid(fields C, const ivec &pi) {
+        switch(C) {
+            case fields::Ez:  return (Ez(pi) + Ez(pi + ivec(1,0)))/2; break; 
+            case fields::Hx:  return (Hx(pi) + Hx(pi - ivec(1,0)) + Hx(pi + ivec(0,1)) + Hx(pi + ivec(-1,1)))/4; break; 
+            case fields::Hy:  return Hy(pi); break; 
+        }
+    }
+
+    double Field2D::to_ygrid(fields C, const ivec &pi) {
+        switch(C) {
+            case fields::Ez:  return (Ez(pi) + Ez(pi + ivec(0,1)))/2; break; 
+            case fields::Hx:  return Hx(pi); break; 
+            case fields::Hy:  return (Hy(pi) + Hy(pi - ivec(1,0)) + Hy(pi + ivec(0,1)) + Hy(pi + ivec(-1,1)))/4; break; 
+        }
+    }
+
     matrix<double,2>& Field2D::get_field_ref(fields F) {
         switch(F) {
             case fields::Ez:  return Ez; break; 

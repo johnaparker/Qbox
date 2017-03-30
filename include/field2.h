@@ -44,6 +44,12 @@ namespace qbox {
         void write_monitor(monitor& mon);   //write a monitor
         void writeE();    //write the E fields
         void writeH();    //write the H fields
+
+        double interpolate(fields C, const vec &p);
+        double to_grid(fields C, const ivec &pi);
+        double to_xgrid(fields C, const ivec &pi);
+        double to_ygrid(fields C, const ivec &pi);
+
         matrix<double,2>& get_field_ref(fields F);
     private:
         void create_fields_dataset(fields field);
