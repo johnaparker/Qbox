@@ -18,6 +18,7 @@ namespace qbox{}
 
 //monitors
 #include "qbox/monitors/surface_monitor.h"
+#include "qbox/monitors/cylinder_monitor.h"
 #include "qbox/monitors/box_monitor.h"
 
 //sources

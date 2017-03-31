@@ -7,6 +7,7 @@
 #include "h5cpp.h"
 #include <vector>
 #include <string>
+#include "math.h"
 
 namespace qbox {
 
@@ -34,6 +35,31 @@ namespace qbox {
         attr.write(p.data());
     }
 
+    struct cylinder_surface {
+        cylinder_surface() = default;
+        cylinder_surface(vec center, double radius): center(center), radius(radius) {}
+
+        vec tangent(double theta) {
+            return vec(-sin(theta), cos(theta));
+        }
+        vec normal(double theta) {
+            return vec(cos(theta), sin(theta));
+        }
+        vec position(double theta) {
+            return radius*normal(theta) + center;
+        }
+
+        void write(h5cpp::h5group &group) const {
+            write_vec<double,h5cpp::dtype::Double>(group, center, "center");
+            auto dspace = h5cpp::dspace(std::vector<hsize_t>{1});
+            auto attr = group.create_attribute("radius", h5cpp::dtype::Double, dspace);
+            attr.write(&radius);
+        }
+
+    public:
+        vec center;                ///< vector coordinates of center
+        double radius;             ///< cylinder radius
+    };
 
     template<class T, h5cpp::dtype M>
     struct surface_template {
