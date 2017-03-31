@@ -25,6 +25,8 @@ namespace qbox {
         rH = matrix<double,2>(length, freq.size());
         iH = matrix<double,2>(length, freq.size());
 
+        auto group = get_group();
+        surf.write(group);
     }
 
     void cylinder_monitor::update() {
