@@ -19,7 +19,7 @@ namespace qbox {
     class monitor {
 
     public:
-        monitor(std::string name, const freq_data &freq, bool extendable): name(name), freq(freq), extendable(extendable) {};
+        monitor(std::string name, std::string sub_name, const freq_data &freq, bool extendable): name(name), sub_name(sub_name), freq(freq), extendable(extendable) {};
         //*** should probably be private:
         virtual void set_F(Field2D *newF);       //set the owning field
         virtual void update() = 0;                //update the DFT values
@@ -35,6 +35,7 @@ namespace qbox {
 
     protected:
         std::string name;    //Monitor name; to call output from main
+        std::string sub_name;    //name of monitor type (subgroup inside monitors)
         freq_data freq;    //set of frequencies to DFT at
         bool extendable;
         Field2D *F;      //pointer to owning field object

@@ -21,4 +21,10 @@ namespace qbox {
         cosf = Eigen::cos(2*M_PI*freq*t);
         sinf = Eigen::sin(2*M_PI*freq*t);
     }
+
+    void freq_data::write(const h5cpp::h5group &group) {
+        auto dataspace = h5cpp::dspace(vector<hsize_t>{static_cast<hsize_t>(freq.size())});
+        auto dset = group.create_dataset("frequency", h5cpp::dtype::Double, dataspace);
+        dset.write(freq.data());
+    }
 }

@@ -10,7 +10,7 @@ using namespace std;
 
 
 namespace qbox {
-    surface_monitor::surface_monitor(string name, const surface &surf, const freq_data &freq, bool extendable): monitor(name,freq,extendable), surf(surf), dir(0), length(0) {
+    surface_monitor::surface_monitor(string name, const surface &surf, const freq_data &freq, bool extendable): monitor(name,"surface_monitor",freq,extendable), surf(surf), dir(0), length(0) {
         F = nullptr;
     }
 

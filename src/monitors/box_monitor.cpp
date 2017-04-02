@@ -11,7 +11,7 @@ using namespace std;
 
 namespace qbox {
     box_monitor::box_monitor(string name, const volume &vol, const freq_data &freq_in, bool extendable):
-                    monitor(name, freq_in, extendable), vol(vol) {
+                    monitor(name, "box_monitor", freq_in, extendable), vol(vol) {
 
         monitors[0] = surface_monitor(name + "_1", vol.get_surface(direction::y_bottom), freq, extendable);
         monitors[1] = surface_monitor(name + "_2", vol.get_surface(direction::x_top),    freq, extendable);

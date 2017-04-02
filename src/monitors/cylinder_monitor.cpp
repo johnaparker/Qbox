@@ -10,7 +10,7 @@ using namespace std;
 
 
 namespace qbox {
-    cylinder_monitor::cylinder_monitor(string name, const cylinder_surface &surf, const freq_data &freq, bool extendable): monitor(name,freq,extendable), surf(surf), length(0) {
+    cylinder_monitor::cylinder_monitor(string name, const cylinder_surface &surf, const freq_data &freq, bool extendable): monitor(name,"cylinder_monitor",freq,extendable), surf(surf), length(0) {
         F = nullptr;
     }
 

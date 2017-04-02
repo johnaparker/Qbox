@@ -30,7 +30,7 @@ namespace qbox {
 
     template<class T, h5cpp::dtype M>
     void write_vec(h5cpp::h5group &group, const Eigen::Matrix<T,Eigen::Dynamic,1> &p, std::string name) {
-        auto dspace = h5cpp::dspace(std::vector<hsize_t>{static_cast<unsigned long int>(p.size())});
+        auto dspace = h5cpp::dspace(std::vector<hsize_t>{static_cast<hsize_t>(p.size())});
         auto attr = group.create_attribute(name, M, dspace);
         attr.write(p.data());
     }
@@ -126,6 +126,8 @@ namespace qbox {
                     return surface_template<T,M>(vec(a[0], b[1]), a); break;
                 case direction::x_top:
                     return surface_template<T,M>(vec(b[0], a[1]), b); break;
+                default: throw std::invalid_argument("not a valid direction");
+
             }
         }
 

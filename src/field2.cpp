@@ -96,6 +96,7 @@ namespace qbox {
                                  dset.append(Hy.data());
                              }
                              break;
+            default: throw std::invalid_argument("not a valid field component");
         }
         clocks.stop(clock_name::hdf5);
     }
@@ -227,9 +228,10 @@ namespace qbox {
         auto &F = get_field_ref(C);
 
         switch(C) {
-            case fields::Ez: ps -= vec(dx/2.0, dx/2.0); break;
+            case fields::Ez: break;
             case fields::Hx: ps -= vec(0, dx/2.0); break;
             case fields::Hy: ps -= vec(dx/2.0, 0); break;
+            default: throw std::invalid_argument("not a valid field component");
         }
 
         ivec c1(floor(ps[0]), floor(ps[1]));
@@ -253,6 +255,7 @@ namespace qbox {
             case fields::Ez:  return Ez(pi); break; 
             case fields::Hx:  return (Hx(pi) + Hx(pi - ivec(0,1)))/2; break; 
             case fields::Hy:  return (Hy(pi) + Hy(pi - ivec(1,0)))/2; break; 
+            default: throw std::invalid_argument("not a valid field component");
         }
     }
 
@@ -261,6 +264,7 @@ namespace qbox {
             case fields::Ez:  return (Ez(pi) + Ez(pi + ivec(1,0)))/2; break; 
             case fields::Hx:  return (Hx(pi) + Hx(pi - ivec(1,0)) + Hx(pi + ivec(0,1)) + Hx(pi + ivec(-1,1)))/4; break; 
             case fields::Hy:  return Hy(pi); break; 
+            default: throw std::invalid_argument("not a valid field component");
         }
     }
 
@@ -269,6 +273,7 @@ namespace qbox {
             case fields::Ez:  return (Ez(pi) + Ez(pi + ivec(0,1)))/2; break; 
             case fields::Hx:  return Hx(pi); break; 
             case fields::Hy:  return (Hy(pi) + Hy(pi - ivec(1,0)) + Hy(pi + ivec(0,1)) + Hy(pi + ivec(-1,1)))/4; break; 
+            default: throw std::invalid_argument("not a valid field component");
         }
     }
 
@@ -277,6 +282,7 @@ namespace qbox {
             case fields::Ez:  return Ez; break; 
             case fields::Hx:  return Hx; break; 
             case fields::Hy:  return Hy; break; 
+            default: throw std::invalid_argument("not a valid field component");
         }
     }
 
@@ -312,6 +318,7 @@ namespace qbox {
                                      h5cpp::dtype::Double, ds); 
                               dset.write(Hy.data());
                               break;
+            default: throw std::invalid_argument("not a valid field component");
         }
     }
 

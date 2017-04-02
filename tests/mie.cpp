@@ -6,15 +6,15 @@ using namespace qbox;
 
 int main() {
     int pml_thickness = 20;
-    int res = 2;
+    double res = 2;
     double f = 2/30.0;
 
     grid_properties grid(120,120,res,pml_thickness);
 
     Field2D norm(grid, "inc.h5");
 
-    //cylinder_monitor box_inc("box_inc", cylinder_surface(vec(60,60), 25), freq_data(1/30.0,3/30.0, 200)); 
-    box_monitor box_inc("box_inc",volume({60,60}, 40), freq_data(1/30.0,3/30.0, 200)); 
+    cylinder_monitor box_inc("box_inc", cylinder_surface(vec(60,60), 30), freq_data(1/30.0,3/30.0, 200)); 
+    //box_monitor box_inc("box_inc",volume({60,60}, 40), freq_data(1/30.0,3/30.0, 200)); 
     surface_monitor inc("inc",surface({40,60}, {80,60}), freq_data(1/30.0,3/30.0, 200)); 
     norm.add_monitor(box_inc);
     norm.add_monitor(inc);
@@ -32,13 +32,11 @@ int main() {
 
     Field2D scat(grid, "scat.h5");
 
-    cylinder c1(20);
-    simple_material d1(2);
-    object o1(c1, d1, vec(60,60));
+    object o1(block({20,20}), simple_material(8,1,.000000000001), vec(60,60), vec(1,1));
     scat.add_object(o1);
 
-    //cylinder_monitor box_scat("box_scat", cylinder_surface(vec(60,60), 25), freq_data(1/30.0,3/30.0, 200)); 
-    box_monitor box_scat("box_scat",volume({60,60}, 40), freq_data(1/30.0,3/30.0, 200)); 
+    cylinder_monitor box_scat("box_scat", cylinder_surface(vec(60,60), 30), freq_data(1/30.0,3/30.0, 200)); 
+    //box_monitor box_scat("box_scat",volume({60,60}, 40), freq_data(1/30.0,3/30.0, 200)); 
     scat.add_monitor(box_scat);
     box_scat -= box_inc;
 
@@ -47,7 +45,7 @@ int main() {
 
     for (int i = 0; i != 4000; i++) {
         scat.update();
-        //scat.writeE();
+        scat.writeE();
     }
     box_scat.write_flux();
 }
