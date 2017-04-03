@@ -24,6 +24,7 @@ namespace qbox {
         //various ways to construct. p1,p2 = corners. 
         surface_monitor() = default;
         surface_monitor(std::string name, const surface &surf, const freq_data &freq, bool extendable=false);   //using freq data
+        surface_monitor(const surface &surf, const freq_data &freq, bool extendable=false);
 
         void set_F(Field2D *newF);    //set ownership
         void update();   //update the DFT matrices

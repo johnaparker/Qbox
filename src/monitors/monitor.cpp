@@ -13,6 +13,8 @@ using namespace std;
 
 namespace qbox {
 
+    int monitor::_num_created = 0;
+
     void monitor::set_F(Field2D *newF) {
         F = newF;
         outFile = make_unique<h5cpp::h5file>(*newF->outFile.get());

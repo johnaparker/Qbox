@@ -13,6 +13,9 @@ namespace qbox {
     surface_monitor::surface_monitor(string name, const surface &surf, const freq_data &freq, bool extendable): monitor(name,"surface_monitor",freq,extendable), surf(surf), dir(0), length(0) {
         F = nullptr;
     }
+    surface_monitor::surface_monitor(const surface &surf, const freq_data &freq, bool extendable): monitor("surface_monitor",freq,extendable), surf(surf), dir(0), length(0) {
+        F = nullptr;
+    }
 
     void surface_monitor::set_F(Field2D *newF) {
         monitor::set_F(newF);

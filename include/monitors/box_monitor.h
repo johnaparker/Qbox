@@ -17,6 +17,7 @@ namespace qbox {
     public:
         //various constructors
         box_monitor(std::string name, const volume &vol, const freq_data &freq, bool extendable=false);
+        box_monitor(const volume &vol, const freq_data &freq, bool extendable=false);
 
         //same as surface_monitor 
         void set_F(Field2D *newF);

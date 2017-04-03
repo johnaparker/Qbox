@@ -14,6 +14,10 @@ namespace qbox {
         F = nullptr;
     }
 
+    cylinder_monitor::cylinder_monitor(const cylinder_surface &surf, const freq_data &freq, bool extendable): monitor("cylinder_monitor",freq,extendable), surf(surf), length(0) {
+        F = nullptr;
+    }
+
     void cylinder_monitor::set_F(Field2D *newF) {
         monitor::set_F(newF);
 

@@ -18,6 +18,7 @@ namespace qbox {
         //various ways to construct. p1,p2 = corners. 
         cylinder_monitor() = default;
         cylinder_monitor(std::string name, const cylinder_surface &surf, const freq_data &freq, bool extendable=false);   //using freq data
+        cylinder_monitor(const cylinder_surface &surf, const freq_data &freq, bool extendable=false);   //using freq data
 
         void set_F(Field2D *newF);    //set ownership
         void update();   //update the DFT matrices

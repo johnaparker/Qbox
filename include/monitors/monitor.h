@@ -20,6 +20,8 @@ namespace qbox {
 
     public:
         monitor(std::string name, std::string sub_name, const freq_data &freq, bool extendable): name(name), sub_name(sub_name), freq(freq), extendable(extendable) {};
+        monitor(std::string sub_name, const freq_data &freq, bool extendable): monitor("monitor_" + std::to_string(_num_created), sub_name, freq, extendable) {_num_created++;}
+
         //*** should probably be private:
         virtual void set_F(Field2D *newF);       //set the owning field
         virtual void update() = 0;                //update the DFT values
@@ -40,6 +42,9 @@ namespace qbox {
         bool extendable;
         Field2D *F;      //pointer to owning field object
         std::unique_ptr<h5cpp::h5file> outFile;
+
+    private:
+        static int _num_created;
     };
 
 }

@@ -19,6 +19,15 @@ namespace qbox {
         monitors[3] = surface_monitor(name + "_4", vol.get_surface(direction::x_bottom), freq, extendable);
     }
 
+    box_monitor::box_monitor(const volume &vol, const freq_data &freq_in, bool extendable):
+                    monitor("box_monitor", freq_in, extendable), vol(vol) {
+
+        monitors[0] = surface_monitor(name + "_1", vol.get_surface(direction::y_bottom), freq, extendable);
+        monitors[1] = surface_monitor(name + "_2", vol.get_surface(direction::x_top),    freq, extendable);
+        monitors[2] = surface_monitor(name + "_3", vol.get_surface(direction::y_top),    freq, extendable);
+        monitors[3] = surface_monitor(name + "_4", vol.get_surface(direction::x_bottom), freq, extendable);
+    }
+
     void box_monitor::set_F(Field2D *newF) {
         monitor::set_F(newF);
         for (int i = 0; i != 4; i++) 
