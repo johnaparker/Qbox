@@ -12,4 +12,16 @@ namespace qbox {
         return unique_ptr<simple_material>(new simple_material(*this));
     }
 
+    void simple_material::write(const h5cpp::h5group &group) {
+        auto dspace = h5cpp::dspace(vector<hsize_t>{1});
+
+        auto dset = group.create_dataset("eps", h5cpp::dtype::Double, dspace);
+        dset.write(&eps);
+
+        dset = group.create_dataset("mu", h5cpp::dtype::Double, dspace);
+        dset.write(&mu);
+
+        dset = group.create_dataset("conduc", h5cpp::dtype::Double, dspace);
+        dset.write(&conduc);
+    }
 }

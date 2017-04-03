@@ -15,10 +15,10 @@ namespace qbox {
         return true;
     }
 
-    void block::write(h5cpp::h5group& group) const {
+    void block::write(const h5cpp::h5group& group) const {
         auto dspace = h5cpp::dspace(vector<hsize_t>{2});
-        auto attr = group.create_attribute("dimensions", h5cpp::dtype::Double, dspace);
-        attr.write(dim.data());
+        auto dset = group.create_dataset("dimensions", h5cpp::dtype::Double, dspace);
+        dset.write(dim.data());
     }
 
     unique_ptr<geometry> block::clone() const {

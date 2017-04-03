@@ -19,8 +19,10 @@ namespace qbox {
         }
 
         virtual bool inside(const vec& v) const = 0;
-        virtual void write(h5cpp::h5group& group) const = 0;
+        virtual void write(const h5cpp::h5group& group) const = 0;
         virtual std::unique_ptr<geometry> clone() const = 0;
+
+        virtual std::string group_name() const = 0;
 
     protected:
         void set_bounding_box(const vec& a, const vec& b) {

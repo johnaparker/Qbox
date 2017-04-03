@@ -31,8 +31,8 @@ namespace qbox {
     template<class T, h5cpp::dtype M>
     void write_vec(h5cpp::h5group &group, const Eigen::Matrix<T,Eigen::Dynamic,1> &p, std::string name) {
         auto dspace = h5cpp::dspace(std::vector<hsize_t>{static_cast<hsize_t>(p.size())});
-        auto attr = group.create_attribute(name, M, dspace);
-        attr.write(p.data());
+        auto dset = group.create_dataset(name, M, dspace);
+        dset.write(p.data());
     }
 
     struct cylinder_surface {
@@ -52,8 +52,8 @@ namespace qbox {
         void write(h5cpp::h5group &group) const {
             write_vec<double,h5cpp::dtype::Double>(group, center, "center");
             auto dspace = h5cpp::dspace(std::vector<hsize_t>{1});
-            auto attr = group.create_attribute("radius", h5cpp::dtype::Double, dspace);
-            attr.write(&radius);
+            auto dset = group.create_dataset("radius", h5cpp::dtype::Double, dspace);
+            dset.write(&radius);
         }
 
     public:

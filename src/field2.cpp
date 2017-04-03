@@ -194,6 +194,7 @@ namespace qbox {
 
     void Field2D::add_object(object &new_object) {
         obj_list.push_back(&new_object);
+        new_object.set_owner(this);
         double eps = new_object.get_material()->get_eps();
         double conduc = new_object.get_material()->get_conduc();
 
