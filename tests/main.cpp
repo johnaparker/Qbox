@@ -20,7 +20,7 @@ int main() {
     //surface_monitor m1("m1",{50,50}, {50,70},0,5*f, 100); 
     //surface_monitor m2(m1); 
     object o1(block({50,35}), simple_material(12), {70,50}, {1,1});
-    //test.add_object(o1);
+    test.add_object(o1);
 
     box_monitor m1("m1", volume({60,60}, 20,20), freq_data(1/30.0,3/30.0, 500), false); 
     test.add_monitor(m1);

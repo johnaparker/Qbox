@@ -68,30 +68,28 @@ namespace qbox {
 
     void Field2D::write_field(const fields field) {
         clocks.start(clock_name::hdf5);
+        auto gFields = outFile->create_or_open_group("fields");
         switch(field) {
-            case fields::Ez: if (!outFile->object_exists("Fields/Ez")) {
+            case fields::Ez: if (!gFields.object_exists("Ez")) {
                                      create_fields_dataset(field);
                              }
                              else {
-                                 auto gFields = outFile->open_group("Fields");
                                  auto dset = gFields.open_dataset("Ez");
                                  dset.append(Ez.data());
                              }
                              break;
-            case fields::Hx: if (!outFile->object_exists("Fields/Hx")) {
+            case fields::Hx: if (!gFields.object_exists("Hx")) {
                                      create_fields_dataset(field);
                              }
                              else {
-                                 auto gFields = outFile->open_group("Fields");
                                  auto dset = gFields.open_dataset("Hx");
                                  dset.append(Hx.data());
                              }
                              break;
-            case fields::Hy: if (!outFile->object_exists("Fields/Hy")) {
+            case fields::Hy: if (!gFields.object_exists("fields/Hy")) {
                                      create_fields_dataset(field);
                              }
                              else {
-                                 auto gFields = outFile->open_group("Fields");
                                  auto dset = gFields.open_dataset("Hy");
                                  dset.append(Hy.data());
                              }
@@ -288,24 +286,15 @@ namespace qbox {
     }
 
     void Field2D::create_fields_dataset(fields field) {
-        h5cpp::h5group gFields;
-        h5cpp::h5dset dset;
-
-        if (!outFile->object_exists("Fields")) {
-            gFields = outFile->create_group("Fields");
-            h5cpp::dspace ds_a(vector<hsize_t>{1});
-            auto attr = gFields.create_attribute("dx", h5cpp::dtype::Double, ds_a);
-            attr.write(&(dx));
-            attr = gFields.create_attribute("dt", h5cpp::dtype::Double, ds_a);
-            attr.write(&(dt));
-        }
-        else
-            gFields = outFile->open_group("Fields");
 
         vector<hsize_t> dims = {hsize_t(Nx),hsize_t(Ny),1};
         vector<hsize_t> max_dims = {hsize_t(Nx),hsize_t(Ny),h5cpp::inf};
         vector<hsize_t> chunk_dims = dims;
         h5cpp::dspace ds(dims, max_dims, chunk_dims, false);
+
+        auto gFields = outFile->create_or_open_group("fields");
+        h5cpp::h5dset dset;
+
         switch(field) {
             case fields::Ez:  dset = gFields.create_dataset("Ez", 
                                      h5cpp::dtype::Double, ds); 
