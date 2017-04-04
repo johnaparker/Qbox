@@ -11,6 +11,7 @@ namespace qbox{}
 
 //geometry
 #include "qbox/geometry/cylinder.h"
+#include "qbox/geometry/ellipse.h"
 #include "qbox/geometry/block.h"
 
 //materials

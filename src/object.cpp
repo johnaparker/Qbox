@@ -17,9 +17,11 @@ namespace qbox {
 
     bool object::inside(const vec& v) const {
         double theta = atan2(orientation(1), orientation(0)) - M_PI/2;
-        auto R = Eigen::Rotation2Dd(theta);
-        vec rot_v = R.toRotationMatrix()*(v-position);
-        return geometryType->inside(rot_v); 
+        auto R = Eigen::Rotation2Dd(theta).inverse();
+        auto T = Eigen::Translation<double,2>(position).inverse();
+        auto tr = R*T;
+        vec transformed_v = tr*v;
+        return geometryType->inside(transformed_v); 
     }
 
     void object::move(const vec& dr) {

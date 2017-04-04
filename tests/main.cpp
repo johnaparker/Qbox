@@ -23,18 +23,20 @@ int main() {
     vec gap{25,0};
 
     auto mat = simple_material(5);
-    auto cyl = cylinder(10);
-    object o3(cyl, mat, center - 2*gap); 
+    auto cyl = ellipse(10,15);
+    vec orient(1,1);
+
+    object o3(cyl, mat, center - 2*gap, orient); 
     test.add_object(o3);
-    object o4(cyl, mat, center - gap);
+    object o4(cyl, mat, center - gap, orient);
     test.add_object(o4);
-    object o1(cyl, mat, center + gap);
+    object o1(cyl, mat, center + gap, orient);
     test.add_object(o1);
-    object o2(cyl, mat, center + 2*gap);
+    object o2(cyl, mat, center + 2*gap, orient);
     test.add_object(o2);
 
     box_monitor m1(volume(center, 5*gap[0], 30), freq_data(1/30.0,3/30.0, 500), false); 
-    test.add_monitor(m1);
+    //test.add_monitor(m1);
 
     gaussian_point_source s1(fields::Ez, center, f, 1/200.0, 80);
     //continuous_point_source s1({60,60}, 1/20.0);
