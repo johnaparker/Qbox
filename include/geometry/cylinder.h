@@ -12,7 +12,7 @@ namespace qbox {
         void write(const h5cpp::h5group& group) const override;
         std::unique_ptr<geometry> clone() const override;
 
-        std::string group_name() const override {return "spheres";}
+        std::string group_name() const override {return "cylinders";}
 
     private:
         double r;

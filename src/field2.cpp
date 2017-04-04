@@ -62,7 +62,7 @@ namespace qbox {
                  << termcolor::reset << endl << endl;
         }
 
-
+        grid.write(outFile->create_group("grid"));
         display_info();
     }
 

@@ -45,7 +45,7 @@ int main() {
 
     for (int i = 0; i != 4000; i++) {
         scat.update();
-        //scat.writeE();
+        scat.writeE();
     }
     box_scat.write_flux();
 }

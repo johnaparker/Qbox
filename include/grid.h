@@ -2,6 +2,7 @@
 #define GUARD_grid_h
 
 #include "vec.h"
+#include "h5cpp.h"
 
 namespace qbox {
 
@@ -25,6 +26,8 @@ namespace qbox {
 
         ivolume to_grid(const volume &vol);     //take real p into grid 
         volume to_real(const ivolume &vol);    //take grid pi into real
+
+        void write(const h5cpp::h5group &group);
 
     public:
         bool totalFieldScatteredField;      //True if TFSF is in use
