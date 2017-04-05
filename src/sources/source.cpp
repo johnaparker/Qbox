@@ -19,12 +19,17 @@ using namespace std;
 
 namespace qbox {
 
-    source::source() {
+    source::source(const time_profile &_tp): tp(_tp.clone()) {
         F = nullptr;
         t = nullptr;
     }
+
     void source::set_F(Field2D *field) {
         F = field;
         t = &(F->t);
+    }
+
+    void source::write(const h5cpp::h5group &group) {
+        tp->write(group);        
     }
 }

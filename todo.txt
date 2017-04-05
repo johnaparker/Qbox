@@ -1,3 +1,11 @@
+[ ] have tfsf take in : surface and time-profile
+[ ] remove field.cpp by pushing code to tfsf class
+[ ] add an interface to tfsf
+    [ ] remove tfsf from the grid... either an object to be added to field or created by field itself
+[ ] add output commands for all source (time-profiles) and tfsf
+[ ] all time-profiles need to have a known or computed fourier transform
+    [ ] the flux from the tfsf per unit area should then by analyically determined
+
 [ ] box_monitor needs to not write 4 surface_monitors (perhaps by not using has-a)
 [ ] qpost needs flux module again
 [ ] sources need to be written to file

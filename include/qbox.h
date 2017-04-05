@@ -23,12 +23,8 @@ namespace qbox{}
 #include "qbox/monitors/box_monitor.h"
 
 //sources
-#include "qbox/sources/continuous_point_source.h"
-#include "qbox/sources/gaussian_point_source.h"
-#include "qbox/sources/custom_point_source.h"
-#include "qbox/sources/continuous_line_source.h"
-#include "qbox/sources/gaussian_line_source.h"
-#include "qbox/sources/custom_line_source.h"
+#include "qbox/sources/point_source.h"
+#include "qbox/sources/line_source.h"
 
 #endif
 

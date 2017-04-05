@@ -1,7 +1,9 @@
 #ifndef GUARD_source_h
 #define GUARD_source_h
 
+#include <memory>
 #include "vec.h"
+#include "time_profile.h"
 
 //*** Think about whether this is the best way to do sources
 //*** Also think about how to add TFSF into these sources
@@ -22,13 +24,17 @@ namespace qbox {
     //source base class
     class source {
     public:
-        source();
+        source(const time_profile &tp);
         void set_F(Field2D *F);   //set field ownership
+
         virtual void pulse() = 0;  //add the source to the fields
+        virtual void write(const h5cpp::h5group &group);
 
     protected:
+        std::unique_ptr<time_profile> tp;
         Field2D *F;    //field owner reference
         double *t;     //current time (from F)
+
     };
 }
 

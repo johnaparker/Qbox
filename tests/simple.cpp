@@ -19,7 +19,7 @@ int main() {
     box_monitor m2("m2", volume({95,95}, 20,20), freq_data(1/30.0,3/30.0, 500), false); 
     test.add_monitor(m2);
 
-    gaussian_point_source s1(fields::Ez, {60,60}, f, 1/200.0, 80);
+    point_source s1(fields::Ez, {60,60}, gaussian_time(f, 1/200.0, 80));
     test.add_source(s1);
 
     for (int i = 0; i != 4000; i++) {

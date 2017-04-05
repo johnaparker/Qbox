@@ -29,7 +29,7 @@ namespace qbox {
     };
 
     template<class T, h5cpp::dtype M>
-    void write_vec(h5cpp::h5group &group, const Eigen::Matrix<T,Eigen::Dynamic,1> &p, std::string name) {
+    void write_vec(const h5cpp::h5group &group, const Eigen::Matrix<T,Eigen::Dynamic,1> &p, std::string name) {
         auto dspace = h5cpp::dspace(std::vector<hsize_t>{static_cast<hsize_t>(p.size())});
         auto dset = group.create_dataset(name, M, dspace);
         dset.write(p.data());
@@ -49,7 +49,7 @@ namespace qbox {
             return radius*normal(theta) + center;
         }
 
-        void write(h5cpp::h5group &group) const {
+        void write(const h5cpp::h5group &group) const {
             write_vec<double,h5cpp::dtype::Double>(group, center, "center");
             auto dspace = h5cpp::dspace(std::vector<hsize_t>{1});
             auto dset = group.create_dataset("radius", h5cpp::dtype::Double, dspace);
@@ -83,7 +83,7 @@ namespace qbox {
             //dim = (a-b).cwiseAbs();
         //}
 
-        void write(h5cpp::h5group &group) const {
+        void write(const h5cpp::h5group &group) const {
             write_vec<T,M>(group, a, "p1");
             write_vec<T,M>(group, b, "p2");
         }
@@ -110,7 +110,7 @@ namespace qbox {
 
         volume_template(Eigen::Matrix<T,2,1> center, T l): volume_template(center,l,l) {};
 
-        void write(h5cpp::h5group &group) const {
+        void write(const h5cpp::h5group &group) const {
             write_vec<T,M>(group, a, "p1");
             write_vec<T,M>(group, b, "p2");
         }
