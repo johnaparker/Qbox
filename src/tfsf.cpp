@@ -23,7 +23,7 @@ namespace qbox {
     }
 
     void tfsf::pulse() {
-        inc->pulse(1);
+        inc->pulse(2/30.0);
         inc->update();
     }
 

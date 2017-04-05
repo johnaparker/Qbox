@@ -41,8 +41,8 @@ namespace qbox {
             for (int j = 0; j != Ny; j++) {
                 double eps = background->get_eps();      
                 double conduc = background->get_conduc(); 
-                ca(i,j) = 1/(eps + conduc*dt/epsilon);
-                cb(i,j) = conduc*dt/epsilon;
+                ca(i,j) = 1/(eps + conduc*dt);
+                cb(i,j) = conduc*dt;
                 obj(i,j) = nullptr;
              }
         }
@@ -205,8 +205,8 @@ namespace qbox {
                     obj(pi) = &new_object;
                     obj(pi) = &new_object;
                         
-                    ca(pi) = 1/(eps + conduc*dt/epsilon);
-                    cb(pi) = conduc*dt/epsilon;
+                    ca(pi) = 1/(eps + conduc*dt);
+                    cb(pi) = conduc*dt;
                 }
             }
         }

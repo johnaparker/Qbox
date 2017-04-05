@@ -1,3 +1,10 @@
+[ ] box_monitor needs to not write 4 surface_monitors (perhaps by not using has-a)
+[ ] qpost needs flux module again
+[ ] sources need to be written to file
+    [ ] consider using source location to determine vmax
+    [ ] define a new layout qpost that creates a static labeled image
+[ ] Try tab-completiono in qpost
+
 
 [ ] vol's get_surface really should be outward normals
     but box_monitor needs positive normals?
