@@ -2,6 +2,7 @@
 #define GUARD_source_h
 
 #include <memory>
+#include <string>
 #include "vec.h"
 #include "time_profile.h"
 
@@ -24,17 +25,26 @@ namespace qbox {
     //source base class
     class source {
     public:
-        source(const time_profile &tp);
+        source(std::string name, std::string sub_group, const time_profile &tp);
+        source(std::string sub_group, const time_profile &tp);
+
         void set_F(Field2D *F);   //set field ownership
+        h5cpp::h5group get_group();
 
         virtual void pulse() = 0;  //add the source to the fields
-        virtual void write(const h5cpp::h5group &group);
+        virtual void write();
+
 
     protected:
         std::unique_ptr<time_profile> tp;
         Field2D *F;    //field owner reference
         double *t;     //current time (from F)
+        std::unique_ptr<h5cpp::h5file> outFile;
 
+    private:
+        static int _num_created;
+        std::string name;
+        std::string sub_group;
     };
 }
 

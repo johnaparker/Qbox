@@ -6,8 +6,11 @@ using namespace std;
 
 namespace qbox {
 
+    line_source::line_source(string name, fields C, const surface& surf, const time_profile &tp):
+        source(name, "line", tp), C(C), surf(surf) {};
+
     line_source::line_source(fields C, const surface& surf, const time_profile &tp):
-        source(tp), C(C), surf(surf) {};
+        source("line", tp), C(C), surf(surf) {};
 
     void line_source::pulse() {
         static isurface isurf = (F->grid).to_grid(surf);
@@ -17,9 +20,9 @@ namespace qbox {
             F->get_field_ref(C)(p) += pulse_amp;
     }
 
-    void line_source::write(const h5cpp::h5group &group) {
-        source::write(group);
-        surf.write(group);
+    void line_source::write() {
+        source::write();
+        surf.write(get_group());
         //write field component (enum?)
     }
 
