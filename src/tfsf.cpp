@@ -13,17 +13,18 @@ using namespace std;
 
 namespace qbox {
 
-    tfsf::tfsf(grid_properties grid, double dt) {
-        ia = grid.p1[0];
-        ib = grid.p2[0];
-        ja = grid.p1[1];
-        jb = grid.p2[1];
+    tfsf::tfsf(const grid_properties &grid, const time_profile &tp, const volume &vol, double dt): tp(tp.clone()) {
+        auto ivol = grid.to_grid(vol);
+        ia = ivol.a[0];
+        ib = ivol.b[0];
+        ja = ivol.a[1];
+        jb = ivol.b[1];
 
-        inc =  make_unique<Field1D>(grid.Ny, grid.dx, dt);
+        inc = make_unique<Field1D>(grid.Ny, grid.dx, dt);
     }
 
     void tfsf::pulse() {
-        inc->pulse(2/30.0);
+        inc->pulse(*tp);
         inc->update();
     }
 
@@ -44,4 +45,5 @@ namespace qbox {
             f->Hy(ib,j) += 0.5*inc->Ez[j];
         }
     }
+
 }

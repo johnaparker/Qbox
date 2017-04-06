@@ -12,8 +12,6 @@ int main() {
 
 
     grid_properties grid(Lx,Ly,res,pml_thickness);
-    //grid.set_tfsf(12, 12);
-    //grid.set_tfsf({12,12},{68,119});
 
     Field2D test(grid, "out.h5");
     

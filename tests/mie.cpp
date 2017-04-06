@@ -10,9 +10,9 @@ int main() {
     double f = 2/30.0;
 
     grid_properties grid(120,120,res,pml_thickness);
-    grid.set_tfsf(30);
 
     Field2D norm(grid, "inc.h5");
+    norm.set_tfsf(volume({60,60}, 70), gaussian_time(f, 1/200.0, 80));
 
     //cylinder_monitor box_inc("box_inc", cylinder_surface(vec(60,60), 30), freq_data(1/30.0,3/30.0, 200)); 
     surface_monitor inc("inc",surface({40,60}, {80,60}), freq_data(1/30.0,3/30.0, 200)); 
@@ -29,6 +29,7 @@ int main() {
 
 
     Field2D scat(grid, "scat.h5");
+    scat.set_tfsf(volume({60,60}, 70), gaussian_time(f, 1/200.0, 80));
 
     object o1(cylinder(20), simple_material(2), vec(60,60), vec(1,1));
     scat.add_object(o1);
@@ -42,7 +43,7 @@ int main() {
 
     for (int i = 0; i != 4000; i++) {
         scat.update();
-        //scat.writeE();
+        scat.writeE();
     }
     box_scat.write_flux();
 }

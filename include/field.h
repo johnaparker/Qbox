@@ -2,6 +2,7 @@
 #define GUARD_field_h
 
 #include "vec.h"
+#include "sources/time_profile.h"
 
 namespace qbox {
 
@@ -13,7 +14,7 @@ namespace qbox {
     class Field1D {
     public:
         Field1D(int Nx, double dl, double dt);
-        void pulse(double f);
+        void pulse(const time_profile &tp);
         void update();
 
     public:

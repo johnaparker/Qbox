@@ -27,13 +27,8 @@ namespace qbox {
 
     }
 
-    void Field1D::pulse(double f) {
-        static double T = 80;
-        static double sig = 1/200.0;
-        //double p = f*exp(-0.5*(pow((t-T)/sig,2)));
-        double p = sin(2*M_PI*f*t)*exp(-1*(pow((t-T)*sig*2*M_PI,2)));
-
-        //double p = sin(2*M_PI*f*t);
+    void Field1D::pulse(const time_profile &tp) {
+        double p = tp.response(t);
         Dz[10] += p;
     }
 

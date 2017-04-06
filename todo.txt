@@ -1,7 +1,4 @@
-[ ] have tfsf take in : surface and time-profile
 [ ] remove field.cpp by pushing code to tfsf class
-[ ] add an interface to tfsf
-    [ ] remove tfsf from the grid... either an object to be added to field or created by field itself
 [ ] tfsf write
 [ ] all time-profiles need to have a known or computed fourier transform
     [ ] the flux from the tfsf per unit area should then by analyically determined

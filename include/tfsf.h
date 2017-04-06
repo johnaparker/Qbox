@@ -3,6 +3,7 @@
 
 #include <memory>
 #include "vec.h"
+#include "sources/time_profile.h"
 
 namespace qbox {
 
@@ -22,7 +23,7 @@ namespace qbox {
  */
     class tfsf {
     public:
-        tfsf(grid_properties grid, double dt);
+        tfsf(const grid_properties &grid, const time_profile &tp, const volume &vol, double dt);
 
         /// update the source in 1D sim
         void pulse();               
@@ -36,6 +37,7 @@ namespace qbox {
     private:
         std::unique_ptr<Field1D> inc;       ///< A 1D field simulation to produce perfect plane wave
         int ia,ib,ja,jb;    ///< position of 4 corners
+        std::unique_ptr<time_profile> tp;       ///< A 1D field simulation to produce perfect plane wave
     };
 }
 

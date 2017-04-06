@@ -48,11 +48,8 @@ namespace qbox {
         }
 
         BC = make_unique<pml>(grid); 
+        total = nullptr;
 
-        if (grid.totalFieldScatteredField) 
-            total = make_unique<tfsf>(grid, dt);
-        else
-            total = nullptr;
         field_components = {{"Ez", &Ez}, {"Hx", &Hx}, {"Hy", &Hy}};
 
         if (!filename.empty()) {
@@ -221,6 +218,10 @@ namespace qbox {
         new_monitor.set_F(this);
         monitor_list.push_back(&new_monitor);
     } 
+
+    void Field2D::set_tfsf(const volume& vol, const time_profile& tp) {
+        total = make_unique<tfsf>(grid, tp, vol, dt);
+    }
 
     double Field2D::interpolate(fields C, const vec &p) {
         vec ps = p/dx; 

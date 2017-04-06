@@ -38,6 +38,8 @@ namespace qbox {
         void add_source(source &new_source);
         void add_monitor(monitor &new_monitor);
 
+        void set_tfsf(const volume& vol, const time_profile& tp);
+
         //write to HDF5 with filename
         void write_field(const fields);  //write nodename (Ex,etc.) to filename
         //*** This should take in a monitor??
