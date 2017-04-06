@@ -12,8 +12,10 @@ using namespace std;
 
 namespace qbox {
 
-    tfsf::tfsf(const grid_properties &grid, const time_profile &tp, const volume &vol, double dt): tp(tp.clone()), Nx(grid.Ny), dx(grid.dx), dt(dt), L(grid.Ly), t(0), tStep(0){
+    tfsf::tfsf(const grid_properties &grid, const time_profile &tp, const volume &vol, double dt): tp(tp.clone()), dx(grid.dx), dt(dt), t(0) {
+
         auto ivol = grid.to_grid(vol);
+        Nx = ivol.dim[1] + 5;
         ia = ivol.a[0];
         ib = ivol.b[0];
         ja = ivol.a[1];
@@ -33,10 +35,8 @@ namespace qbox {
     }
 
     void tfsf::pulse() {
-        double p = tp->response(t);
-        Dz[10] += p;
-
-        tStep += 1;
+        //Dz[1] += tp->response(t);
+        Dz[1] = tp->response(t);
         t += dt;
 
         for (int k=1; k<Nx; k++) {
@@ -60,19 +60,25 @@ namespace qbox {
 
     void tfsf::updateD(Field2D* f) {
         for (int i = ia; i <= ib; i++) {
-            f->Dz(i,ja) += 0.5*Hx[ja-1];
-            f->Dz(i,jb) += -0.5*Hx[jb];
+            //f->Dz(i,ja) += 0.5*Hx[ja-1];
+            //f->Dz(i,jb) += -0.5*Hx[jb];
+            f->Dz(i,ja) += 0.5*Hx[2];
+            f->Dz(i,jb) += -0.5*Hx[Nx-2];
         }
     }
 
     void tfsf::updateH(Field2D* f) {
         for (int i = ia; i <= ib; i++) {
-            f->Hx(i,ja-1) += 0.5*Ez[ja];
-            f->Hx(i,jb) += -0.5*Ez[jb];
+            //f->Hx(i,ja-1) += 0.5*Ez[ja];
+            //f->Hx(i,jb) += -0.5*Ez[jb];
+            f->Hx(i,ja-1) += 0.5*Ez[3];
+            f->Hx(i,jb) += -0.5*Ez[Nx-2];
         }
         for (int j = ja; j <= jb; j++) {
-            f->Hy(ia-1,j) += -0.5*Ez[j];
-            f->Hy(ib,j) += 0.5*Ez[j];
+            //f->Hy(ia-1,j) += -0.5*Ez[j];
+            //f->Hy(ib,j) += 0.5*Ez[j];
+            f->Hy(ia-1,j) += -0.5*Ez[j-ja+3];
+            f->Hy(ib,j) += 0.5*Ez[j-ja+3];
         }
     }
 

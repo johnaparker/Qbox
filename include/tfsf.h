@@ -42,8 +42,8 @@ namespace qbox {
         int ia,ib,ja,jb;    ///< position of 4 corners
         std::unique_ptr<time_profile> tp;       ///< A 1D field simulation to produce perfect plane wave
 
-        int Nx,tStep;
-        double dx,L;
+        int Nx;
+        double dx;
         double dt,t;
 
         Array Ez,Dz,Hx,Iz,ca,cb;
