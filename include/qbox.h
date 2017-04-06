@@ -6,7 +6,6 @@ namespace qbox{}
 
 //main
 #include "qbox/field2.h"
-#include "qbox/field.h"
 #include "qbox/vec.h"
 
 //geometry

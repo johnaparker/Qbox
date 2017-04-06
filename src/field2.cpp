@@ -8,7 +8,6 @@
 #include <vector>
 #include <string>
 #include "field2.h"
-#include "field.h"
 #include "matrix.h"
 #include "tfsf.h"
 #include "termcolor.h"

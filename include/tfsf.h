@@ -10,7 +10,11 @@ namespace qbox {
     class Field1D;
     class Field2D;
     class grid_properties;
-    //class grid_properties;
+
+    struct pmlBoundary{
+        Eigen::Array2d left; 
+        Eigen::Array2d right; 
+    };
 
 /// Total Field/Scattered Field class
 /** 
@@ -35,9 +39,15 @@ namespace qbox {
         void updateH(Field2D* f);
 
     private:
-        std::unique_ptr<Field1D> inc;       ///< A 1D field simulation to produce perfect plane wave
         int ia,ib,ja,jb;    ///< position of 4 corners
         std::unique_ptr<time_profile> tp;       ///< A 1D field simulation to produce perfect plane wave
+
+        int Nx,tStep;
+        double dx,L;
+        double dt,t;
+
+        Array Ez,Dz,Hx,Iz,ca,cb;
+        pmlBoundary pml;
     };
 }
 

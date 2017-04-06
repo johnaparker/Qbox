@@ -1,4 +1,3 @@
-[ ] remove field.cpp by pushing code to tfsf class
 [ ] tfsf write
 [ ] all time-profiles need to have a known or computed fourier transform
     [ ] the flux from the tfsf per unit area should then by analyically determined
