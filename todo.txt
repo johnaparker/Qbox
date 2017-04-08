@@ -1,12 +1,13 @@
 [ ] tfsf write
+[ ] tfsf from a different surface side (use ivec in for loop)
 [ ] all time-profiles need to have a known or computed fourier transform
     [ ] the flux from the tfsf per unit area should then by analyically determined
+    [ ] or DFT inside tfsf class at a single point
 
 [ ] box_monitor needs to not write 4 surface_monitors (perhaps by not using has-a)
 [ ] qpost needs flux module again
-[ ] sources need to be written to file
-    [ ] consider using source location to determine vmax
-    [ ] define a new layout qpost that creates a static labeled image
+[ ] consider using source location to determine vmax
+[ ] define a new layout qpost that creates a static labeled image
 [ ] Try tab-completiono in qpost
 
 
@@ -19,7 +20,6 @@
     Figure out how the grid is staggered
 
 [ ]  Definitely rethink the way sources are being done, with tfsf in mind
-    [ ] for tfsf, we need to remove field1 files in favor of something better
 
 [ ] should IO be handled by its own class?
 
@@ -46,30 +46,14 @@
 For all code: consider when to pass by reference
             : add destructors, etc.
 
-Consider using an enum for output or doing output with a separate class
-
-
-
-Output objects
-
-Currently, field class maintains outFiles list and manages output files/nodes. This should be done by a seperate class.
-
 Monitor does not handle a single point well - add support for this
-
-Solve the pause at the end of the program (problem caused by H5)
-
 
 Follow Rule: 1 Class per CPP file, 1 header file per CPP file
     (also change .h for .hpp)
 
-
 Eliminate unnecessary includes 
     a) May be possible to move them from .h into .cpp, and simply forward declare in .h
 Replace using namespace std; with indivisual usings
-
-Separte classes in:
-    field1.h
-    field2.h
 
 Data members need to be made private and/or protected
     When doing so, consider design choices in regards to get/set functions

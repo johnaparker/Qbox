@@ -35,8 +35,6 @@ namespace qbox {
     }
 
     void tfsf::pulse() {
-        //Dz[1] += tp->response(t);
-        Dz[1] = tp->response(t);
         t += dt;
 
         for (int k=1; k<Nx; k++) {
@@ -44,6 +42,7 @@ namespace qbox {
             Ez[k] = ca[k]*(Dz[k] -Iz[k]);
             Iz[k] += cb[k]*Ez[k];
         }
+        Ez[1] = tp->response(t);
         
         Ez[0] = pml.left[1];
         pml.left[1] = pml.left[0];
