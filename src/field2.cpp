@@ -21,16 +21,16 @@ using namespace std;
 namespace qbox {
 
     Field2D::Field2D(grid_properties grid, string filename): grid(grid), Nx(grid.Nx), Ny(grid.Ny), dx(grid.dx), Lx(grid.Lx), Ly(grid.Ly) {
-        t = 1;
+        t = 0;
         tStep = 0;
-        dt = dx/2.0;
+        dt = grid.dt;
         Ez = matrix<double,2>(Nx, Ny); 
         Hx = matrix<double,2>(Nx, Ny);
         Hy = matrix<double,2>(Nx, Ny);
-        Dz = matrix<double,2>(Nx, Ny);
-        Iz = matrix<double,2>(Nx, Ny);
-        ca = matrix<double,2>(Nx, Ny);
-        cb = matrix<double,2>(Nx, Ny);
+        Ca = matrix<double,2>(Nx, Ny);
+        Cb = matrix<double,2>(Nx, Ny);
+        Da = matrix<double,2>(Nx, Ny);
+        Db = matrix<double,2>(Nx, Ny);
 
         obj  = matrix<object*,2>(Nx, Ny); 
 
@@ -40,13 +40,81 @@ namespace qbox {
             for (int j = 0; j != Ny; j++) {
                 double eps = background->get_eps();      
                 double conduc = background->get_conduc(); 
-                ca(i,j) = 1/(eps + conduc*dt);
-                cb(i,j) = conduc*dt;
+                //*** this kind of loop needs to be its own function since add_object uses the same code
+                Ca(i,j) = (1 - conduc*dt/(2*eps))/(1 + conduc*dt/(2*eps));
+                Cb(i,j) = (dt/(eps))/(1 + conduc*dt/(2*eps));
+                Da(i,j) = 1;
+                Db(i,j) = dt;
                 obj(i,j) = nullptr;
              }
         }
 
         BC = make_unique<pml>(grid); 
+        kedx = dx*Array::Ones(Nx);
+        khdx = dx*Array::Ones(Nx);
+        kedy = dx*Array::Ones(Ny);
+        khdy = dx*Array::Ones(Ny);
+
+        be_x = Array::Zero(Nx);
+        ce_x = Array::Zero(Nx);
+        bh_x = Array::Zero(Nx);
+        ch_x = Array::Zero(Nx);
+
+        be_y = Array::Zero(Ny);
+        ce_y = Array::Zero(Ny);
+        bh_y = Array::Zero(Ny);
+        ch_y = Array::Zero(Ny);
+
+        psi_Ezx1 = matrix<double,2>(grid.pml_thickness+1, Ny);
+        psi_Ezx2 = matrix<double,2>(grid.pml_thickness+1, Ny);
+        psi_Hyx1 = matrix<double,2>(grid.pml_thickness+1, Ny);
+        psi_Hyx2 = matrix<double,2>(grid.pml_thickness+1, Ny);
+
+        psi_Ezy1 = matrix<double,2>(Nx, grid.pml_thickness+1);
+        psi_Ezy2 = matrix<double,2>(Nx, grid.pml_thickness+1);
+        psi_Hxy1 = matrix<double,2>(Nx, grid.pml_thickness+1);
+        psi_Hxy2 = matrix<double,2>(Nx, grid.pml_thickness+1);
+
+        for (int i = 0; i <= grid.pml_thickness; i++) {
+            kedx(i) = BC->k_func(i)*dx;
+            khdx(i) = BC->k_func(i + 0.5)*dx;
+
+            kedx(Nx-1-i) = BC->k_func(i)*dx;
+            khdx(Nx-1-i) = BC->k_func(i + 0.5)*dx;
+
+            be_x(i) = BC->b_func(i);
+            ce_x(i) = BC->c_func(i);
+
+            bh_x(i) = BC->b_func(i + 0.5);
+            ch_x(i) = BC->c_func(i + 0.5);
+
+            be_x(Nx-1-i) = BC->b_func(i);
+            ce_x(Nx-1-i) = BC->c_func(i);
+
+            bh_x(Nx-1-i) = BC->b_func(i + 0.5);
+            ch_x(Nx-1-i) = BC->c_func(i + 0.5);
+        }
+
+        for (int i = 0; i <= grid.pml_thickness; i++) {
+            kedy(i) = BC->k_func(i)*dx;
+            khdy(i) = BC->k_func(i + 0.5)*dx;
+
+            kedy(Ny-1-i) = BC->k_func(i)*dx;
+            khdy(Ny-1-i) = BC->k_func(i + 0.5)*dx;
+
+            be_y(i) = BC->b_func(i);
+            ce_y(i) = BC->c_func(i);
+
+            bh_y(i) = BC->b_func(i + 0.5);
+            ch_y(i) = BC->c_func(i + 0.5);
+
+            be_y(Ny-1-i) = BC->b_func(i);
+            ce_y(Ny-1-i) = BC->c_func(i);
+
+            bh_y(Ny-1-i) = BC->b_func(i + 0.5);
+            ch_y(Ny-1-i) = BC->c_func(i + 0.5);
+        }
+
         total = nullptr;
 
         field_components = {{"Ez", &Ez}, {"Hx", &Hx}, {"Hy", &Hy}};
@@ -136,21 +204,41 @@ namespace qbox {
         clocks.start(clock_name::looping);
         for (int i=1; i<Nx-1; i++) {
             for (int j=1; j<Ny-1; j++) {
-                Dz(i,j) = BC->gi3[i]*BC->gj3[j]*Dz(i,j) + 
-                    BC->gi2[i]*BC->gj2[j]*0.5*(Hy(i,j)-Hy(i-1,j) - Hx(i,j)+Hx(i,j-1));
+                Ez(i,j) = Ca(i,j)*Ez(i,j) 
+                    + Cb(i,j)*((Hy(i,j) - Hy(i-1,j))/kedx(i) + (Hx(i,j-1) - Hx(i,j))/kedy(j));
              }
+        }
+
+        double thickness = grid.pml_thickness;
+        for (int i=1; i<Nx-1; i++) {
+            for (int j=1; j<= thickness; j++) {
+                psi_Ezy1(i,j) = be_y(j)*psi_Ezy1(i,j)
+                                + ce_y(j)*(Hx(i,j) - Hx(i,j-1))/dx;
+                psi_Ezy2(i,j) = be_y(Ny-1-j)*psi_Ezy2(i,j)
+                                + ce_y(Ny-1-j)*(Hx(i,Ny-1-j) - Hx(i,Ny-1-j-1))/dx;
+
+                Ez(i,j) -= Cb(i,j)*psi_Ezy1(i,j);
+                Ez(i,Ny-1-j) -= Cb(i,Ny-1-j)*psi_Ezy2(i,j);
+            }
+        }
+
+        for (int i=1; i<= thickness; i++) {
+            for (int j=1; j<= Ny-1; j++) {
+                psi_Ezx1(i,j) = be_x(i)*psi_Ezx1(i,j)
+                                + ce_x(i)*(Hy(i,j) - Hy(i-1,j))/dx;
+                psi_Ezx2(i,j) = be_x(Nx-1-i)*psi_Ezx2(i,j)
+                                + ce_x(Nx-1-i)*(Hy(Nx-1-i,j) - Hy(Nx-1-i-1,j))/dx;
+
+                Ez(i,j) += Cb(i,j)*psi_Ezx1(i,j);
+                Ez(Nx-1-i,j) += Cb(Nx-1-i,j)*psi_Ezx2(i,j);
+            }
         }
 
         if (total) 
             total->updateD(this);
 
-        for (int i=1; i<Nx-1; i++) {
-            for (int j=1; j<Ny-1; j++) {
-                Ez(i,j)= ca(i,j)*(Dz(i,j) -Iz(i,j));
-                Iz(i,j)+= cb(i,j)*Ez(i,j);
-             }
-        }
-
+        //*** this is when electric sources are hit...magnetic sources should come after H is updated
+        //*** also.... multiply all sources by the appropiate pre-factor
         for (const auto &s : source_list) {
             s->pulse();
         } 
@@ -164,19 +252,38 @@ namespace qbox {
 
 
         clocks.start(clock_name::looping);
-        //this can possibly be moved to the previous if statement
+        //*** this can possibly be moved to the previous if statement
         if (total) 
             total->pulse();
 
         for (int i=1; i<Nx-1; i++) {
             for (int j=1; j<Ny-1; j++) {
-                double curl_e = Ez({i+1,j}) - Ez({i,j});
-                BC->Ihy(i,j) += curl_e;
-                Hy(i,j) = BC->fi3[i]*Hy(i,j) + BC->fi2[i]*0.5*curl_e + BC->fj1[j]*BC->Ihy(i,j);
-                
-                curl_e = Ez(i,j) - Ez(i,j+1);
-                BC->Ihx(i,j) += curl_e;
-                Hx(i,j) = BC->fj3[j]*Hx(i,j) + BC->fj2[j]*0.5*curl_e + BC->fi1[i]*BC->Ihx(i,j);
+                Hx(i,j) = Da(i,j)*Hx(i,j) - Db(i,j)*(Ez(i,j+1) - Ez(i,j))/khdy(j);
+                Hy(i,j) = Da(i,j)*Hy(i,j) + Db(i,j)*(Ez(i+1,j) - Ez(i,j))/khdx(i);
+            }
+        }
+
+        for (int i=1; i<Nx-1; i++) {
+            for (int j=1; j<= thickness; j++) {
+                psi_Hxy1(i,j) = bh_y(j)*psi_Hxy1(i,j)
+                                + ch_y(j)*(Ez(i,j+1) - Ez(i,j))/dx;
+                psi_Hxy2(i,j) = bh_y(Ny-1-j)*psi_Hxy2(i,j)
+                                + ch_y(Ny-1-j)*(Ez(i,Ny-1-j) - Ez(i,Ny-1-j-1))/dx;
+
+                Hx(i,j) -= Db(i,j)*psi_Hxy1(i,j);
+                Hx(i,Ny-1-j) -= Db(i,Ny-1-j)*psi_Hxy2(i,j);
+            }
+        }
+
+        for (int i=1; i<= thickness; i++) {
+            for (int j=1; j<= Ny-1; j++) {
+                psi_Hyx1(i,j) = bh_x(i)*psi_Hyx1(i,j)
+                                + ch_x(i)*(Ez(i,j) - Ez(i-1,j))/dx;
+                psi_Hyx2(i,j) = bh_x(Nx-1-i)*psi_Hyx2(i,j)
+                                + ch_x(Nx-1-i)*(Ez(Nx-1-i,j) - Ez(Nx-1-i-1,j))/dx;
+
+                Hy(i,j) += Db(i,j)*psi_Hyx1(i,j);
+                Hy(Nx-1-i,j) += Db(Nx-1-i,j)*psi_Hyx2(i,j);
             }
         }
 
@@ -199,10 +306,11 @@ namespace qbox {
 
                 if (new_object.inside(p)) {
                     obj(pi) = &new_object;
-                    obj(pi) = &new_object;
                         
-                    ca(pi) = 1/(eps + conduc*dt);
-                    cb(pi) = conduc*dt;
+                    Ca(pi) = (1 - conduc*dt/(2*eps))/(1 + conduc*dt/(2*eps));
+                    Cb(pi) = (dt/eps)/(1 + conduc*dt/(2*eps));
+                    Da(pi) = 1;
+                    Db(pi) = dt;
                 }
             }
         }

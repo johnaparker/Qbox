@@ -30,6 +30,7 @@ namespace qbox {
         double Lx, Ly;          //Actual length in x,y direction
         int Nx, Ny;          //Number of grid cells in x,y direction
         double dx;           //Actual length between grid points; dx = 1/res, Nx*dx = Lx
+        double dt;           //time step
         double res;             //grid resolution (points per 1 Lx unit); Nx = Lx*res
         int pml_thickness;   //The thickness of the pml in # of grid cells
         //*** This should be a separate (boundary) class, and p1,p2 should volumes

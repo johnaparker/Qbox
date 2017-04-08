@@ -4,26 +4,29 @@
 #include <memory>
 #include "matrix.h"
 #include "vec.h"
+#include "grid.h"
 
 namespace qbox {
-    class grid_properties;
 
     //PML boundary object
     class pml {
     public:
-        pml(grid_properties grid);
         pml() = default;
+        pml(grid_properties grid, int m = 3, int ma = 1, double k_max = 10, double a_max = 0.2, double sig_scale = 1);
 
-    public:
-        //PML array and matrix properties
-        Array fi1,fi2,fi3,fj1,fj2,fj3;
-        Array gi2,gi3,gj2,gj3;
-        matrix<double,2> Ihx, Ihy;
+        double b_func(double t);
+        double c_func(double t);
+
+        double a_func(double t);
+        double k_func(double t);
+        double sig_func(double t);
 
     private:
-        //PML dimensions
-        int Nx, Ny;      //Nx, Ny of boundary_parameters
+        grid_properties grid;
         int thickness;   //# of cells for thickness
+
+        int m, ma;
+        double k_max, sig_max, a_max;
     };
 }
 

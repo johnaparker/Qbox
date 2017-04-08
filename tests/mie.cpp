@@ -23,7 +23,7 @@ int main() {
 
     for (int i = 0; i != 4000; i++) {
         norm.update();
-        //norm.writeE();
+        norm.writeE();
     }
     inc.write_flux();
 
@@ -43,7 +43,7 @@ int main() {
 
     for (int i = 0; i != 4000; i++) {
         scat.update();
-        //scat.writeE();
+        scat.writeE();
     }
     box_scat.write_flux();
 }

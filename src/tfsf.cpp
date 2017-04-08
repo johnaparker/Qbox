@@ -61,8 +61,8 @@ namespace qbox {
         for (int i = ia; i <= ib; i++) {
             //f->Dz(i,ja) += 0.5*Hx[ja-1];
             //f->Dz(i,jb) += -0.5*Hx[jb];
-            f->Dz(i,ja) += 0.5*Hx[2];
-            f->Dz(i,jb) += -0.5*Hx[Nx-2];
+            f->Ez(i,ja) += 0.5*Hx[2];
+            f->Ez(i,jb) += -0.5*Hx[Nx-2];
         }
     }
 

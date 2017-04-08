@@ -66,7 +66,7 @@ namespace qbox {
         double mu;             //Permeability constant everywhere
 
         //2D matrices defined everwhere. These make up the dominant memory usage
-        matrix<double,2> Ez,Dz,Hx,Hy,Iz,ca,cb;  //Fields + auxillary fields
+        matrix<double,2> Ez,Hx,Hy,Ca,Cb,Da,Db;  //Fields + auxillary fields
         matrix<object*,2> obj;    //Pointer-to-Object matrix
 
         //Objects, sources, and monitors. These are all polymorphic classes
@@ -79,8 +79,17 @@ namespace qbox {
         //Physical timestep, time
         double dt,t;
 
-        //PML + TFSF
+        //PML + Auxillary fields
         std::unique_ptr<pml> BC;
+        Array khdx, khdy, kedx, kedy;
+        Array be_x, be_y, ce_x, ce_y;
+        Array bh_x, bh_y, ch_x, ch_y;
+
+        matrix<double,2> psi_Ezx1, psi_Ezx2;
+        matrix<double,2> psi_Ezy1, psi_Ezy2;
+        matrix<double,2> psi_Hxy1, psi_Hxy2;
+        matrix<double,2> psi_Hyx1, psi_Hyx2;
+
         std::unique_ptr<tfsf> total;   //This is nullptr if not in use
 
         //*** Should be different class to manage IO

@@ -12,6 +12,7 @@ namespace qbox {
         dx = 1.0/res;
         Lx = dx*(Nx-1);
         Ly = dx*(Ny-1);
+        dt = dx/2;
     }
 
     ivec grid_properties::to_grid(const vec &p) const {
@@ -51,6 +52,8 @@ namespace qbox {
         dset.write(&Ny);
         dset = group.create_dataset("dx", h5cpp::dtype::Double, dspace);
         dset.write(&dx);
+        dset = group.create_dataset("dt", h5cpp::dtype::Double, dspace);
+        dset.write(&dt);
         dset = group.create_dataset("resolution", h5cpp::dtype::Double, dspace);
         dset.write(&res);
         dset = group.create_dataset("pml_thickness", h5cpp::dtype::Int, dspace);
