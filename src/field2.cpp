@@ -75,12 +75,12 @@ namespace qbox {
         psi_Hxy1 = matrix<double,2>(Nx, grid.pml_thickness+1);
         psi_Hxy2 = matrix<double,2>(Nx, grid.pml_thickness+1);
 
-        for (int i = 0; i <= grid.pml_thickness; i++) {
+        for (int i = 0; i < grid.pml_thickness; i++) {
             kedx(i) = BC->k_func(i)*dx;
             khdx(i) = BC->k_func(i + 0.5)*dx;
 
             kedx(Nx-1-i) = BC->k_func(i)*dx;
-            khdx(Nx-1-i) = BC->k_func(i + 0.5)*dx;
+            khdx(Nx-1-i) = BC->k_func(i - 0.5)*dx;
 
             be_x(i) = BC->b_func(i);
             ce_x(i) = BC->c_func(i);
@@ -91,16 +91,16 @@ namespace qbox {
             be_x(Nx-1-i) = BC->b_func(i);
             ce_x(Nx-1-i) = BC->c_func(i);
 
-            bh_x(Nx-1-i) = BC->b_func(i + 0.5);
-            ch_x(Nx-1-i) = BC->c_func(i + 0.5);
+            bh_x(Nx-1-i) = BC->b_func(i - 0.5);
+            ch_x(Nx-1-i) = BC->c_func(i - 0.5);
         }
 
-        for (int i = 0; i <= grid.pml_thickness; i++) {
+        for (int i = 0; i < grid.pml_thickness; i++) {
             kedy(i) = BC->k_func(i)*dx;
             khdy(i) = BC->k_func(i + 0.5)*dx;
 
             kedy(Ny-1-i) = BC->k_func(i)*dx;
-            khdy(Ny-1-i) = BC->k_func(i + 0.5)*dx;
+            khdy(Ny-1-i) = BC->k_func(i - 0.5)*dx;
 
             be_y(i) = BC->b_func(i);
             ce_y(i) = BC->c_func(i);
@@ -111,8 +111,8 @@ namespace qbox {
             be_y(Ny-1-i) = BC->b_func(i);
             ce_y(Ny-1-i) = BC->c_func(i);
 
-            bh_y(Ny-1-i) = BC->b_func(i + 0.5);
-            ch_y(Ny-1-i) = BC->c_func(i + 0.5);
+            bh_y(Ny-1-i) = BC->b_func(i - 0.5);
+            ch_y(Ny-1-i) = BC->c_func(i - 0.5);
         }
 
         total = nullptr;
@@ -214,11 +214,12 @@ namespace qbox {
             for (int j=1; j<= thickness; j++) {
                 psi_Ezy1(i,j) = be_y(j)*psi_Ezy1(i,j)
                                 + ce_y(j)*(Hx(i,j) - Hx(i,j-1))/dx;
-                psi_Ezy2(i,j) = be_y(Ny-1-j)*psi_Ezy2(i,j)
-                                + ce_y(Ny-1-j)*(Hx(i,Ny-1-j) - Hx(i,Ny-1-j-1))/dx;
+
+                psi_Ezy2(i,j) = be_y(Ny-2-thickness+j)*psi_Ezy2(i,j)
+                                + ce_y(Ny-2-thickness+j)*(Hx(i,Ny-2-thickness+j) - Hx(i,Ny-2-thickness+j-1))/dx;
 
                 Ez(i,j) -= Cb(i,j)*psi_Ezy1(i,j);
-                Ez(i,Ny-1-j) -= Cb(i,Ny-1-j)*psi_Ezy2(i,j);
+                Ez(i,Ny-2-thickness+j) -= Cb(i,Ny-2-thickness+j)*psi_Ezy2(i,j);
             }
         }
 
@@ -226,11 +227,12 @@ namespace qbox {
             for (int j=1; j<= Ny-1; j++) {
                 psi_Ezx1(i,j) = be_x(i)*psi_Ezx1(i,j)
                                 + ce_x(i)*(Hy(i,j) - Hy(i-1,j))/dx;
-                psi_Ezx2(i,j) = be_x(Nx-1-i)*psi_Ezx2(i,j)
-                                + ce_x(Nx-1-i)*(Hy(Nx-1-i,j) - Hy(Nx-1-i-1,j))/dx;
+
+                psi_Ezx2(i,j) = be_x(Nx-2-thickness+i)*psi_Ezx2(i,j)
+                                + ce_x(Nx-2-thickness+i)*(Hy(Nx-2-thickness+i,j) - Hy(Nx-2-thickness+i-1,j))/dx;
 
                 Ez(i,j) += Cb(i,j)*psi_Ezx1(i,j);
-                Ez(Nx-1-i,j) += Cb(Nx-1-i,j)*psi_Ezx2(i,j);
+                Ez(Nx-2-thickness+i,j) += Cb(Nx-2-thickness+i,j)*psi_Ezx2(i,j);
             }
         }
 
@@ -263,27 +265,27 @@ namespace qbox {
             }
         }
 
-        for (int i=1; i<Nx-1; i++) {
+        for (int i=1; i<=Nx-1; i++) {
             for (int j=1; j<= thickness; j++) {
                 psi_Hxy1(i,j) = bh_y(j)*psi_Hxy1(i,j)
                                 + ch_y(j)*(Ez(i,j+1) - Ez(i,j))/dx;
-                psi_Hxy2(i,j) = bh_y(Ny-1-j)*psi_Hxy2(i,j)
-                                + ch_y(Ny-1-j)*(Ez(i,Ny-1-j) - Ez(i,Ny-1-j-1))/dx;
+                psi_Hxy2(i,j) = bh_y(Ny-2-thickness+j)*psi_Hxy2(i,j)
+                                + ch_y(Ny-2-thickness+j)*(Ez(i,Ny-2-thickness+j+1) - Ez(i,Ny-2-thickness+j))/dx;
 
                 Hx(i,j) -= Db(i,j)*psi_Hxy1(i,j);
-                Hx(i,Ny-1-j) -= Db(i,Ny-1-j)*psi_Hxy2(i,j);
+                Hx(i,Ny-2-thickness+j) -= Db(i,Ny-2-thickness+j)*psi_Hxy2(i,j);
             }
         }
 
         for (int i=1; i<= thickness; i++) {
             for (int j=1; j<= Ny-1; j++) {
                 psi_Hyx1(i,j) = bh_x(i)*psi_Hyx1(i,j)
-                                + ch_x(i)*(Ez(i,j) - Ez(i-1,j))/dx;
-                psi_Hyx2(i,j) = bh_x(Nx-1-i)*psi_Hyx2(i,j)
-                                + ch_x(Nx-1-i)*(Ez(Nx-1-i,j) - Ez(Nx-1-i-1,j))/dx;
+                                + ch_x(i)*(Ez(i+1,j) - Ez(i,j))/dx;
+                psi_Hyx2(i,j) = bh_x(Nx-2-thickness+i)*psi_Hyx2(i,j)
+                                + ch_x(Nx-2-thickness+i)*(Ez(Nx-2-thickness+i+1,j) - Ez(Nx-2-thickness+i,j))/dx;
 
                 Hy(i,j) += Db(i,j)*psi_Hyx1(i,j);
-                Hy(Nx-1-i,j) += Db(Nx-1-i,j)*psi_Hyx2(i,j);
+                Hy(Nx-2-thickness+i,j) += Db(Nx-2-thickness+i,j)*psi_Hyx2(i,j);
             }
         }
 
