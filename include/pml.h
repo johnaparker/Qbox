@@ -5,6 +5,7 @@
 #include "matrix.h"
 #include "vec.h"
 #include "grid.h"
+#include "field2.h"
 
 namespace qbox {
 
@@ -21,12 +22,24 @@ namespace qbox {
         double k_func(double t);
         double sig_func(double t);
 
+        void set_scaling_factors(Array &kedx, Array &khdx, Array &kedy, Array &khdy);
+        void update_E(Field2D &f);
+        void update_H(Field2D &f);
+
     private:
         grid_properties grid;
         int thickness;   //# of cells for thickness
 
         int m, ma;
         double k_max, sig_max, a_max;
+
+        Array be_x, be_y, ce_x, ce_y;
+        Array bh_x, bh_y, ch_x, ch_y;
+
+        matrix<double,2> psi_Ezx1, psi_Ezx2;
+        matrix<double,2> psi_Ezy1, psi_Ezy2;
+        matrix<double,2> psi_Hxy1, psi_Hxy2;
+        matrix<double,2> psi_Hyx1, psi_Hyx2;
     };
 }
 

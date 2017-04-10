@@ -21,8 +21,8 @@ int main(int argc, char **argv) {
   initialize mpi(argc, argv); // do this even for non-MPI Meep
   double resolution = 2; // pixels per distance
   grid_volume v = vol2d(120,120, resolution); // 5x10 2d cell
-  structure s(v, vaccum, pml(pml_thickness));
-  structure sg(v, eps, pml(pml_thickness));
+  structure s(v, vaccum, pml(pml_thickness), identity(), 0, 0.5, false);
+  structure sg(v, eps, pml(pml_thickness), identity(), 0, 0.5, false);
 
   fields f(&s);
   f.use_real_fields();

@@ -81,14 +81,7 @@ namespace qbox {
 
         //PML + Auxillary fields
         std::unique_ptr<pml> BC;
-        Array khdx, khdy, kedx, kedy;
-        Array be_x, be_y, ce_x, ce_y;
-        Array bh_x, bh_y, ch_x, ch_y;
-
-        matrix<double,2> psi_Ezx1, psi_Ezx2;
-        matrix<double,2> psi_Ezy1, psi_Ezy2;
-        matrix<double,2> psi_Hxy1, psi_Hxy2;
-        matrix<double,2> psi_Hyx1, psi_Hyx2;
+        Array khdx, khdy, kedx, kedy;     //scaling factors for pml
 
         std::unique_ptr<tfsf> total;   //This is nullptr if not in use
 

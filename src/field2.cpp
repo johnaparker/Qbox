@@ -50,70 +50,7 @@ namespace qbox {
         }
 
         BC = make_unique<pml>(grid); 
-        kedx = dx*Array::Ones(Nx);
-        khdx = dx*Array::Ones(Nx);
-        kedy = dx*Array::Ones(Ny);
-        khdy = dx*Array::Ones(Ny);
-
-        be_x = Array::Zero(Nx);
-        ce_x = Array::Zero(Nx);
-        bh_x = Array::Zero(Nx);
-        ch_x = Array::Zero(Nx);
-
-        be_y = Array::Zero(Ny);
-        ce_y = Array::Zero(Ny);
-        bh_y = Array::Zero(Ny);
-        ch_y = Array::Zero(Ny);
-
-        psi_Ezx1 = matrix<double,2>(grid.pml_thickness+1, Ny);
-        psi_Ezx2 = matrix<double,2>(grid.pml_thickness+1, Ny);
-        psi_Hyx1 = matrix<double,2>(grid.pml_thickness+1, Ny);
-        psi_Hyx2 = matrix<double,2>(grid.pml_thickness+1, Ny);
-
-        psi_Ezy1 = matrix<double,2>(Nx, grid.pml_thickness+1);
-        psi_Ezy2 = matrix<double,2>(Nx, grid.pml_thickness+1);
-        psi_Hxy1 = matrix<double,2>(Nx, grid.pml_thickness+1);
-        psi_Hxy2 = matrix<double,2>(Nx, grid.pml_thickness+1);
-
-        for (int i = 0; i < grid.pml_thickness; i++) {
-            kedx(i) = BC->k_func(i)*dx;
-            khdx(i) = BC->k_func(i + 0.5)*dx;
-
-            kedx(Nx-1-i) = BC->k_func(i)*dx;
-            khdx(Nx-1-i) = BC->k_func(i - 0.5)*dx;
-
-            be_x(i) = BC->b_func(i);
-            ce_x(i) = BC->c_func(i);
-
-            bh_x(i) = BC->b_func(i + 0.5);
-            ch_x(i) = BC->c_func(i + 0.5);
-
-            be_x(Nx-1-i) = BC->b_func(i);
-            ce_x(Nx-1-i) = BC->c_func(i);
-
-            bh_x(Nx-1-i) = BC->b_func(i - 0.5);
-            ch_x(Nx-1-i) = BC->c_func(i - 0.5);
-        }
-
-        for (int i = 0; i < grid.pml_thickness; i++) {
-            kedy(i) = BC->k_func(i)*dx;
-            khdy(i) = BC->k_func(i + 0.5)*dx;
-
-            kedy(Ny-1-i) = BC->k_func(i)*dx;
-            khdy(Ny-1-i) = BC->k_func(i - 0.5)*dx;
-
-            be_y(i) = BC->b_func(i);
-            ce_y(i) = BC->c_func(i);
-
-            bh_y(i) = BC->b_func(i + 0.5);
-            ch_y(i) = BC->c_func(i + 0.5);
-
-            be_y(Ny-1-i) = BC->b_func(i);
-            ce_y(Ny-1-i) = BC->c_func(i);
-
-            bh_y(Ny-1-i) = BC->b_func(i - 0.5);
-            ch_y(Ny-1-i) = BC->c_func(i - 0.5);
-        }
+        BC->set_scaling_factors(kedx, khdx, kedy, khdy);
 
         total = nullptr;
 
@@ -208,33 +145,8 @@ namespace qbox {
                     + Cb(i,j)*((Hy(i,j) - Hy(i-1,j))/kedx(i) + (Hx(i,j-1) - Hx(i,j))/kedy(j));
              }
         }
-
-        double thickness = grid.pml_thickness;
-        for (int i=1; i<Nx-1; i++) {
-            for (int j=1; j<= thickness; j++) {
-                psi_Ezy1(i,j) = be_y(j)*psi_Ezy1(i,j)
-                                + ce_y(j)*(Hx(i,j) - Hx(i,j-1))/dx;
-
-                psi_Ezy2(i,j) = be_y(Ny-2-thickness+j)*psi_Ezy2(i,j)
-                                + ce_y(Ny-2-thickness+j)*(Hx(i,Ny-2-thickness+j) - Hx(i,Ny-2-thickness+j-1))/dx;
-
-                Ez(i,j) -= Cb(i,j)*psi_Ezy1(i,j);
-                Ez(i,Ny-2-thickness+j) -= Cb(i,Ny-2-thickness+j)*psi_Ezy2(i,j);
-            }
-        }
-
-        for (int i=1; i<= thickness; i++) {
-            for (int j=1; j<= Ny-1; j++) {
-                psi_Ezx1(i,j) = be_x(i)*psi_Ezx1(i,j)
-                                + ce_x(i)*(Hy(i,j) - Hy(i-1,j))/dx;
-
-                psi_Ezx2(i,j) = be_x(Nx-2-thickness+i)*psi_Ezx2(i,j)
-                                + ce_x(Nx-2-thickness+i)*(Hy(Nx-2-thickness+i,j) - Hy(Nx-2-thickness+i-1,j))/dx;
-
-                Ez(i,j) += Cb(i,j)*psi_Ezx1(i,j);
-                Ez(Nx-2-thickness+i,j) += Cb(Nx-2-thickness+i,j)*psi_Ezx2(i,j);
-            }
-        }
+        
+        BC->update_E(*this);
 
         if (total) 
             total->updateD(this);
@@ -265,29 +177,7 @@ namespace qbox {
             }
         }
 
-        for (int i=1; i<=Nx-1; i++) {
-            for (int j=1; j<= thickness; j++) {
-                psi_Hxy1(i,j) = bh_y(j)*psi_Hxy1(i,j)
-                                + ch_y(j)*(Ez(i,j+1) - Ez(i,j))/dx;
-                psi_Hxy2(i,j) = bh_y(Ny-2-thickness+j)*psi_Hxy2(i,j)
-                                + ch_y(Ny-2-thickness+j)*(Ez(i,Ny-2-thickness+j+1) - Ez(i,Ny-2-thickness+j))/dx;
-
-                Hx(i,j) -= Db(i,j)*psi_Hxy1(i,j);
-                Hx(i,Ny-2-thickness+j) -= Db(i,Ny-2-thickness+j)*psi_Hxy2(i,j);
-            }
-        }
-
-        for (int i=1; i<= thickness; i++) {
-            for (int j=1; j<= Ny-1; j++) {
-                psi_Hyx1(i,j) = bh_x(i)*psi_Hyx1(i,j)
-                                + ch_x(i)*(Ez(i+1,j) - Ez(i,j))/dx;
-                psi_Hyx2(i,j) = bh_x(Nx-2-thickness+i)*psi_Hyx2(i,j)
-                                + ch_x(Nx-2-thickness+i)*(Ez(Nx-2-thickness+i+1,j) - Ez(Nx-2-thickness+i,j))/dx;
-
-                Hy(i,j) += Db(i,j)*psi_Hyx1(i,j);
-                Hy(Nx-2-thickness+i,j) += Db(Nx-2-thickness+i,j)*psi_Hyx2(i,j);
-            }
-        }
+        BC->update_H(*this);
 
         if (total) 
             total->updateH(this);
@@ -304,7 +194,7 @@ namespace qbox {
         for (int i = 0; i != Nx; i++) {
             for (int j = 0; j != Ny; j++) {
                 ivec pi = {i,j};
-                vec p = grid.to_real(pi);
+                vec p = grid.to_real(pi) + vec(dx,dx)/2.0;
 
                 if (new_object.inside(p)) {
                     obj(pi) = &new_object;
@@ -337,9 +227,9 @@ namespace qbox {
         auto &F = get_field_ref(C);
 
         switch(C) {
-            case fields::Ez: break;
-            case fields::Hx: ps -= vec(0, dx/2.0); break;
-            case fields::Hy: ps -= vec(dx/2.0, 0); break;
+            case fields::Ez:  ps += vec(dx/2.0, dx/2.0); break;
+            case fields::Hx: ps += vec(dx/2.0, 0); break;
+            case fields::Hy: ps += vec(0, dx/2.0); break;
             default: throw std::invalid_argument("not a valid field component");
         }
 
