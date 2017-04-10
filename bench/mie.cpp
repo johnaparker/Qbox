@@ -6,7 +6,7 @@ using namespace meep;
 
 double radius = 20;
 int Nfreq = 200;
-double pml_thickness = 1;
+double pml_thickness = 5;
 
 double eps(const vec &p) {
   if (pow(p.x()-60,2) + pow(p.y()-60,2) < pow(radius,2))
@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
 
   box_scat -= box_inc;
 
-  for (int i = 0; i != 4000; i++) {
+  for (int i = 0; i != 8000; i++) {
     g.step();
   }
 

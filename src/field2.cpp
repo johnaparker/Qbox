@@ -194,7 +194,7 @@ namespace qbox {
         for (int i = 0; i != Nx; i++) {
             for (int j = 0; j != Ny; j++) {
                 ivec pi = {i,j};
-                vec p = grid.to_real(pi) + vec(dx,dx)/2.0;
+                vec p = grid.to_real(pi);
 
                 if (new_object.inside(p)) {
                     obj(pi) = &new_object;
@@ -227,7 +227,7 @@ namespace qbox {
         auto &F = get_field_ref(C);
 
         switch(C) {
-            case fields::Ez:  ps += vec(dx/2.0, dx/2.0); break;
+            case fields::Ez:  ps += vec(0,0); break;
             case fields::Hx: ps += vec(dx/2.0, 0); break;
             case fields::Hy: ps += vec(0, dx/2.0); break;
             default: throw std::invalid_argument("not a valid field component");

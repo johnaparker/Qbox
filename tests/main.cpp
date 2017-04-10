@@ -5,7 +5,7 @@ using namespace std;
 using namespace qbox;
 
 int main() {
-    int pml_thickness = 20;
+    int pml_thickness = 10;
     int res = 2;
     double Lx = 120;
     double Ly = 120;
@@ -17,7 +17,7 @@ int main() {
     
     double f = 2/30.0;
 
-    point_source s1(fields::Ez, {90,90}, gaussian_time(f, 1/200.0, 80));
+    point_source s1(fields::Ez, {30,30}, gaussian_time(f, 1/200.0, 80));
     test.add_source(s1);
 
     for (int i = 0; i != 3000; i++) {

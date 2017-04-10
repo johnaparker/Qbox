@@ -6,7 +6,7 @@ using namespace std;
 namespace qbox {
 
     grid_properties::grid_properties(double _Lx, double _Ly, double res, int pml_thickness):
-            res(res), pml_thickness(pml_thickness) {
+            res(res), pml_thickness(pml_thickness+1) {
         Nx = ceil(_Lx*res);
         Ny = ceil(_Ly*res);
         dx = 1.0/res;

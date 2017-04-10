@@ -25,6 +25,7 @@ namespace qbox {
             ce_y = Array::Zero(grid.Ny);
             bh_y = Array::Zero(grid.Ny);
             ch_y = Array::Zero(grid.Ny);
+
             for (int i = 0; i < grid.pml_thickness; i++) {
                 be_x(i) = b_func(i);
                 ce_x(i) = c_func(i);
@@ -33,8 +34,8 @@ namespace qbox {
 
                 be_x(grid.Nx-1-i) = b_func(i);
                 ce_x(grid.Nx-1-i) = c_func(i);
-                bh_x(grid.Nx-2-i) = b_func(i + 0.5);
-                ch_x(grid.Nx-2-i) = c_func(i + 0.5);
+                bh_x(grid.Nx-1-i) = b_func(i - 0.5);
+                ch_x(grid.Nx-1-i) = c_func(i - 0.5);
 
                 be_y(i) = b_func(i);
                 ce_y(i) = c_func(i);
@@ -43,8 +44,8 @@ namespace qbox {
 
                 be_y(grid.Ny-1-i) = b_func(i);
                 ce_y(grid.Ny-1-i) = c_func(i);
-                bh_y(grid.Ny-2-i) = b_func(i + 0.5);
-                ch_y(grid.Ny-2-i) = c_func(i + 0.5);
+                bh_y(grid.Ny-1-i) = b_func(i - 0.5);
+                ch_y(grid.Ny-1-i) = c_func(i - 0.5);
             }
 
             // iniaitialize all 2-d arrays for pml
@@ -98,12 +99,12 @@ namespace qbox {
             kedx(i) = k_func(i)*grid.dx;
             khdx(i) = k_func(i + 0.5)*grid.dx;
             kedx(grid.Nx-1-i) = k_func(i)*grid.dx;
-            khdx(grid.Nx-2-i) = k_func(i + 0.5)*grid.dx;
+            khdx(grid.Nx-1-i) = k_func(i - 0.5)*grid.dx;
 
             kedy(i) = k_func(i)*grid.dx;
             khdy(i) = k_func(i + 0.5)*grid.dx;
             kedy(grid.Ny-1-i) = k_func(i)*grid.dx;
-            khdy(grid.Ny-2-i) = k_func(i + 0.5)*grid.dx;
+            khdy(grid.Ny-1-i) = k_func(i - 0.5)*grid.dx;
         }
     }
 

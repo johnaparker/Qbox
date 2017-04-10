@@ -5,7 +5,7 @@ using namespace std;
 using namespace qbox;
 
 int main() {
-    int pml_thickness = 5;
+    int pml_thickness = 15;
     double res = 2;
     double f = 2/30.0;
 
