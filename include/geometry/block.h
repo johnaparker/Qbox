@@ -1,7 +1,7 @@
 #ifndef GUARD_block_h
 #define GUARD_block_h
 
-#include "geometry/geometry.h"
+#include "geometry.h"
 
 namespace qbox {
 

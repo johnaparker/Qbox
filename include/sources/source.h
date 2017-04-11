@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <string>
-#include "vec.h"
+#include "../vec.h"
 #include "time_profile.h"
 
 //*** Think about whether this is the best way to do sources

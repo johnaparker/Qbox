@@ -5,7 +5,7 @@ using namespace std;
 using namespace qbox;
 
 int main() {
-    int pml_thickness = 20;
+    int pml_thickness = 7;
     int res = 2;
     double Lx = 150;
     double Ly = 70;
@@ -34,7 +34,7 @@ int main() {
     test.add_object(o2);
 
     box_monitor m1(volume(center, 5*gap[0], 30), freq_data(1/30.0,3/30.0, 500), false); 
-    //test.add_monitor(m1);
+    test.add_monitor(m1);
 
     point_source s1(fields::Ez, center, gaussian_time(f, 1/200.0, 80));
     test.add_source(s1);
@@ -43,5 +43,5 @@ int main() {
         test.update();
         test.writeE();
     }
-    //m1.write_flux_sides();
+    m1.write_flux();
 }

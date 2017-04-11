@@ -1,8 +1,8 @@
 #ifndef GUARD_freq_h
 #define GUARD_freq_h
 
-#include "vec.h"
 #include "h5cpp.h"
+#include "../vec.h"
 
 namespace qbox {
 

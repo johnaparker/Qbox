@@ -3,7 +3,7 @@
 
 #include <memory>
 #include "vec.h"
-#include "sources/time_profile.h"
+#include "qbox/sources/time_profile.h"
 
 namespace qbox {
 
@@ -38,7 +38,10 @@ namespace qbox {
         /// @param f pointer to owning Field2D object
         void updateH(Field2D* f);
 
+        void write(const h5cpp::h5group &group);
+
     private:
+        volume vol;
         int ia,ib,ja,jb;    ///< position of 4 corners
         std::unique_ptr<time_profile> tp;       ///< A 1D field simulation to produce perfect plane wave
 

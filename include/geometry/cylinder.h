@@ -1,7 +1,7 @@
 #ifndef GUARD_cylinder_h
 #define GUARD_cylinder_h
 
-#include "geometry/geometry.h"
+#include "geometry.h"
 
 namespace qbox {
 

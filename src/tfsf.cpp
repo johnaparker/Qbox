@@ -12,7 +12,7 @@ using namespace std;
 
 namespace qbox {
 
-    tfsf::tfsf(const grid_properties &grid, const time_profile &tp, const volume &vol, double dt): tp(tp.clone()), dx(grid.dx), dt(dt), t(0) {
+    tfsf::tfsf(const grid_properties &grid, const time_profile &tp, const volume &vol, double dt): vol(vol), tp(tp.clone()), dx(grid.dx), dt(dt), t(0) {
 
         auto ivol = grid.to_grid(vol);
         Nx = ivol.dim[1] + 5;
@@ -81,4 +81,7 @@ namespace qbox {
         }
     }
 
+    void tfsf::write(const h5cpp::h5group &group) {
+        vol.write(group);
+    }
 }

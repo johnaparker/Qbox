@@ -1,7 +1,7 @@
 #ifndef GUARD_ellipse_h
 #define GUARD_ellipse_h
 
-#include "geometry/geometry.h"
+#include "geometry.h"
 
 namespace qbox {
 

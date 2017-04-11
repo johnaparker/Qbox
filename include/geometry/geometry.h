@@ -2,8 +2,8 @@
 #define GUARD_geometry_h
 
 #include <memory>
-#include "vec.h"
 #include "h5cpp.h"
+#include "../vec.h"
 
 
 ///Geometry

@@ -220,6 +220,9 @@ namespace qbox {
 
     void Field2D::set_tfsf(const volume& vol, const time_profile& tp) {
         total = make_unique<tfsf>(grid, tp, vol, dt);
+        auto sources_group = outFile->create_or_open_group("sources");
+        auto group = sources_group.create_or_open_group("tfsf");
+        total->write(group);
     }
 
     double Field2D::interpolate(fields C, const vec &p) {

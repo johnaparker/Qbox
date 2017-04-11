@@ -1,7 +1,7 @@
 #ifndef GUARD_simple_material_h
 #define GUARD_simple_material_h
 
-#include "materials/material.h"
+#include "material.h"
 
 namespace qbox {
 

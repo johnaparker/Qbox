@@ -4,8 +4,8 @@
 #include <string>
 #include <memory>
 #include "../matrix.h"
+#include "../vec.h"
 #include "monitor.h"
-#include "vec.h"
 
 
 namespace qbox {

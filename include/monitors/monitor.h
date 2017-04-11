@@ -4,9 +4,9 @@
 #include <string>
 #include <memory>
 #include "../matrix.h"
+#include "../vec.h"
 #include "freq.h"
 #include "h5cpp.h"
-#include "vec.h"
 
 
 namespace qbox {
