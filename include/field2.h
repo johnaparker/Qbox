@@ -52,7 +52,7 @@ namespace qbox {
         double to_xgrid(fields C, const ivec &pi);
         double to_ygrid(fields C, const ivec &pi);
 
-        matrix<double,2>& get_field_ref(fields F);
+        tensor& get_field_ref(fields F);
     private:
         void create_fields_dataset(fields field);
 
@@ -66,7 +66,7 @@ namespace qbox {
         double mu;             //Permeability constant everywhere
 
         //2D matrices defined everwhere. These make up the dominant memory usage
-        matrix<double,2> Ez,Hx,Hy,Ca,Cb,Da,Db;  //Fields + auxillary fields
+        tensor Ez,Hx,Hy,Ca,Cb,Da,Db;  //Fields + auxillary fields
         matrix<object*,2> obj;    //Pointer-to-Object matrix
 
         //Objects, sources, and monitors. These are all polymorphic classes
@@ -93,7 +93,7 @@ namespace qbox {
         
         //*** Enum here? 
         //map of field names to matrix pointer data
-        std::map<std::string, matrix<double,2>* > field_components;
+        std::map<std::string, tensor* > field_components;
         timers clocks;
     };   
 }

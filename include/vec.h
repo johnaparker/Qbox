@@ -3,6 +3,7 @@
 
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Geometry>
+#include <eigen3/unsupported/Eigen/CXX11/Tensor>
 #include <stdexcept>
 #include "h5cpp.h"
 #include <vector>
@@ -15,6 +16,7 @@ namespace qbox {
     using ivec = Eigen::Vector2i;
     using quat = Eigen::Quaterniond;
     using Array = Eigen::ArrayXd;
+    using tensor = Eigen::Tensor<double,2>;
 
     enum class direction {
         x_bottom, x_top,

@@ -24,13 +24,13 @@ namespace qbox {
         t = 0;
         tStep = 0;
         dt = grid.dt;
-        Ez = matrix<double,2>(Nx, Ny); 
-        Hx = matrix<double,2>(Nx, Ny);
-        Hy = matrix<double,2>(Nx, Ny);
-        Ca = matrix<double,2>(Nx, Ny);
-        Cb = matrix<double,2>(Nx, Ny);
-        Da = matrix<double,2>(Nx, Ny);
-        Db = matrix<double,2>(Nx, Ny);
+        Ez = tensor(Nx,Ny); 
+        Hx = tensor(Nx,Ny);
+        Hy = tensor(Nx,Ny);
+        Ca = tensor(Nx,Ny);
+        Cb = tensor(Nx,Ny);
+        Da = tensor(Nx,Ny);
+        Db = tensor(Nx,Ny);
 
         obj  = matrix<object*,2>(Nx, Ny); 
 
@@ -139,8 +139,8 @@ namespace qbox {
         }
         
         clocks.start(clock_name::looping);
-        for (int i=1; i<Nx-1; i++) {
-            for (int j=1; j<Ny-1; j++) {
+        for (int j=1; j<Ny-1; j++) {
+            for (int i=1; i<Nx-1; i++) {
                 Ez(i,j) = Ca(i,j)*Ez(i,j) 
                     + Cb(i,j)*((Hy(i,j) - Hy(i-1,j))/kedx(i) + (Hx(i,j-1) - Hx(i,j))/kedy(j));
              }
@@ -170,8 +170,8 @@ namespace qbox {
         if (total) 
             total->pulse();
 
-        for (int i=1; i<Nx-1; i++) {
-            for (int j=1; j<Ny-1; j++) {
+        for (int j=1; j<Ny-1; j++) {
+            for (int i=1; i<Nx-1; i++) {
                 Hx(i,j) = Da(i,j)*Hx(i,j) - Db(i,j)*(Ez(i,j+1) - Ez(i,j))/khdy(j);
                 Hy(i,j) = Da(i,j)*Hy(i,j) + Db(i,j)*(Ez(i+1,j) - Ez(i,j))/khdx(i);
             }
@@ -279,7 +279,7 @@ namespace qbox {
         }
     }
 
-    matrix<double,2>& Field2D::get_field_ref(fields F) {
+    tensor& Field2D::get_field_ref(fields F) {
         switch(F) {
             case fields::Ez:  return Ez; break; 
             case fields::Hx:  return Hx; break; 
