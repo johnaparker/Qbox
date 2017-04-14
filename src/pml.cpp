@@ -49,15 +49,15 @@ namespace qbox {
             }
 
             // iniaitialize all 2-d arrays for pml
-            psi_Ezx1 = matrix<double,2>(grid.pml_thickness+1, grid.Ny);
-            psi_Ezx2 = matrix<double,2>(grid.pml_thickness+1, grid.Ny);
-            psi_Hyx1 = matrix<double,2>(grid.pml_thickness+1, grid.Ny);
-            psi_Hyx2 = matrix<double,2>(grid.pml_thickness+1, grid.Ny);
+            psi_Ezx1 = tensor(grid.pml_thickness+1, grid.Ny);
+            psi_Ezx2 = tensor(grid.pml_thickness+1, grid.Ny);
+            psi_Hyx1 = tensor(grid.pml_thickness+1, grid.Ny);
+            psi_Hyx2 = tensor(grid.pml_thickness+1, grid.Ny);
 
-            psi_Ezy1 = matrix<double,2>(grid.Nx, grid.pml_thickness+1);
-            psi_Ezy2 = matrix<double,2>(grid.Nx, grid.pml_thickness+1);
-            psi_Hxy1 = matrix<double,2>(grid.Nx, grid.pml_thickness+1);
-            psi_Hxy2 = matrix<double,2>(grid.Nx, grid.pml_thickness+1);
+            psi_Ezy1 = tensor(grid.Nx, grid.pml_thickness+1);
+            psi_Ezy2 = tensor(grid.Nx, grid.pml_thickness+1);
+            psi_Hxy1 = tensor(grid.Nx, grid.pml_thickness+1);
+            psi_Hxy2 = tensor(grid.Nx, grid.pml_thickness+1);
 
         }
 
@@ -110,8 +110,9 @@ namespace qbox {
 
     void pml::update_E(Field2D &f) {
 
-        for (int i=1; i<grid.Nx-1; i++) {
-            for (int j=1; j<= thickness; j++) {
+        for (int j=1; j<= thickness; j++) {
+#pragma GCC ivdep
+            for (int i=1; i<grid.Nx-1; i++) {
                 psi_Ezy1(i,j) = be_y(j)*psi_Ezy1(i,j)
                                 + ce_y(j)*(f.Hx(i,j) - f.Hx(i,j-1))/grid.dx;
 
@@ -124,8 +125,9 @@ namespace qbox {
             }
         }
 
-        for (int i=1; i<= thickness; i++) {
-            for (int j=1; j<= grid.Ny-1; j++) {
+        for (int j=1; j<= grid.Ny-1; j++) {
+#pragma GCC ivdep
+            for (int i=1; i<= thickness; i++) {
                 psi_Ezx1(i,j) = be_x(i)*psi_Ezx1(i,j)
                                 + ce_x(i)*(f.Hy(i,j) - f.Hy(i-1,j))/grid.dx;
 
@@ -140,8 +142,9 @@ namespace qbox {
     }
 
     void pml::update_H(Field2D &f) {
-        for (int i=1; i<=grid.Nx-1; i++) {
-            for (int j=1; j<= thickness; j++) {
+        for (int j=1; j<= thickness; j++) {
+#pragma GCC ivdep
+            for (int i=1; i<=grid.Nx-1; i++) {
                 psi_Hxy1(i,j) = bh_y(j)*psi_Hxy1(i,j)
                                 + ch_y(j)*(f.Ez(i,j+1) - f.Ez(i,j))/grid.dx;
                 psi_Hxy2(i,j) = bh_y(grid.Ny-2-thickness+j)*psi_Hxy2(i,j)
@@ -153,8 +156,9 @@ namespace qbox {
             }
         }
 
-        for (int i=1; i<= thickness; i++) {
-            for (int j=1; j<= grid.Ny-1; j++) {
+        for (int j=1; j<= grid.Ny-1; j++) {
+#pragma GCC ivdep
+            for (int i=1; i<= thickness; i++) {
                 psi_Hyx1(i,j) = bh_x(i)*psi_Hyx1(i,j)
                                 + ch_x(i)*(f.Ez(i+1,j) - f.Ez(i,j))/grid.dx;
                 psi_Hyx2(i,j) = bh_x(grid.Nx-2-thickness+i)*psi_Hyx2(i,j)

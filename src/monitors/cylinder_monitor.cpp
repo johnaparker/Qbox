@@ -23,11 +23,11 @@ namespace qbox {
 
         length = ceil(2*M_PI*surf.radius/F->dx);
 
-        prevE = matrix<double,1>(length);
-        rE = matrix<double,2>(length, freq.size());
-        iE = matrix<double,2>(length, freq.size());
-        rH = matrix<double,2>(length, freq.size());
-        iH = matrix<double,2>(length, freq.size());
+        prevE = Array::Zero(length);
+        rE = tensor(freq.size(), length);
+        iE = tensor(freq.size(), length);
+        rH = tensor(freq.size(), length);
+        iH = tensor(freq.size(), length);
 
         auto group = get_group();
         surf.write(group);
@@ -40,7 +40,7 @@ namespace qbox {
         double H = 0;
         freq.update(F->t);
 
-        for (int i = 0; i != length; i++) {
+        for (int i = 0; i < length; i++) {
             double theta = 2*M_PI*(i + 0.5)/(length + 1);
             vec pr = surf.position(theta);
 
@@ -51,11 +51,14 @@ namespace qbox {
 
             prevE(i) = F->interpolate(fields::Ez, pr);
 
-            for (int j = 0; j != freq.size(); j++) {
-                rE(i,j) += E*freq.get_cosf(j);
-                iE(i,j) += E*freq.get_sinf(j);
-                rH(i,j) += H*freq.get_cosf(j);
-                iH(i,j) += H*freq.get_sinf(j);
+            const int max_freq = freq.size();
+#pragma GCC ivdep
+            for (int j = 0; j < max_freq; j++) {
+                rE(j,i) += E*freq.get_cosf(j);
+                iE(j,i) += E*freq.get_sinf(j);
+
+                rH(j,i) += H*freq.get_cosf(j);
+                iH(j,i) += H*freq.get_sinf(j);
             }
         }
     }
@@ -65,7 +68,7 @@ namespace qbox {
 
         for (int j = 0; j != freq.size(); j++) {
             for (int i = 0; i != length; i++) {
-                S[j] -= rE(i,j)*rH(i,j) + iE(i,j)*iH(i,j);
+                S[j] -= rE(j,i)*rH(j,i) + iE(j,i)*iH(j,i);
             }
         }
         //S *= F->dx;

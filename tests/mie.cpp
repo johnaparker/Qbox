@@ -5,7 +5,7 @@ using namespace std;
 using namespace qbox;
 
 int main() {
-    int pml_thickness = 15;
+    int pml_thickness = 5;
     double res = 2;
     double f = 2/30.0;
 
@@ -38,7 +38,7 @@ int main() {
     //box_monitor box_scat("box_scat",volume({60,60}, 75), freq_data(1/30.0,3/30.0, 200)); 
     scat.add_monitor(box_scat);
 
-    line_source s2(fields::Ez, surface({0,30},{120,30}), gaussian_time(f, 1/200.0, 80));
+    //line_source s2(fields::Ez, surface({0,30},{120,30}), gaussian_time(f, 1/200.0, 80));
     //scat.add_source(s2);
 
     for (int i = 0; i != 8000; i++) {

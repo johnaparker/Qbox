@@ -34,8 +34,8 @@ namespace qbox {
     private:
         bool extendable;
         cylinder_surface surf;
-        matrix<double,2> rE, iE, rH, iH;    //DFT matrices
-        matrix<double,1> prevE;             ///< previous electric field values
+        tensor rE, iE, rH, iH;    //DFT matrices
+        Array prevE;             ///< previous electric field values
         int length; //length of monitor in grid points
     };
 
