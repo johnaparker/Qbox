@@ -38,6 +38,8 @@ namespace qbox {
         void add_monitor(monitor &new_monitor);
 
         void set_tfsf(const volume& vol, const time_profile& tp);
+        void set_tfsf_freq(const freq_data &freq);
+        void write_tfsf();
 
         //write to HDF5 with filename
         void write_field(const fields);  //write nodename (Ex,etc.) to filename
@@ -52,6 +54,7 @@ namespace qbox {
         double to_ygrid(fields C, const ivec &pi);
 
         tensor& get_field_ref(fields F);
+
     private:
         void create_fields_dataset(fields field);
 

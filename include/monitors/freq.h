@@ -17,7 +17,7 @@ namespace qbox {
         //update cosf, sinf arrays with t = tnew
         void update(double tnew);
 
-        void write(const h5cpp::h5group &group);
+        void write(const h5cpp::h5group &group) const;
 
         //getter functions
         Array get_freq() const {return freq;}

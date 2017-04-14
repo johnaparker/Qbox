@@ -4,6 +4,7 @@
 #include <memory>
 #include "vec.h"
 #include "qbox/sources/time_profile.h"
+#include "monitors/freq.h"
 
 namespace qbox {
 
@@ -40,6 +41,9 @@ namespace qbox {
 
         void write(const h5cpp::h5group &group);
 
+        Array compute_flux();
+        void add_dft(const freq_data &freq);
+
     private:
         volume vol;
         int ia,ib,ja,jb;    ///< position of 4 corners
@@ -51,6 +55,10 @@ namespace qbox {
 
         Array Ez,Dz,Hx,Iz,ca,cb;
         pmlBoundary pml;
+
+        bool dft = false;
+        freq_data freq;
+        Array rE,iE,rH,iH;
     };
 }
 

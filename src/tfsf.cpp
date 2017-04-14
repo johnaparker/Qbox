@@ -35,6 +35,7 @@ namespace qbox {
 
     void tfsf::pulse() {
         t += dt;
+        double prevE = Ez[2];
 
         for (int k=1; k<Nx; k++) {
             Dz[k] += 0.5*(Hx[k-1]-Hx[k]);
@@ -51,6 +52,19 @@ namespace qbox {
         pml.right[1] = pml.right[0];
         pml.right[0] = Ez[Nx-2];
         
+
+        if (dft) {
+            freq.update(t);
+            double E = (Ez[2] + prevE)/2.0;
+            double H = (Hx[2] + Hx[1])/2.0;
+            for (int i = 0; i != freq.size(); i++) {
+                rE(i) += E*freq.get_cosf(i);
+                iE(i) += E*freq.get_sinf(i);
+                rH(i) += H*freq.get_cosf(i);
+                iH(i) += H*freq.get_sinf(i);
+            }
+        }
+
         for (int k=0; k<Nx-1; k++) {
             Hx[k] = Hx[k] + 0.5*(Ez[k] - Ez[k+1]);
         }
@@ -82,5 +96,22 @@ namespace qbox {
 
     void tfsf::write(const h5cpp::h5group &group) {
         vol.write(group);
+    }
+
+    Array tfsf::compute_flux() {
+        if (dft) {
+            Array S = rE*rH + iE*iH;
+            return S;
+        }
+    }
+
+    void tfsf::add_dft(const freq_data &freq_in) {
+        dft = true;
+        freq = freq_in;
+
+        rE = Array::Zero(freq.size());
+        iE = Array::Zero(freq.size());
+        rH = Array::Zero(freq.size());
+        iH = Array::Zero(freq.size());
     }
 }
