@@ -16,7 +16,7 @@ namespace qbox {
     using ivec = Eigen::Vector2i;
     using quat = Eigen::Quaterniond;
     using Array = Eigen::ArrayXd;
-    using tensor = Eigen::Tensor<double,2>;
+    using tensor = Eigen::Tensor<double,2,Eigen::RowMajor>;
 
     enum class direction {
         x_bottom, x_top,

@@ -2,7 +2,6 @@
 #include <string>
 #include <iostream>
 #include <math.h>
-#include "matrix.h"
 #include "field2.h"
 #include "monitors/monitor.h"
 #include "monitors/box_monitor.h"

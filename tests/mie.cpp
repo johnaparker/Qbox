@@ -41,9 +41,9 @@ int main() {
     //line_source s2(fields::Ez, surface({0,30},{120,30}), gaussian_time(f, 1/200.0, 80));
     //scat.add_source(s2);
 
-    for (int i = 0; i != 8000; i++) {
+    for (int i = 0; i != 2000; i++) {
         scat.update();
-        //scat.writeE();
+        scat.writeE();
     }
     box_scat.write_flux();
 }

@@ -2,7 +2,6 @@
 #define GUARD_pml_h
 
 #include <memory>
-#include "matrix.h"
 #include "vec.h"
 #include "grid.h"
 #include "field2.h"

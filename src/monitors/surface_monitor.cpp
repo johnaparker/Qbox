@@ -2,7 +2,6 @@
 #include <string>
 #include <iostream>
 #include <math.h>
-#include "matrix.h"
 #include "field2.h"
 #include "monitors/surface_monitor.h"
 
@@ -22,11 +21,11 @@ namespace qbox {
         auto isurf = newF->grid.to_grid(surf);
         length = isurf.dim.norm();
 
-        prevE = matrix<double,1>(length+1);
-        rE = matrix<double,2>(length, freq.size());
-        iE = matrix<double,2>(length, freq.size());
-        rH = matrix<double,2>(length, freq.size());
-        iH = matrix<double,2>(length, freq.size());
+        prevE = Array::Zero(length+1);
+        rE = tensor(length, freq.size());
+        iE = tensor(length, freq.size());
+        rH = tensor(length, freq.size());
+        iH = tensor(length, freq.size());
 
         auto group = get_group();
         surf.write(group);

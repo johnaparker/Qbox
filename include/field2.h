@@ -9,7 +9,6 @@
 #include <string>
 #include <map>
 #include <memory>
-#include "matrix.h"
 #include "sources/source.h"
 #include "object.h"
 #include "geometry/geometry.h"
@@ -67,7 +66,6 @@ namespace qbox {
 
         //2D matrices defined everwhere. These make up the dominant memory usage
         tensor Ez,Hx,Hy,Ca,Cb,Da,Db;  //Fields + auxillary fields
-        matrix<object*,2> obj;    //Pointer-to-Object matrix
 
         //Objects, sources, and monitors. These are all polymorphic classes
         std::vector<object*> obj_list;
@@ -92,7 +90,7 @@ namespace qbox {
 
         
         //*** Enum here? 
-        //map of field names to matrix pointer data
+        //map of field names to tensor pointer data
         std::map<std::string, tensor* > field_components;
         timers clocks;
     };   

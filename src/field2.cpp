@@ -8,7 +8,6 @@
 #include <vector>
 #include <string>
 #include "field2.h"
-#include "matrix.h"
 #include "tfsf.h"
 #include "termcolor.h"
 #include "timer.h"
@@ -32,8 +31,6 @@ namespace qbox {
         Da = tensor(Nx,Ny);
         Db = tensor(Nx,Ny);
 
-        obj  = matrix<object*,2>(Nx, Ny); 
-
         background = make_unique<simple_material>(1);
 
         for (int i = 0; i != Nx; i++) {
@@ -45,7 +42,6 @@ namespace qbox {
                 Cb(i,j) = (dt/(eps))/(1 + conduc*dt/(2*eps));
                 Da(i,j) = 1;
                 Db(i,j) = dt;
-                obj(i,j) = nullptr;
              }
         }
 
@@ -139,9 +135,9 @@ namespace qbox {
         }
         
         clocks.start(clock_name::looping);
-        for (int j=1; j<Ny-1; j++) {
+        for (int i=1; i<Nx-1; i++) {
 #pragma GCC ivdep
-            for (int i=1; i<Nx-1; i++) {
+            for (int j=1; j<Ny-1; j++) {
                 Ez(i,j) = Ca(i,j)*Ez(i,j) 
                     + Cb(i,j)*((Hy(i,j) - Hy(i-1,j))/kedx(i) + (Hx(i,j-1) - Hx(i,j))/kedy(j));
              }
@@ -171,9 +167,9 @@ namespace qbox {
         if (total) 
             total->pulse();
 
-        for (int j=1; j<Ny-1; j++) {
+        for (int i=1; i<Nx-1; i++) {
 #pragma GCC ivdep
-            for (int i=1; i<Nx-1; i++) {
+            for (int j=1; j<Ny-1; j++) {
                 Hx(i,j) = Da(i,j)*Hx(i,j) - Db(i,j)*(Ez(i,j+1) - Ez(i,j))/khdy(j);
                 Hy(i,j) = Da(i,j)*Hy(i,j) + Db(i,j)*(Ez(i+1,j) - Ez(i,j))/khdx(i);
             }
@@ -199,8 +195,6 @@ namespace qbox {
                 vec p = grid.to_real(pi);
 
                 if (new_object.inside(p)) {
-                    obj(pi) = &new_object;
-                        
                     Ca(pi) = (1 - conduc*dt/(2*eps))/(1 + conduc*dt/(2*eps));
                     Cb(pi) = (dt/eps)/(1 + conduc*dt/(2*eps));
                     Da(pi) = 1;

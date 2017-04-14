@@ -3,7 +3,6 @@
 
 #include <string>
 #include <memory>
-#include "../matrix.h"
 #include "monitor.h"
 #include "surface_monitor.h"
 

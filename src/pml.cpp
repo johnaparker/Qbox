@@ -1,4 +1,3 @@
-#include "matrix.h"
 #include "field2.h"
 #include <math.h>
 #include <vector>
@@ -110,9 +109,9 @@ namespace qbox {
 
     void pml::update_E(Field2D &f) {
 
-        for (int j=1; j<= thickness; j++) {
+        for (int i=1; i<grid.Nx-1; i++) {
 #pragma GCC ivdep
-            for (int i=1; i<grid.Nx-1; i++) {
+            for (int j=1; j<= thickness; j++) {
                 psi_Ezy1(i,j) = be_y(j)*psi_Ezy1(i,j)
                                 + ce_y(j)*(f.Hx(i,j) - f.Hx(i,j-1))/grid.dx;
 
@@ -125,9 +124,9 @@ namespace qbox {
             }
         }
 
-        for (int j=1; j<= grid.Ny-1; j++) {
+        for (int i=1; i<= thickness; i++) {
 #pragma GCC ivdep
-            for (int i=1; i<= thickness; i++) {
+            for (int j=1; j<= grid.Ny-1; j++) {
                 psi_Ezx1(i,j) = be_x(i)*psi_Ezx1(i,j)
                                 + ce_x(i)*(f.Hy(i,j) - f.Hy(i-1,j))/grid.dx;
 
@@ -142,9 +141,9 @@ namespace qbox {
     }
 
     void pml::update_H(Field2D &f) {
-        for (int j=1; j<= thickness; j++) {
+        for (int i=1; i<=grid.Nx-1; i++) {
 #pragma GCC ivdep
-            for (int i=1; i<=grid.Nx-1; i++) {
+            for (int j=1; j<= thickness; j++) {
                 psi_Hxy1(i,j) = bh_y(j)*psi_Hxy1(i,j)
                                 + ch_y(j)*(f.Ez(i,j+1) - f.Ez(i,j))/grid.dx;
                 psi_Hxy2(i,j) = bh_y(grid.Ny-2-thickness+j)*psi_Hxy2(i,j)
@@ -156,9 +155,9 @@ namespace qbox {
             }
         }
 
-        for (int j=1; j<= grid.Ny-1; j++) {
+        for (int i=1; i<= thickness; i++) {
 #pragma GCC ivdep
-            for (int i=1; i<= thickness; i++) {
+            for (int j=1; j<= grid.Ny-1; j++) {
                 psi_Hyx1(i,j) = bh_x(i)*psi_Hyx1(i,j)
                                 + ch_x(i)*(f.Ez(i+1,j) - f.Ez(i,j))/grid.dx;
                 psi_Hyx2(i,j) = bh_x(grid.Nx-2-thickness+i)*psi_Hyx2(i,j)

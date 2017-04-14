@@ -2,7 +2,6 @@
 #include <string>
 #include <iostream>
 #include <math.h>
-#include "matrix.h"
 #include "field2.h"
 #include "monitors/cylinder_monitor.h"
 
@@ -24,10 +23,10 @@ namespace qbox {
         length = ceil(2*M_PI*surf.radius/F->dx);
 
         prevE = Array::Zero(length);
-        rE = tensor(freq.size(), length);
-        iE = tensor(freq.size(), length);
-        rH = tensor(freq.size(), length);
-        iH = tensor(freq.size(), length);
+        rE = tensor(length, freq.size());
+        iE = tensor(length, freq.size());
+        rH = tensor(length, freq.size());
+        iH = tensor(length, freq.size());
 
         auto group = get_group();
         surf.write(group);
@@ -54,11 +53,11 @@ namespace qbox {
             const int max_freq = freq.size();
 #pragma GCC ivdep
             for (int j = 0; j < max_freq; j++) {
-                rE(j,i) += E*freq.get_cosf(j);
-                iE(j,i) += E*freq.get_sinf(j);
+                rE(i,j) += E*freq.get_cosf(j);
+                iE(i,j) += E*freq.get_sinf(j);
 
-                rH(j,i) += H*freq.get_cosf(j);
-                iH(j,i) += H*freq.get_sinf(j);
+                rH(i,j) += H*freq.get_cosf(j);
+                iH(i,j) += H*freq.get_sinf(j);
             }
         }
     }
@@ -66,9 +65,9 @@ namespace qbox {
     Array cylinder_monitor::compute_flux() const {
         Array S = Array::Zero(freq.size());
 
-        for (int j = 0; j != freq.size(); j++) {
-            for (int i = 0; i != length; i++) {
-                S[j] -= rE(j,i)*rH(j,i) + iE(j,i)*iH(j,i);
+        for (int i = 0; i != length; i++) {
+            for (int j = 0; j != freq.size(); j++) {
+                S[j] -= rE(i,j)*rH(i,j) + iE(i,j)*iH(i,j);
             }
         }
         //S *= F->dx;
