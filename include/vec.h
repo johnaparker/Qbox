@@ -42,6 +42,14 @@ namespace qbox {
         auto dspace = h5cpp::dspace(std::vector<hsize_t>{static_cast<hsize_t>(p.size())});
         auto dset = group.create_dataset(name, M, dspace);
         dset.write(p.data());
+
+    }
+
+    template<class T, int RANK, h5cpp::dtype M>
+    void write_array(const h5cpp::h5group &group, const Eigen::Tensor<T,RANK,Eigen::RowMajor> &p, std::string name) {
+        auto dspace = h5cpp::dspace(std::vector<hsize_t>{static_cast<hsize_t>(p.dimensions())});
+        auto dset = group.create_dataset(name, M, dspace);
+        dset.write(p.data());
     }
 
     struct cylinder_surface {

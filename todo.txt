@@ -1,13 +1,9 @@
-[ ] tfsf write
 [ ] tfsf from a different surface side (use ivec in for loop)
 [ ] all time-profiles need to have a known or computed fourier transform
     [ ] the flux from the tfsf per unit area should then by analyically determined
-    [ ] or DFT inside tfsf class at a single point
 
 [ ] box_monitor needs to not write 4 surface_monitors (perhaps by not using has-a)
-[ ] qpost needs flux module again
 [ ] consider using source location to determine vmax
-[ ] define a new layout qpost that creates a static labeled image
 [ ] Try tab-completiono in qpost
 
 
@@ -33,8 +29,6 @@
     [ ] should monitors even have names? instead, name at write time?
 
 [ ] For non-extendable monitor... writing multiple time gives seg fault
-
-[ ] Consider the move from matrix to Eigen::tensor
 
 [ ] Do full TEM fields
 
