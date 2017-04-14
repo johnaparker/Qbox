@@ -140,6 +140,7 @@ namespace qbox {
         
         clocks.start(clock_name::looping);
         for (int j=1; j<Ny-1; j++) {
+#pragma GCC ivdep
             for (int i=1; i<Nx-1; i++) {
                 Ez(i,j) = Ca(i,j)*Ez(i,j) 
                     + Cb(i,j)*((Hy(i,j) - Hy(i-1,j))/kedx(i) + (Hx(i,j-1) - Hx(i,j))/kedy(j));
@@ -171,6 +172,7 @@ namespace qbox {
             total->pulse();
 
         for (int j=1; j<Ny-1; j++) {
+#pragma GCC ivdep
             for (int i=1; i<Nx-1; i++) {
                 Hx(i,j) = Da(i,j)*Hx(i,j) - Db(i,j)*(Ez(i,j+1) - Ez(i,j))/khdy(j);
                 Hy(i,j) = Da(i,j)*Hy(i,j) + Db(i,j)*(Ez(i+1,j) - Ez(i,j))/khdx(i);
