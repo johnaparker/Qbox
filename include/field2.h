@@ -19,6 +19,9 @@
 #include "vec.h"
 #include "h5cpp.h"
 #include "grid.h"
+#include "materials/simple_material.h"
+#include "materials/debye.h"
+#include "materials/polarization.h"
 
 namespace qbox {
 
@@ -33,7 +36,8 @@ namespace qbox {
         void update();         //update the fields for a single time step; also time steps sources/monitors
         
         //Add objects, sources, and monitors. These are all polymorphic classes
-        void add_object(object &new_object);
+        void add_object(object &new_object, const simple_material &mat);
+        void add_object(object &new_object, const debye &mat);
         void add_source(source &new_source);
         void add_monitor(monitor &new_monitor);
 
@@ -57,6 +61,7 @@ namespace qbox {
 
     private:
         void create_fields_dataset(fields field);
+        void add_object(object &new_object, const material* mat);
 
     public:
         //Grid properties (some reduntant)
@@ -75,6 +80,7 @@ namespace qbox {
         std::vector<source*> source_list;
         std::vector<monitor*> monitor_list;
 
+        //background medium
         std::unique_ptr<material> background;
 
         //Physical timestep, time
@@ -84,13 +90,16 @@ namespace qbox {
         std::unique_ptr<pml> BC;
         Array khdx, khdy, kedx, kedy;     //scaling factors for pml
 
+        //TFSF
         std::unique_ptr<tfsf> total;   //This is nullptr if not in use
+
+        //Polarization auxillary fields
+        std::vector<polarization> P_debye;
 
         //*** Should be different class to manage IO
         //map of all HDF5 output files
         //std::map<std::string, h5out> outFiles;
         std::unique_ptr<h5cpp::h5file> outFile;
-
         
         //*** Enum here? 
         //map of field names to tensor pointer data

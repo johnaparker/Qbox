@@ -5,7 +5,6 @@
 #include <string>
 #include "h5cpp.h"
 #include "geometry/geometry.h"
-#include "materials/material.h"
 #include "vec.h"
 
 namespace qbox {
@@ -14,8 +13,8 @@ namespace qbox {
 
     class object {
     public:
-        object(std::string name, const geometry& geometryType, const material& materialType, vec position, vec orientation = vec(0,1));
-        object(const geometry& geometryType, const material& materialType, vec position, vec orientation = vec(0,1));
+        object(std::string name, const geometry& geometryType, vec position, vec orientation = vec(0,1));
+        object(const geometry& geometryType, vec position, vec orientation = vec(0,1));
 
         bool inside(const vec& p) const;
 
@@ -25,13 +24,11 @@ namespace qbox {
         void write();
 
         std::unique_ptr<geometry> get_geometry() {return geometryType->clone();}
-        std::unique_ptr<material> get_material() {return materialType->clone();}
 
         void set_owner(Field2D* F);
 
     private:
         std::unique_ptr<geometry> geometryType;
-        std::unique_ptr<material> materialType;
 
         vec position;
         vec orientation;

@@ -9,11 +9,11 @@ namespace qbox {
 
     int object::num_created = 0;
 
-    object::object(string name, const geometry& geometryType, const material& materialType, vec position, vec orientation): 
-                  name(name), geometryType(geometryType.clone()), materialType(materialType.clone()), position(position), orientation(orientation) {}
+    object::object(string name, const geometry& geometryType, vec position, vec orientation): 
+                  name(name), geometryType(geometryType.clone()), position(position), orientation(orientation) {}
 
-    object::object(const geometry& geometryType, const material& materialType, vec position, vec orientation): 
-                  object("object_" + to_string(num_created), geometryType, materialType, position, orientation) {num_created++;}
+    object::object(const geometry& geometryType, vec position, vec orientation): 
+                  object("object_" + to_string(num_created), geometryType, position, orientation) {num_created++;}
 
     bool object::inside(const vec& v) const {
         double theta = atan2(orientation(1), orientation(0)) - M_PI/2;
@@ -40,7 +40,6 @@ namespace qbox {
 
         write_vec<double,h5cpp::dtype::Double>(my_group, position, "position");
         write_vec<double,h5cpp::dtype::Double>(my_group, orientation, "orientation");
-        materialType->write(my_group);
         geometryType->write(my_group);
     }
 

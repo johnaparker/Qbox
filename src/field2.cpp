@@ -143,6 +143,9 @@ namespace qbox {
         
         BC->update_E(*this);
 
+        for (auto &P : P_debye)
+            P.update_J(*this);
+
         if (total) 
             total->updateD(this);
 
@@ -181,24 +184,17 @@ namespace qbox {
         
     }
 
-    void Field2D::add_object(object &new_object) {
-        obj_list.push_back(&new_object);
-        new_object.set_owner(this);
+    void Field2D::add_object(object &new_object, const simple_material &mat) {
+        add_object(new_object, &mat);
+    }
 
-        auto mat = new_object.get_material();
-        for (int i = 0; i != Nx; i++) {
-            for (int j = 0; j != Ny; j++) {
-                ivec pi = {i,j};
-                vec p = grid.to_real(pi);
-
-                if (new_object.inside(p)) {
-                    Ca(pi) = mat->Ca(dt); 
-                    Cb(pi) = mat->Cb(dt); 
-                    Da(pi) = mat->Da(dt); 
-                    Db(pi) = mat->Db(dt); 
-                }
-            }
-        }
+    void Field2D::add_object(object &new_object, const debye &mat) {
+        //*** only create new polarization if needed
+        //kappa may need to be its own tensor to account for different tau regions
+        add_object(new_object, &mat);
+        auto new_P = polarization(grid, mat);
+        new_P.insert_object(new_object);
+        P_debye.push_back(new_P);
     }
 
     void Field2D::add_source(source &new_source) {
@@ -324,6 +320,25 @@ namespace qbox {
                               dset.write(Hy.data());
                               break;
             default: throw std::invalid_argument("not a valid field component");
+        }
+    }
+
+    void Field2D::add_object(object &new_object, const material* mat) {
+        obj_list.push_back(&new_object);
+        new_object.set_owner(this);
+
+        for (int i = 0; i != Nx; i++) {
+            for (int j = 0; j != Ny; j++) {
+                ivec pi = {i,j};
+                vec p = grid.to_real(pi);
+
+                if (new_object.inside(p)) {
+                    Ca(pi) = mat->Ca(dt); 
+                    Cb(pi) = mat->Cb(dt); 
+                    Da(pi) = mat->Da(dt); 
+                    Db(pi) = mat->Db(dt); 
+                }
+            }
         }
     }
 
