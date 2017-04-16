@@ -8,9 +8,10 @@ namespace qbox {
 
     class material {
     public:
-        virtual double get_eps() = 0;
-        virtual double get_mu() = 0;
-        virtual double get_conduc() = 0;
+        virtual double Ca(double dt) const = 0;
+        virtual double Cb(double dt) const = 0;
+        virtual double Da(double dt) const = 0;
+        virtual double Db(double dt) const = 0;
 
         virtual void write(const h5cpp::h5group &group) = 0;
 

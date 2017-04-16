@@ -24,4 +24,20 @@ namespace qbox {
         dset = group.create_dataset("conduc", h5cpp::dtype::Double, dspace);
         dset.write(&conduc);
     }
+
+    double simple_material::Ca(double dt) const {
+        return (1 - conduc*dt/(2*eps))/(1 + conduc*dt/(2*eps));
+    }
+
+    double simple_material::Cb(double dt) const {
+        return (dt/(eps))/(1 + conduc*dt/(2*eps));
+    }
+
+    double simple_material::Da(double dt) const {
+        return 1;
+    }
+
+    double simple_material::Db(double dt) const {
+        return dt;
+    }
 }

@@ -35,13 +35,11 @@ namespace qbox {
 
         for (int i = 0; i != Nx; i++) {
             for (int j = 0; j != Ny; j++) {
-                double eps = background->get_eps();      
-                double conduc = background->get_conduc(); 
                 //*** this kind of loop needs to be its own function since add_object uses the same code
-                Ca(i,j) = (1 - conduc*dt/(2*eps))/(1 + conduc*dt/(2*eps));
-                Cb(i,j) = (dt/(eps))/(1 + conduc*dt/(2*eps));
-                Da(i,j) = 1;
-                Db(i,j) = dt;
+                Ca(i,j) = background->Ca(dt); 
+                Cb(i,j) = background->Cb(dt); 
+                Da(i,j) = background->Da(dt); 
+                Db(i,j) = background->Db(dt); 
              }
         }
 
@@ -186,19 +184,18 @@ namespace qbox {
     void Field2D::add_object(object &new_object) {
         obj_list.push_back(&new_object);
         new_object.set_owner(this);
-        double eps = new_object.get_material()->get_eps();
-        double conduc = new_object.get_material()->get_conduc();
 
+        auto mat = new_object.get_material();
         for (int i = 0; i != Nx; i++) {
             for (int j = 0; j != Ny; j++) {
                 ivec pi = {i,j};
                 vec p = grid.to_real(pi);
 
                 if (new_object.inside(p)) {
-                    Ca(pi) = (1 - conduc*dt/(2*eps))/(1 + conduc*dt/(2*eps));
-                    Cb(pi) = (dt/eps)/(1 + conduc*dt/(2*eps));
-                    Da(pi) = 1;
-                    Db(pi) = dt;
+                    Ca(pi) = mat->Ca(dt); 
+                    Cb(pi) = mat->Cb(dt); 
+                    Da(pi) = mat->Da(dt); 
+                    Db(pi) = mat->Db(dt); 
                 }
             }
         }

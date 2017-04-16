@@ -9,9 +9,14 @@ namespace qbox {
     public:
         simple_material(double eps, double mu = 1, double conduc = 0);
 
-        double get_eps() override {return eps;}
-        double get_mu() override {return mu;}
-        double get_conduc() override {return conduc;}
+        double get_eps() const {return eps;}
+        double get_mu() const {return mu;}
+        double get_conduc() const {return conduc;}
+
+        double Ca(double dt) const override;
+        double Cb(double dt) const override;
+        double Da(double dt) const override;
+        double Db(double dt) const override;
 
         void write(const h5cpp::h5group &group) override;
 
