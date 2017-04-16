@@ -15,6 +15,7 @@ namespace qbox{}
 
 //materials
 #include "qbox/materials/simple_material.h"
+#include "qbox/materials/debye.h"
 
 //monitors
 #include "qbox/monitors/surface_monitor.h"
