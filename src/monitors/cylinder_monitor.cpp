@@ -46,9 +46,10 @@ namespace qbox {
             //H = -sin(theta)*F->interpolate(fields::Hx, pr) + cos(theta)*F->interpolate(fields::Hy, pr);
             H = vec(F->interpolate(fields::Hx, pr), F->interpolate(fields::Hy, pr)).dot(surf.tangent(theta));
             E = F->interpolate(fields::Ez, pr);
+            double tempE = E;
             E = (E + prevE(i))/2;
 
-            prevE(i) = F->interpolate(fields::Ez, pr);
+            prevE(i) = tempE;
 
             const int max_freq = freq.size();
 #pragma GCC ivdep
@@ -65,12 +66,11 @@ namespace qbox {
     Array cylinder_monitor::compute_flux() const {
         Array S = Array::Zero(freq.size());
 
-        for (int i = 0; i != length; i++) {
-            for (int j = 0; j != freq.size(); j++) {
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < freq.size(); j++) {
                 S[j] -= rE(i,j)*rH(i,j) + iE(i,j)*iH(i,j);
             }
         }
-        //S *= F->dx;
         S *= 2*M_PI*surf.radius/length;
         return S;
     }

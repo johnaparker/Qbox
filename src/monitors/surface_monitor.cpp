@@ -21,7 +21,7 @@ namespace qbox {
         auto isurf = newF->grid.to_grid(surf);
         length = isurf.dim.norm();
 
-        prevE = Array::Zero(length+1);
+        prevE = Array::Zero(length);
         rE = tensor(length, freq.size());
         iE = tensor(length, freq.size());
         rH = tensor(length, freq.size());
@@ -40,15 +40,19 @@ namespace qbox {
         double H = 0;
         freq.update(F->t);
 
-        for (int i = 0; i != length; i++) {
+        for (int i = 0; i < length; i++) {
             ivec p = isurf.a + i*isurf.tangent;
             //H = ((*Hfield)(p)+ (*Hfield)(p - isurf.normal)
                     //+ (*Hfield)(p + isurf.tangent) + (*Hfield)(p - isurf.normal + isurf.tangent))/4;
             //E = (F->Ez(p) + F->Ez(p + isurf.tangent)
                     //+ prevE(i) + prevE(i+1))/4;
                     
-            H = ((*Hfield)(p)+ (*Hfield)(p - isurf.normal))/2;
+            H = ((*Hfield)(p) + (*Hfield)(p - isurf.normal))/2;
             E = (F->Ez(p) + prevE(i))/2;
+            prevE(i) = F->Ez(p);
+
+            //E = (F->Ez(p));
+            //H = ((*Hfield)(p));
 
             //H = isurf.normal[0] == 0 ? F->to_xgrid(fields::Hx, p) : F->to_ygrid(fields::Hy, p); 
             //E = isurf.normal[0] == 0 ? F->to_xgrid(fields::Ez, p) : F->to_ygrid(fields::Ez, p); 
@@ -56,25 +60,27 @@ namespace qbox {
             //vec pr = F->grid.to_real(p) + surf.tangent*F->dx/2.0;
             //H = isurf.normal[0] == 0 ? F->interpolate(fields::Hx, pr) : F->interpolate(fields::Hy, pr);
             //E = F->interpolate(fields::Ez, pr);
-            //E = (2*E + prevE(i) + prevE(i+1))/4;
+            //double tempE = E;
+            //E = (E + prevE(i))/2;
+            //prevE(i) = tempE;
 
-            prevE(i) = F->Ez(p);
-
-            for (int j = 0; j != freq.size(); j++) {
+            const int max_freq = freq.size();
+#pragma GCC ivdep
+            for (int j = 0; j < max_freq; j++) {
                 rE(i,j) += E*freq.get_cosf(j);
                 iE(i,j) += E*freq.get_sinf(j);
                 rH(i,j) += H*freq.get_cosf(j);
                 iH(i,j) += H*freq.get_sinf(j);
             }
         }
-        prevE(length) = F->Ez(isurf.b);
+        //prevE(length) = F->Ez(isurf.b);
     }
 
     Array surface_monitor::compute_flux() const {
         Array S = Array::Zero(freq.size());
 
-        for (int j = 0; j != freq.size(); j++) {
-            for (int i = 0; i != length; i++) {
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < freq.size(); j++) {
                 S[j] += rE(i,j)*rH(i,j) + iE(i,j)*iH(i,j);
             }
         }

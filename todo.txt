@@ -1,3 +1,6 @@
+[ ] scattering and absoprtion tests with block (interpolated and non) and cylinder monitor
+    [ ] shouldn't interpolation and non for block give identical results if setup correctly?
+
 [ ] tfsf from a different surface side (use ivec in for loop)
 [ ] all time-profiles need to have a known or computed fourier transform
     [ ] the flux from the tfsf per unit area should then by analyically determined

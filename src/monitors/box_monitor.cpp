@@ -46,7 +46,7 @@ namespace qbox {
         Array S = Array::Zero(freq.size());
 
         for (int i = 0; i != 4; i++) {
-            auto Sm = sign_values[i]*monitors[i].compute_flux();
+            Array Sm = sign_values[i]*monitors[i].compute_flux();
             S += Sm;
         }
         return S;
