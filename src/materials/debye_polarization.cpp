@@ -1,15 +1,15 @@
-#include "materials/polarization.h"
+#include "materials/debye_polarization.h"
 #include "field2.h"
 
 using namespace std;
 
 namespace qbox {
-    polarization::polarization(const grid_properties &grid, const debye &mat): grid(grid), mat(mat) {
+    debye_polarization::debye_polarization(const grid_properties &grid, const debye &mat): grid(grid), mat(mat) {
         beta = tensor(grid.Nx, grid.Ny);
         J = tensor(grid.Nx, grid.Ny);
     }
 
-    void polarization::insert_object(const object &new_object) {
+    void debye_polarization::insert_object(const object &new_object) {
         for (int i = 0; i < grid.Nx; i++) {
             for (int j = 0; j < grid.Ny; j++) {
                 ivec pi = {i,j};
@@ -21,7 +21,7 @@ namespace qbox {
         }
     }
 
-    void polarization::update_J(Field2D &f) {
+    void debye_polarization::update_J(Field2D &f) {
         double dt = grid.dt;
         double kappa = mat.kappa(dt);
         double Cb = mat.Cb(dt);

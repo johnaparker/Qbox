@@ -1,5 +1,5 @@
-#ifndef GUARD_polarization_h
-#define GUARD_polarization_h
+#ifndef GUARD_debye_polarization_h
+#define GUARD_debye_polarization_h
 
 #include "qbox/materials/debye.h"
 #include "qbox/grid.h"
@@ -10,9 +10,9 @@ namespace qbox {
 
     class Field2D;
 
-    class polarization {
+    class debye_polarization {
     public:
-        polarization(const grid_properties &grid, const debye &mat);
+        debye_polarization(const grid_properties &grid, const debye &mat);
         void update_J(Field2D &f);
         void insert_object(const object &new_object);
 

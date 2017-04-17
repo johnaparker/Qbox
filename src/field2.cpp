@@ -148,6 +148,9 @@ namespace qbox {
         for (auto &P : P_debye)
             P.update_J(*this);
 
+        for (auto &P : P_drude)
+            P.update_J(*this);
+
         if (total) 
             total->updateD(this);
 
@@ -195,9 +198,21 @@ namespace qbox {
         //*** only create new polarization if needed
         //kappa may need to be its own tensor to account for different tau regions
         add_object(new_object, &mat);
-        auto new_P = polarization(grid, mat);
+        auto new_P = debye_polarization(grid, mat);
         new_P.insert_object(new_object);
         P_debye.push_back(new_P);
+
+        if (!prevE)
+            prevE = make_unique<tensor>(Nx,Ny);
+    }
+
+    void Field2D::add_object(object &new_object, const drude &mat) {
+        //*** only create new polarization if needed
+        //kappa may need to be its own tensor to account for different tau regions
+        add_object(new_object, &mat);
+        auto new_P = drude_polarization(grid, mat);
+        new_P.insert_object(new_object);
+        P_drude.push_back(new_P);
 
         if (!prevE)
             prevE = make_unique<tensor>(Nx,Ny);
