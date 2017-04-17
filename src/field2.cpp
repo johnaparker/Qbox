@@ -132,6 +132,8 @@ namespace qbox {
         }
         
         clocks.start(clock_name::looping);
+        if (prev2E)
+            *prev2E = *prevE;
         if (prevE)
             *prevE = Ez;
 
@@ -149,6 +151,9 @@ namespace qbox {
             P.update_J(*this);
 
         for (auto &P : P_drude)
+            P.update_J(*this);
+
+        for (auto &P : P_lorentz)
             P.update_J(*this);
 
         if (total) 
@@ -216,6 +221,20 @@ namespace qbox {
 
         if (!prevE)
             prevE = make_unique<tensor>(Nx,Ny);
+    }
+
+    void Field2D::add_object(object &new_object, const lorentz &mat) {
+        //*** only create new polarization if needed
+        //kappa may need to be its own tensor to account for different tau regions
+        add_object(new_object, &mat);
+        auto new_P = lorentz_polarization(grid, mat);
+        new_P.insert_object(new_object);
+        P_lorentz.push_back(new_P);
+
+        if (!prevE)
+            prevE = make_unique<tensor>(Nx,Ny);
+        if (!prev2E)
+            prev2E = make_unique<tensor>(Nx,Ny);
     }
 
     void Field2D::add_source(source &new_source) {

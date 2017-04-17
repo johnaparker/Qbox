@@ -25,6 +25,8 @@
 #include "materials/debye_polarization.h"
 #include "materials/drude.h"
 #include "materials/drude_polarization.h"
+#include "materials/lorentz.h"
+#include "materials/lorentz_polarization.h"
 
 namespace qbox {
 
@@ -42,6 +44,7 @@ namespace qbox {
         void add_object(object &new_object, const simple_material &mat);
         void add_object(object &new_object, const debye &mat);
         void add_object(object &new_object, const drude &mat);
+        void add_object(object &new_object, const lorentz &mat);
         void add_source(source &new_source);
         void add_monitor(monitor &new_monitor);
 
@@ -94,6 +97,7 @@ namespace qbox {
         std::unique_ptr<pml> BC;
         Array khdx, khdy, kedx, kedy;     //scaling factors for pml
         std::unique_ptr<tensor> prevE = nullptr;
+        std::unique_ptr<tensor> prev2E = nullptr;
 
         //TFSF
         std::unique_ptr<tfsf> total;   //This is nullptr if not in use
@@ -101,6 +105,7 @@ namespace qbox {
         //Polarization auxillary fields
         std::vector<debye_polarization> P_debye;
         std::vector<drude_polarization> P_drude;
+        std::vector<lorentz_polarization> P_lorentz;
 
         //*** Should be different class to manage IO
         //map of all HDF5 output files
