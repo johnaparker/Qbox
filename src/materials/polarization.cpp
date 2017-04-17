@@ -6,7 +6,6 @@ using namespace std;
 namespace qbox {
     polarization::polarization(const grid_properties &grid, const debye &mat): grid(grid), mat(mat) {
         beta = tensor(grid.Nx, grid.Ny);
-        prevE = tensor(grid.Nx, grid.Ny);
         J = tensor(grid.Nx, grid.Ny);
     }
 
@@ -29,8 +28,7 @@ namespace qbox {
         for (int i = 0; i < grid.Nx; i++) {
             for (int j = 0; j < grid.Ny; j++) {
                 f.Ez(i,j) -= Cb*0.5*(1 + kappa)*J(i,j);
-                J(i,j) = kappa*J(i,j) + beta(i,j)/dt*(f.Ez(i,j) - prevE(i,j));
-                prevE(i,j) = f.Ez(i,j);
+                J(i,j) = kappa*J(i,j) + beta(i,j)/dt*(f.Ez(i,j) - (*f.prevE)(i,j));
             }
         }
     }

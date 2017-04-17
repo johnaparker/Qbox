@@ -1,10 +1,10 @@
 #ifndef GUARD_polarization_h
 #define GUARD_polarization_h
 
-#include "materials/debye.h"
-#include "grid.h"
-#include "object.h"
-#include "vec.h"
+#include "qbox/materials/debye.h"
+#include "qbox/grid.h"
+#include "qbox/object.h"
+#include "qbox/vec.h"
 
 namespace qbox {
 
@@ -20,7 +20,7 @@ namespace qbox {
         grid_properties grid;
         debye mat;
 
-        tensor beta, prevE, J;
+        tensor beta, J;
     };
 
 }

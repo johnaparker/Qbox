@@ -19,7 +19,7 @@ int main() {
 
     object o1(cylinder(20), vec(60,60), vec(1,1));
     //scat.add_object(o1, simple_material(2));
-    scat.add_object(o1, debye(2,1,.1));
+    scat.add_object(o1, debye(2,1,1));
 
     cylinder_monitor box_scat("box_scat", cylinder_surface(vec(60,60), 50), dft); 
     //box_monitor box_scat("box_scat",volume({60,60}, 75), dft); 

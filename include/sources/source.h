@@ -34,6 +34,10 @@ namespace qbox {
         virtual void pulse() = 0;  //add the source to the fields
         virtual void write();
 
+    private:
+        std::string name;
+        std::string sub_group;
+        static int _num_created;
 
     protected:
         std::unique_ptr<time_profile> tp;
@@ -41,10 +45,6 @@ namespace qbox {
         double *t;     //current time (from F)
         std::unique_ptr<h5cpp::h5file> outFile;
 
-    private:
-        static int _num_created;
-        std::string name;
-        std::string sub_group;
     };
 }
 

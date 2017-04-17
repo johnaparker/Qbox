@@ -28,12 +28,12 @@ namespace qbox {
         void set_owner(Field2D* F);
 
     private:
-        std::unique_ptr<geometry> geometryType;
+        std::string name;
 
+        std::unique_ptr<geometry> geometryType;
         vec position;
         vec orientation;
 
-        std::string name;
         std::unique_ptr<h5cpp::h5file> outFile = nullptr;
 
         static int num_created;

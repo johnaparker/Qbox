@@ -89,6 +89,7 @@ namespace qbox {
         //PML + Auxillary fields
         std::unique_ptr<pml> BC;
         Array khdx, khdy, kedx, kedy;     //scaling factors for pml
+        std::unique_ptr<tensor> prevE = nullptr;
 
         //TFSF
         std::unique_ptr<tfsf> total;   //This is nullptr if not in use
@@ -105,7 +106,8 @@ namespace qbox {
         //map of field names to tensor pointer data
         std::map<std::string, tensor* > field_components;
         timers clocks;
-    };   
+    };
+
 }
 
 #endif

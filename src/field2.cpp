@@ -12,7 +12,6 @@
 #include "termcolor.h"
 #include "timer.h"
 
-#include "materials/simple_material.h"
 #include "geometry/cylinder.h"
 
 using namespace std;
@@ -133,6 +132,9 @@ namespace qbox {
         }
         
         clocks.start(clock_name::looping);
+        if (prevE)
+            *prevE = Ez;
+
         for (int i=1; i<Nx-1; i++) {
 #pragma GCC ivdep
             for (int j=1; j<Ny-1; j++) {
@@ -180,6 +182,7 @@ namespace qbox {
 
         if (total) 
             total->updateH(this);
+
         clocks.stop(clock_name::looping);
         
     }
@@ -195,6 +198,9 @@ namespace qbox {
         auto new_P = polarization(grid, mat);
         new_P.insert_object(new_object);
         P_debye.push_back(new_P);
+
+        if (!prevE)
+            prevE = make_unique<tensor>(Nx,Ny);
     }
 
     void Field2D::add_source(source &new_source) {
