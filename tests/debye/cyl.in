@@ -1,0 +1,3 @@
+'eps.txt',200   !  eps data set and no. points in it.
+20.   ! radius
+'mie.out'  ! output sig file
