@@ -4,9 +4,8 @@
 using namespace std;
 
 namespace qbox {
-    drude_polarization::drude_polarization(const grid_properties &grid, const drude &mat): grid(grid), mat(mat) {
+    drude_polarization::drude_polarization(const grid_properties &grid, const drude &mat): polarization(grid), mat(mat) {
         beta = tensor(grid.Nx, grid.Ny);
-        J = tensor(grid.Nx, grid.Ny);
     }
 
     void drude_polarization::insert_object(const object &new_object) {
