@@ -16,7 +16,7 @@ namespace qbox {
 
     private:
         lorentz mat;
-        tensor delta, prevJ;
+        tensor3 delta, prevJ;
     };
 
 }

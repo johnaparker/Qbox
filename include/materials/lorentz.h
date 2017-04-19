@@ -2,16 +2,18 @@
 #define GUARD_lorentz_h
 
 #include "material.h"
+#include "qbox/vec.h"
 
 namespace qbox {
 
     class lorentz: public material {
     public:
+        lorentz(double eps_inf, Array omega_0, Array delta_epsilon, Array gamma);
         lorentz(double eps_inf, double omega_0, double delta_epsilon, double gamma);
 
-        double alpha(double dt) const;
-        double beta(double dt) const;
-        double delta(double dt) const;
+        Array alpha(double dt) const;
+        Array beta(double dt) const;
+        Array delta(double dt) const;
 
         double Ca_prev(double dt) const;
         double Ca(double dt) const override;
@@ -22,11 +24,14 @@ namespace qbox {
         void write(const h5cpp::h5group &group) override;
 
         std::unique_ptr<material> clone() const override;
+
+        int Npoles() const {return omega_0.size();}
+
     private:
         double eps_inf;
-        double omega_0;
-        double delta_epsilon;
-        double gamma;
+        Array omega_0;
+        Array delta_epsilon;
+        Array gamma;
     };
 
 }

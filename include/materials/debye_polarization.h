@@ -16,7 +16,7 @@ namespace qbox {
 
     private:
         debye mat;
-        tensor beta;
+        tensor3 beta;
     };
 
 }

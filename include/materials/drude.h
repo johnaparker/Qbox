@@ -2,15 +2,17 @@
 #define GUARD_drude_h
 
 #include "material.h"
+#include "qbox/vec.h"
 
 namespace qbox {
 
     class drude: public material {
     public:
+        drude(double eps_inf, Array omega_0, Array gamma);
         drude(double eps_inf, double omega_0, double gamma);
 
-        double beta(double dt) const;
-        double kappa(double dt) const;
+        Array beta(double dt) const;
+        Array kappa(double dt) const;
 
         double Ca(double dt) const override;
         double Cb(double dt) const override;
@@ -20,10 +22,13 @@ namespace qbox {
         void write(const h5cpp::h5group &group) override;
 
         std::unique_ptr<material> clone() const override;
+
+        int Npoles() const {return omega_0.size();}
+
     private:
         double eps_inf;
-        double omega_0;
-        double gamma;
+        Array omega_0;
+        Array gamma;
     };
 
 }

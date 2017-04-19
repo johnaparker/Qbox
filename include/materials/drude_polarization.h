@@ -16,7 +16,7 @@ namespace qbox {
 
     private:
         drude mat;
-        tensor beta;
+        tensor3 beta;
     };
 
 }

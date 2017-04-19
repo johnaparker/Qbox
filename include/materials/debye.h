@@ -2,15 +2,17 @@
 #define GUARD_debye_h
 
 #include "material.h"
+#include "qbox/vec.h"
 
 namespace qbox {
 
     class debye: public material {
     public:
+        debye(double eps_inf, Array delta_epsilon, Array tau);
         debye(double eps_inf, double delta_epsilon, double tau);
 
-        double beta(double dt) const;
-        double kappa(double dt) const;
+        Array beta(double dt) const;
+        Array kappa(double dt) const;
 
         double Ca(double dt) const override;
         double Cb(double dt) const override;
@@ -20,10 +22,13 @@ namespace qbox {
         void write(const h5cpp::h5group &group) override;
 
         std::unique_ptr<material> clone() const override;
+
+        int Npoles() const {return delta_epsilon.size();}
+
     private:
         double eps_inf;
-        double delta_epsilon;
-        double tau;
+        Array delta_epsilon;
+        Array tau;
     };
 
 }

@@ -11,15 +11,16 @@ namespace qbox {
 
     class polarization {
     public:
-        polarization(const grid_properties &grid): grid(grid) {
-            J = tensor(grid.Nx, grid.Ny);
+        polarization(const grid_properties &grid, int Npoles): grid(grid), Npoles(Npoles) {
+            J = tensor3(grid.Nx, grid.Ny, Npoles);
         }
         virtual void update_J(Field2D &f) = 0;
         virtual void insert_object(const object &new_object) = 0;
 
     protected:
         grid_properties grid;
-        tensor J;
+        tensor3 J;    // Nx x Ny x Npoles tensor
+        int Npoles;
     };
 
 }
