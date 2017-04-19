@@ -18,6 +18,7 @@ namespace qbox{}
 #include "qbox/materials/debye.h"
 #include "qbox/materials/drude.h"
 #include "qbox/materials/lorentz.h"
+#include "qbox/materials/creation.h"
 
 //monitors
 #include "qbox/monitors/surface_monitor.h"

@@ -24,6 +24,9 @@ namespace qbox {
         std::unique_ptr<material> clone() const override;
 
         int Npoles() const {return delta_epsilon.size();}
+        double get_eps_inf() const { return eps_inf; }
+        Array get_delta_epsilon() const { return delta_epsilon; }
+        Array get_tau() const { return tau; }
 
     private:
         double eps_inf;

@@ -24,6 +24,9 @@ namespace qbox {
         std::unique_ptr<material> clone() const override;
 
         int Npoles() const {return omega_0.size();}
+        double get_eps_inf() const { return eps_inf; }
+        Array get_omega_0() const { return omega_0; }
+        Array get_gamma() const { return gamma; }
 
     private:
         double eps_inf;
