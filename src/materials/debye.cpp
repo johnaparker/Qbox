@@ -6,9 +6,13 @@ using namespace std;
 
 namespace qbox {
 
-    debye::debye(double eps_inf, Array delta_epsilon, Array tau): eps_inf(eps_inf),
+    debye::debye(string name, double eps_inf, Array delta_epsilon, Array tau): material(name, "debye"), 
+                    eps_inf(eps_inf), delta_epsilon(delta_epsilon), tau(tau) {};
+    debye::debye(double eps_inf, Array delta_epsilon, Array tau): material("debye"), eps_inf(eps_inf),
                     delta_epsilon(delta_epsilon), tau(tau) {};
 
+    debye::debye(string name, double eps_inf, double delta_epsilon_val, double tau_val): debye(name, eps_inf,
+            Array::Constant(1,delta_epsilon_val), Array::Constant(1,tau_val)) {};
     debye::debye(double eps_inf, double delta_epsilon_val, double tau_val): debye(eps_inf,
             Array::Constant(1,delta_epsilon_val), Array::Constant(1,tau_val)) {};
 
@@ -16,7 +20,17 @@ namespace qbox {
         return unique_ptr<debye>(new debye(*this));
     }
 
-    void debye::write(const h5cpp::h5group &group) {
+    void debye::write(const h5cpp::h5file &outFile) const {
+        auto group = get_group(outFile);
+
+        auto dset = group.create_dataset("type", h5cpp::dtype::String, h5cpp::dspace(vector<hsize_t>{1}));
+        dset.write(&group_name);
+        dset = group.create_dataset("eps_inf", h5cpp::dtype::Double, h5cpp::dspace(vector<hsize_t>{1}));
+        dset.write(&eps_inf);
+        dset = group.create_dataset("delta_epsilon", h5cpp::dtype::Double, h5cpp::dspace(vector<hsize_t>{Npoles()}));
+        dset.write(delta_epsilon.data());
+        dset = group.create_dataset("tau", h5cpp::dtype::Double, h5cpp::dspace(vector<hsize_t>{Npoles()}));
+        dset.write(tau.data());
     }
 
     Array debye::beta(double dt) const {

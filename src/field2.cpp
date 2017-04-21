@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <vector>
 #include <string>
+#include <algorithm>
 #include "field2.h"
 #include "tfsf.h"
 #include "termcolor.h"
@@ -367,6 +368,13 @@ namespace qbox {
         obj_list.push_back(&new_object);
         new_object.set_owner(this);
 
+        auto mat_name = mat->get_name();
+        if (find(materials_added.begin(), materials_added.end(), mat_name) == materials_added.end()) {
+            materials_added.push_back(mat_name);
+            mat->write(*outFile);
+        }
+
+
         for (int i = 0; i != Nx; i++) {
             for (int j = 0; j != Ny; j++) {
                 ivec pi = {i,j};
@@ -383,8 +391,3 @@ namespace qbox {
     }
 
 }
-
-
-
-
-

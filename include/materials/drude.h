@@ -8,7 +8,10 @@ namespace qbox {
 
     class drude: public material {
     public:
+        drude(std::string name, double eps_inf, Array omega_0, Array gamma);
         drude(double eps_inf, Array omega_0, Array gamma);
+
+        drude(std::string name, double eps_inf, double omega_0, double gamma);
         drude(double eps_inf, double omega_0, double gamma);
 
         Array beta(double dt) const;
@@ -19,7 +22,7 @@ namespace qbox {
         double Da(double dt) const override;
         double Db(double dt) const override;
 
-        void write(const h5cpp::h5group &group) override;
+        void write(const h5cpp::h5file &outFile) const override;
 
         std::unique_ptr<material> clone() const override;
 

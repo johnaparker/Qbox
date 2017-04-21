@@ -87,6 +87,9 @@ namespace qbox {
         std::vector<source*> source_list;
         std::vector<monitor*> monitor_list;
 
+        //list of materials added so far
+        std::vector<std::string> materials_added;
+
         //background medium
         std::unique_ptr<material> background;
 
