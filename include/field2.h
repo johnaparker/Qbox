@@ -105,10 +105,10 @@ namespace qbox {
         //TFSF
         std::unique_ptr<tfsf> total;   //This is nullptr if not in use
 
-        //Polarization auxillary fields
-        std::vector<debye_polarization> P_debye;
-        std::vector<drude_polarization> P_drude;
-        std::vector<lorentz_polarization> P_lorentz;
+        //Polarization auxillary fields, map from material_name -> polarization object
+        std::map<std::string, debye_polarization>   P_debye;
+        std::map<std::string, drude_polarization>   P_drude;
+        std::map<std::string, lorentz_polarization> P_lorentz;
 
         //*** Should be different class to manage IO
         //map of all HDF5 output files
@@ -120,6 +120,21 @@ namespace qbox {
         std::map<std::string, tensor* > field_components;
         timers clocks;
     };
+
+    template <class POL, class MAT>
+    void add_polarization(std::map<std::string,POL> &P_map, const MAT &mat,
+            const object &new_object, const grid_properties &grid) {
+        auto name = mat.get_name();
+        auto iter = P_map.find(name);
+        if (iter == P_map.end()) {
+            auto new_P = POL(grid, mat);
+            new_P.insert_object(new_object);
+            P_map.insert(std::pair<std::string,POL>(name, new_P));
+        }
+        else {
+            iter->second.insert_object(new_object);
+        }
+    }
 
 }
 

@@ -149,13 +149,13 @@ namespace qbox {
         BC->update_E(*this);
 
         for (auto &P : P_debye)
-            P.update_J(*this);
+            P.second.update_J(*this);
 
         for (auto &P : P_drude)
-            P.update_J(*this);
+            P.second.update_J(*this);
 
         for (auto &P : P_lorentz)
-            P.update_J(*this);
+            P.second.update_J(*this);
 
         if (total) 
             total->updateD(this);
@@ -201,36 +201,24 @@ namespace qbox {
     }
 
     void Field2D::add_object(object &new_object, const debye &mat) {
-        //*** only create new polarization if needed
-        //kappa may need to be its own tensor to account for different tau regions
         add_object(new_object, &mat);
-        auto new_P = debye_polarization(grid, mat);
-        new_P.insert_object(new_object);
-        P_debye.push_back(new_P);
+        add_polarization(P_debye, mat, new_object, grid);
 
         if (!prevE)
             prevE = make_unique<tensor>(Nx,Ny);
     }
 
     void Field2D::add_object(object &new_object, const drude &mat) {
-        //*** only create new polarization if needed
-        //kappa may need to be its own tensor to account for different tau regions
         add_object(new_object, &mat);
-        auto new_P = drude_polarization(grid, mat);
-        new_P.insert_object(new_object);
-        P_drude.push_back(new_P);
+        add_polarization(P_drude, mat, new_object, grid);
 
         if (!prevE)
             prevE = make_unique<tensor>(Nx,Ny);
     }
 
     void Field2D::add_object(object &new_object, const lorentz &mat) {
-        //*** only create new polarization if needed
-        //kappa may need to be its own tensor to account for different tau regions
         add_object(new_object, &mat);
-        auto new_P = lorentz_polarization(grid, mat);
-        new_P.insert_object(new_object);
-        P_lorentz.push_back(new_P);
+        add_polarization(P_lorentz, mat, new_object, grid);
 
         if (!prevE)
             prevE = make_unique<tensor>(Nx,Ny);
@@ -389,5 +377,6 @@ namespace qbox {
             }
         }
     }
+
 
 }
