@@ -16,8 +16,7 @@ namespace qbox {
     }
 
     void cylinder::write(const h5cpp::h5group& group) const {
-        auto dspace = h5cpp::dspace(vector<hsize_t>{1});
-        auto dset = group.create_dataset("radius", h5cpp::dtype::Double, dspace);
+        auto dset = group.create_dataset("radius", h5cpp::dtype::Double);
         dset.write(&r);
     }
 

@@ -70,8 +70,7 @@ namespace qbox {
 
         void write(const h5cpp::h5group &group) const {
             write_vec<double,h5cpp::dtype::Double>(group, center, "center");
-            auto dspace = h5cpp::dspace(std::vector<hsize_t>{1});
-            auto dset = group.create_dataset("radius", h5cpp::dtype::Double, dspace);
+            auto dset = group.create_dataset("radius", h5cpp::dtype::Double);
             dset.write(&radius);
         }
 

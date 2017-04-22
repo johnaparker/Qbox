@@ -16,10 +16,9 @@ namespace qbox {
     }
 
     void ellipse::write(const h5cpp::h5group& group) const {
-        auto dspace = h5cpp::dspace(vector<hsize_t>{1});
-        auto dset = group.create_dataset("rx", h5cpp::dtype::Double, dspace);
+        auto dset = group.create_dataset("rx", h5cpp::dtype::Double);
         dset.write(&rx);
-        dset = group.create_dataset("ry", h5cpp::dtype::Double, dspace);
+        dset = group.create_dataset("ry", h5cpp::dtype::Double);
         dset.write(&ry);
     }
 

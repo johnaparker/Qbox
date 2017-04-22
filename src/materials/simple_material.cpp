@@ -17,13 +17,13 @@ namespace qbox {
     void simple_material::write(const h5cpp::h5file &outFile) const {
         auto group = get_group(outFile);
 
-        auto dset = group.create_dataset("type", h5cpp::dtype::String, h5cpp::dspace(vector<hsize_t>{1}));
+        auto dset = group.create_dataset("material_type", h5cpp::dtype::String);
         dset.write(&group_name);
-        dset = group.create_dataset("eps", h5cpp::dtype::Double, h5cpp::dspace(vector<hsize_t>{1}));
+        dset = group.create_dataset("eps", h5cpp::dtype::Double);
         dset.write(&eps);
-        dset = group.create_dataset("mu", h5cpp::dtype::Double, h5cpp::dspace(vector<hsize_t>{1}));
+        dset = group.create_dataset("mu", h5cpp::dtype::Double);
         dset.write(&mu);
-        dset = group.create_dataset("conduc", h5cpp::dtype::Double, h5cpp::dspace(vector<hsize_t>{1}));
+        dset = group.create_dataset("conduc", h5cpp::dtype::Double);
         dset.write(&conduc);
     }
 

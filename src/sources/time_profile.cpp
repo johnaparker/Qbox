@@ -10,12 +10,11 @@ namespace qbox {
     }
 
     void gaussian_time::write(const h5cpp::h5group &group) const {
-        auto dspace = h5cpp::dspace(std::vector<hsize_t>{1});
-        auto dset = group.create_dataset("frequency", h5cpp::dtype::Double, dspace);
+        auto dset = group.create_dataset("frequency", h5cpp::dtype::Double);
         dset.write(&f);
-        dset = group.create_dataset("T0", h5cpp::dtype::Double, dspace);
+        dset = group.create_dataset("T0", h5cpp::dtype::Double);
         dset.write(&T0);
-        dset = group.create_dataset("sig", h5cpp::dtype::Double, dspace);
+        dset = group.create_dataset("sig", h5cpp::dtype::Double);
         dset.write(&sig);
     }
 
@@ -30,8 +29,7 @@ namespace qbox {
     }
 
     void continuous_time::write(const h5cpp::h5group &group) const {
-        auto dspace = h5cpp::dspace(std::vector<hsize_t>{1});
-        auto dset = group.create_dataset("frequency", h5cpp::dtype::Double, dspace);
+        auto dset = group.create_dataset("frequency", h5cpp::dtype::Double);
         dset.write(&f);
     }
 

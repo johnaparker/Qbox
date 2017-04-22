@@ -25,9 +25,9 @@ namespace qbox {
     void drude::write(const h5cpp::h5file &outFile) const {
         auto group = get_group(outFile);
 
-        auto dset = group.create_dataset("type", h5cpp::dtype::String, h5cpp::dspace(vector<hsize_t>{1}));
+        auto dset = group.create_dataset("material_type", h5cpp::dtype::String);
         dset.write(&group_name);
-        dset = group.create_dataset("eps_inf", h5cpp::dtype::Double, h5cpp::dspace(vector<hsize_t>{1}));
+        dset = group.create_dataset("eps_inf", h5cpp::dtype::Double);
         dset.write(&eps_inf);
         dset = group.create_dataset("omega_0", h5cpp::dtype::Double, h5cpp::dspace(vector<hsize_t>{Npoles()}));
         dset.write(omega_0.data());

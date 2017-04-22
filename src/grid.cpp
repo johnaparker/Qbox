@@ -40,23 +40,21 @@ namespace qbox {
     }
 
     void grid_properties::write(const h5cpp::h5group &group) {
-        auto dspace = h5cpp::dspace(vector<hsize_t>{1});
-
-        auto dset = group.create_dataset("Lx", h5cpp::dtype::Double, dspace);
+        auto dset = group.create_dataset("Lx", h5cpp::dtype::Double);
         dset.write(&Lx);
-        dset = group.create_dataset("Ly", h5cpp::dtype::Double, dspace);
+        dset = group.create_dataset("Ly", h5cpp::dtype::Double);
         dset.write(&Ly);
-        dset = group.create_dataset("Nx", h5cpp::dtype::Int, dspace);
+        dset = group.create_dataset("Nx", h5cpp::dtype::Int);
         dset.write(&Nx);
-        dset = group.create_dataset("Ny", h5cpp::dtype::Int, dspace);
+        dset = group.create_dataset("Ny", h5cpp::dtype::Int);
         dset.write(&Ny);
-        dset = group.create_dataset("dx", h5cpp::dtype::Double, dspace);
+        dset = group.create_dataset("dx", h5cpp::dtype::Double);
         dset.write(&dx);
-        dset = group.create_dataset("dt", h5cpp::dtype::Double, dspace);
+        dset = group.create_dataset("dt", h5cpp::dtype::Double);
         dset.write(&dt);
-        dset = group.create_dataset("resolution", h5cpp::dtype::Double, dspace);
+        dset = group.create_dataset("resolution", h5cpp::dtype::Double);
         dset.write(&res);
-        dset = group.create_dataset("pml_thickness", h5cpp::dtype::Int, dspace);
+        dset = group.create_dataset("pml_thickness", h5cpp::dtype::Int);
         dset.write(&pml_thickness);
     }
 
