@@ -361,6 +361,7 @@ namespace qbox {
             materials_added.push_back(mat_name);
             mat->write(*outFile);
         }
+        new_object.write_material(mat);
 
 
         for (int i = 0; i != Nx; i++) {

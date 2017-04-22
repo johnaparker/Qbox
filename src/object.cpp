@@ -2,6 +2,7 @@
 #include <eigen3/Eigen/Geometry>
 #include "math.h"
 #include "field2.h"
+#include "materials/material.h"
 
 using namespace std;
 
@@ -32,15 +33,33 @@ namespace qbox {
         //orientation = rot._transformVector(orientation);
     }
 
-    void object::write() {
+    h5cpp::h5group object::get_group() const {
         string sub_group_name = geometryType->group_name();
         auto gObjects = outFile->create_or_open_group("objects");
         auto gSubObject = gObjects.create_or_open_group(sub_group_name);
         auto my_group = gSubObject.create_or_open_group(name);
+        return my_group;
+    }
+
+    void object::write() const {
+        auto my_group = get_group();
 
         write_vec<double,h5cpp::dtype::Double>(my_group, position, "position");
         write_vec<double,h5cpp::dtype::Double>(my_group, orientation, "orientation");
         geometryType->write(my_group);
+    }
+
+    void object::write_material(const material* mat) const {
+        auto my_group = get_group();
+
+        auto dset = my_group.create_dataset("material", h5cpp::dtype::Reference, h5cpp::dspace(vector<hsize_t>{1}));
+        auto mat_reference = outFile->create_reference(mat->get_group_path()); 
+        dset.write(&mat_reference);
+
+        //auto mat_group = mat->get_group(*outFile);
+        //auto mat_name = mat->get_name();
+        //dset.write(&mat_name);
+
     }
 
     void object::set_owner(Field2D* F) {

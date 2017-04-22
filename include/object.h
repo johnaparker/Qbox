@@ -10,6 +10,7 @@
 namespace qbox {
 
     class Field2D;
+    class material;
 
     class object {
     public:
@@ -21,7 +22,9 @@ namespace qbox {
         void move(const vec& dr);
         void rotate(quat rot);
 
-        void write();
+        h5cpp::h5group get_group() const;
+        void write() const;
+        void write_material(const material* mat) const;
 
         std::unique_ptr<geometry> get_geometry() {return geometryType->clone();}
 

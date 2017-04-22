@@ -17,6 +17,7 @@ namespace qbox {
         virtual double Da(double dt) const = 0;
         virtual double Db(double dt) const = 0;
 
+        std::string get_group_path() const;
         h5cpp::h5group get_group(const h5cpp::h5file &outFile) const;
         virtual void write(const h5cpp::h5file &outFile) const = 0;
 
