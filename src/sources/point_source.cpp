@@ -13,7 +13,7 @@ namespace qbox {
         source("point", tp), C(C), p(p) {};
 
     void point_source::pulse() {
-        static ivec pi = (F->grid).to_grid(p);
+        ivec pi = (F->grid).to_grid(p);
         F->get_field_ref(C)(pi) += tp->response(*t);
     }
 

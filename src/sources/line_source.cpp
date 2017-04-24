@@ -13,7 +13,7 @@ namespace qbox {
         source("line", tp), C(C), surf(surf) {};
 
     void line_source::pulse() {
-        static isurface isurf = (F->grid).to_grid(surf);
+        isurface isurf = (F->grid).to_grid(surf);
         double pulse_amp = tp->response(*t);
 
         for (ivec p = isurf.a; p != isurf.b; p += isurf.tangent)
