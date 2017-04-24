@@ -76,6 +76,15 @@ namespace qbox {
         return result;
     }
 
+    void box_monitor::write_ntff_sphere(double radius, int N) const {
+        ComplexTensor result = ntff_sphere(radius, N);
+
+        auto my_group = get_group();
+        auto dset = write_tensor<complex<double>,2,h5cpp::dtype::Complexd>(my_group, result, "ntff");
+        auto attr = dset.create_attribute("radius", h5cpp::dtype::Double);
+        attr.write(&radius);
+    }
+
     void box_monitor::write_flux_sides() {
         for (int i = 0; i != 4; i++) 
             monitors[i].write_flux();

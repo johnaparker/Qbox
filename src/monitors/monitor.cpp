@@ -22,7 +22,7 @@ namespace qbox {
         freq.write(my_group);
     }
 
-    h5cpp::h5group monitor::get_group() {
+    h5cpp::h5group monitor::get_group() const {
 
         auto gMonitors = outFile->create_or_open_group("monitors");
         auto gSubMonitors = gMonitors.create_or_open_group(sub_name);
@@ -31,7 +31,7 @@ namespace qbox {
         return my_group;
     }
 
-    void monitor::write_flux() {
+    void monitor::write_flux() const {
         auto S = compute_flux();
         auto my_group = get_group();
 

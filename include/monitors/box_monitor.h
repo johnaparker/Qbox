@@ -27,6 +27,7 @@ namespace qbox {
         ComplexTensor ntff_sphere(double radius, int N) const;
 
         void write_flux_sides();  //call write for all surface_monitors
+        void write_ntff_sphere(double radius, int N) const;
 
         void operator-=(const box_monitor& other) {
             for (int i = 0; i != 4; i++)

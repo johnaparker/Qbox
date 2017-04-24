@@ -37,25 +37,32 @@ namespace qbox {
     };
 
     template<class T, h5cpp::dtype M>
-    void write_vec(const h5cpp::h5group &group, const Eigen::Matrix<T,Eigen::Dynamic,1> &p, std::string name) {
+    h5cpp::h5dset write_vec(const h5cpp::h5group &group, const Eigen::Matrix<T,Eigen::Dynamic,1> &p, std::string name) {
         auto dspace = h5cpp::dspace(std::vector<hsize_t>{static_cast<hsize_t>(p.size())});
         auto dset = group.create_dataset(name, M, dspace);
         dset.write(p.data());
+        return dset;
     }
 
     template<class T, h5cpp::dtype M>
-    void write_array(const h5cpp::h5group &group, const Eigen::Array<T,Eigen::Dynamic,1> &p, std::string name) {
+    h5cpp::h5dset write_array(const h5cpp::h5group &group, const Eigen::Array<T,Eigen::Dynamic,1> &p, std::string name) {
         auto dspace = h5cpp::dspace(std::vector<hsize_t>{static_cast<hsize_t>(p.size())});
         auto dset = group.create_dataset(name, M, dspace);
         dset.write(p.data());
-
+        return dset;
     }
 
     template<class T, int RANK, h5cpp::dtype M>
-    void write_array(const h5cpp::h5group &group, const Eigen::Tensor<T,RANK,Eigen::RowMajor> &p, std::string name) {
-        auto dspace = h5cpp::dspace(std::vector<hsize_t>{static_cast<hsize_t>(p.dimensions())});
+    h5cpp::h5dset write_tensor(const h5cpp::h5group &group, const Eigen::Tensor<T,RANK,Eigen::RowMajor> &p, std::string name) {
+
+        std::vector<hsize_t> dims;
+        for (int i = 0; i < RANK; i++)
+            dims.push_back(p.dimensions()[i]);
+
+        auto dspace = h5cpp::dspace(dims);
         auto dset = group.create_dataset(name, M, dspace);
         dset.write(p.data());
+        return dset;
     }
 
     struct cylinder_surface {

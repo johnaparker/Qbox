@@ -25,9 +25,9 @@ namespace qbox {
         virtual void set_F(Field2D *newF);       //set the owning field
         virtual void update() = 0;                //update the DFT values
         virtual Array compute_flux() const = 0;
-        void write_flux();
+        void write_flux() const;
 
-        h5cpp::h5group get_group();
+        h5cpp::h5group get_group() const;
 
         monitor() = default;
         monitor(const monitor&) = default;
