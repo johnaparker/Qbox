@@ -19,8 +19,6 @@ namespace qbox {
     class surface_monitor: public monitor {
 
     public:
-        //*** replace vectors with vol here
-        //various ways to construct. p1,p2 = corners. 
         surface_monitor() = default;
         surface_monitor(std::string name, const surface &surf, const freq_data &freq, bool extendable=false);   //using freq data
         surface_monitor(const surface &surf, const freq_data &freq, bool extendable=false);
@@ -28,6 +26,11 @@ namespace qbox {
         void set_F(Field2D *newF);    //set ownership
         void update();   //update the DFT matrices
         Array compute_flux() const; //compute flux though face
+
+        //equivalent currents
+        ComplexArray ntff(const vec &center, const vec &p) const;
+        //ComplexTensor Jeq() const;
+        //ComplexTensor Meq() const;
 
         void operator-=(const surface_monitor& other) {
             rE -= other.rE;
@@ -39,6 +42,7 @@ namespace qbox {
     private:
         bool extendable;
         surface surf;
+        //*** complex tensor ?
         tensor rE, iE, rH, iH;    //DFT matrices
         Array prevE;             ///< previous electric field values
         int dir;    //orientation

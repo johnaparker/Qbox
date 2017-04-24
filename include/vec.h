@@ -8,15 +8,19 @@
 #include "h5cpp.h"
 #include <vector>
 #include <string>
+#include <complex>
 #include "math.h"
 
 namespace qbox {
 
     using vec = Eigen::Vector2d;
+    using cvec = Eigen::Vector2cd;
     using ivec = Eigen::Vector2i;
     using quat = Eigen::Quaterniond;
     using Array = Eigen::ArrayXd;
+    using ComplexArray = Eigen::ArrayXcd;
     using tensor = Eigen::Tensor<double,2,Eigen::RowMajor>;
+    using ComplexTensor = Eigen::Tensor<std::complex<double>,2,Eigen::RowMajor>;
     using tensor3 = Eigen::Tensor<double,3,Eigen::RowMajor>;
     using tensor4 = Eigen::Tensor<double,4,Eigen::RowMajor>;
 
@@ -133,6 +137,9 @@ namespace qbox {
             write_vec<T,M>(group, b, "p2");
         }
 
+        Eigen::Matrix<T,2,1> center() const {
+            return (a + b)/2;
+        }
 
         surface_template<T,M> get_surface(direction dir) const {
             switch(dir) {

@@ -21,7 +21,10 @@ namespace qbox {
         //same as surface_monitor 
         void set_F(Field2D *newF);
         void update();
-        Array compute_flux() const;
+        Array compute_flux() const override;
+
+        ComplexArray ntff(const vec &p) const;
+        ComplexTensor ntff_sphere(double radius, int N) const;
 
         void write_flux_sides();  //call write for all surface_monitors
 

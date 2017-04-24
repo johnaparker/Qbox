@@ -52,6 +52,30 @@ namespace qbox {
         return S;
     }
 
+    ComplexArray box_monitor::ntff(const vec &p) const {
+        vec center = vol.center();
+        double sign_values[] = {1, 1, -1, -1};
+        ComplexArray result = ComplexArray::Zero(freq.size());
+
+        for (int i = 0; i != 4; i++)
+            result += sign_values[i]*monitors[i].ntff(center, p);
+
+        return result;
+    }
+
+    ComplexTensor box_monitor::ntff_sphere(double radius, int N) const {
+        ComplexTensor result(N, freq.size());
+        Array theta = Array::LinSpaced(N, 0, 2*M_PI);
+
+        for (int i = 0; i < N; i++) {
+            vec p = radius*vec(cos(theta[i]), sin(theta[i]));
+            ComplexArray p_ntff = ntff(p);
+            for (int j = 0; j < freq.size(); j++)
+                result(i,j) = p_ntff(j);
+        }
+        return result;
+    }
+
     void box_monitor::write_flux_sides() {
         for (int i = 0; i != 4; i++) 
             monitors[i].write_flux();

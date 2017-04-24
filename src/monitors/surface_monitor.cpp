@@ -76,6 +76,7 @@ namespace qbox {
         //prevE(length) = F->Ez(isurf.b);
     }
 
+    //*** rename to flux
     Array surface_monitor::compute_flux() const {
         Array S = Array::Zero(freq.size());
 
@@ -86,6 +87,33 @@ namespace qbox {
         }
         S *= F->dx;
         return S;
+    }
+
+    ComplexArray surface_monitor::ntff(const vec &center, const vec &p) const {
+        double r = p.norm();
+        Array omega = 2*M_PI*freq.get_freq();
+        Array k = omega;
+        ComplexArray factor = Eigen::exp(1i*(M_PI/4 - k*r))/Eigen::sqrt(8*r*M_PI*k); 
+        ComplexArray integral = ComplexArray::Zero(freq.size());
+        
+        vec normal = surf.normal;  //*** this needs to be outward normal
+        vec tangent = surf.tangent;
+
+        for (int i = 0; i < length; i++) {
+            vec p_prime = surf.a + tangent*i - center; //*** account for yee grid half-step here
+            double angle = p.dot(tangent);  //*** worry about the sign of tangent here
+            for (int j = 0; j < freq.size(); j++) {
+                auto E = rE(i,j) + 1i*iE(i,j);
+                auto H = rH(i,j) + 1i*iH(i,j);
+
+                auto Jeq_term = omega[j]*H;
+                auto Meq_term = k[j]*H*angle;
+                auto integand = (Jeq_term + Meq_term)*exp(1i*k[j]*p.dot(p_prime)/r);
+                integral[j] += integand; 
+            }
+        }
+
+        return factor*integral;
     }
 
 }

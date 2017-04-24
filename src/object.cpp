@@ -52,7 +52,7 @@ namespace qbox {
     void object::write_material(const material* mat) const {
         auto my_group = get_group();
 
-        auto dset = my_group.create_dataset("material", h5cpp::dtype::Reference, h5cpp::dspace(vector<hsize_t>{1}));
+        auto dset = my_group.create_dataset("material", h5cpp::dtype::Reference);
         auto mat_reference = outFile->create_reference(mat->get_group_path()); 
         dset.write(&mat_reference);
 
