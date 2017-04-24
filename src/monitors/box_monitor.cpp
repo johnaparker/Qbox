@@ -54,11 +54,10 @@ namespace qbox {
 
     ComplexArray box_monitor::ntff(const vec &p) const {
         vec center = vol.center();
-        double sign_values[] = {1, 1, -1, -1};
         ComplexArray result = ComplexArray::Zero(freq.size());
 
         for (int i = 0; i != 4; i++)
-            result += sign_values[i]*monitors[i].ntff(center, p);
+            result += monitors[i].ntff(center, p);
 
         return result;
     }

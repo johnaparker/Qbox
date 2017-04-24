@@ -89,25 +89,30 @@ namespace qbox {
         return S;
     }
 
-    ComplexArray surface_monitor::ntff(const vec &center, const vec &p) const {
+    ComplexArray surface_monitor::ntff(const vec &center, const vec &pc) const {
+        vec p = pc - center;
         double r = p.norm();
         Array omega = 2*M_PI*freq.get_freq();
         Array k = omega;
         ComplexArray factor = Eigen::exp(1i*(M_PI/4 - k*r))/Eigen::sqrt(8*r*M_PI*k); 
         ComplexArray integral = ComplexArray::Zero(freq.size());
         
-        vec normal = surf.normal;  //*** this needs to be outward normal
+
         vec tangent = surf.tangent;
+        vec normal = surf.normal;  //*** this needs to be outward normal
+
+        double Jsgn = tangent.dot(vec(1,1));
+        double Msgn = tangent.dot(vec(-1,1));
 
         for (int i = 0; i < length; i++) {
-            vec p_prime = surf.a + tangent*i - center; //*** account for yee grid half-step here
-            double angle = p.dot(tangent);  //*** worry about the sign of tangent here
+            vec p_prime = surf.a + tangent*i*F->dx - center; //*** account for yee grid half-step here
+            double angle = p.dot(normal)/r;  //*** worry about the sign of tangent here
             for (int j = 0; j < freq.size(); j++) {
                 auto E = rE(i,j) + 1i*iE(i,j);
                 auto H = rH(i,j) + 1i*iH(i,j);
 
-                auto Jeq_term = omega[j]*H;
-                auto Meq_term = k[j]*H*angle;
+                auto Jeq_term = Jsgn*omega[j]*H;
+                auto Meq_term = Msgn*k[j]*E*angle;
                 auto integand = (Jeq_term + Meq_term)*exp(1i*k[j]*p.dot(p_prime)/r);
                 integral[j] += integand; 
             }
@@ -117,5 +122,3 @@ namespace qbox {
     }
 
 }
-
-
