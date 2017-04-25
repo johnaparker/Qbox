@@ -196,7 +196,38 @@ namespace qbox {
         
     }
 
+    void Field2D::update_material_grid(const material &mat) {
+        for (int i = 0; i < Nx; i++) {
+            for (int j = 0; j < Ny; j++) {
+                Ca(i,j) = background->Ca(dt); 
+                Cb(i,j) = background->Cb(dt); 
+                Da(i,j) = background->Da(dt); 
+                Db(i,j) = background->Db(dt); 
+            }
+        }
+        for (auto obj_ptr : dynamic_objects) {
+            for (int i = 0; i < Nx; i++) {
+                for (int j = 0; j < Ny; j++) {
+                    ivec pi = {i,j};
+                    vec p = grid.to_real(pi);
+
+                    if (obj_ptr->inside(p)) {
+                        Ca(pi) = mat.Ca(dt); 
+                        Cb(pi) = mat.Cb(dt); 
+                        Da(pi) = mat.Da(dt); 
+                        Db(pi) = mat.Db(dt); 
+                    }
+                }
+            }
+        }
+    }
+
+
     void Field2D::add_object(object &new_object, const simple_material &mat) {
+        add_object(new_object, &mat);
+    }
+
+    void Field2D::add_object(dynamic_object &new_object, const simple_material &mat) {
         add_object(new_object, &mat);
     }
 
@@ -236,11 +267,23 @@ namespace qbox {
         monitor_list.push_back(&new_monitor);
     } 
 
+    void Field2D::clear_monitors() {
+        monitor_list.clear();
+    }
+
+    void Field2D::clear_fields() {
+        t = 0;
+        tStep = 0;
+        Ez = 0*Ez; 
+        Hx = 0*Ez; 
+        Hy = 0*Ez; 
+    }
+
     void Field2D::set_tfsf(const volume& vol, const time_profile& tp) {
         total = make_unique<tfsf>(grid, tp, vol, dt);
-        auto sources_group = outFile->create_or_open_group("sources");
-        auto group = sources_group.create_or_open_group("tfsf");
-        total->write(group);
+        //auto sources_group = outFile->create_or_open_group("sources");
+        //auto group = sources_group.create_or_open_group("tfsf");
+        //total->write(group);
     }
 
     void Field2D::set_tfsf_freq(const freq_data &freq) {
@@ -379,5 +422,31 @@ namespace qbox {
         }
     }
 
+    void Field2D::add_object(dynamic_object &new_object, const material* mat) {
+        dynamic_objects.push_back(&new_object);
+        new_object.set_owner(this);
+
+        auto mat_name = mat->get_name();
+        if (find(materials_added.begin(), materials_added.end(), mat_name) == materials_added.end()) {
+            materials_added.push_back(mat_name);
+            mat->write(*outFile);
+        }
+        new_object.write_material(mat);
+
+
+        for (int i = 0; i != Nx; i++) {
+            for (int j = 0; j != Ny; j++) {
+                ivec pi = {i,j};
+                vec p = grid.to_real(pi);
+
+                if (new_object.inside(p)) {
+                    Ca(pi) = mat->Ca(dt); 
+                    Cb(pi) = mat->Cb(dt); 
+                    Da(pi) = mat->Da(dt); 
+                    Db(pi) = mat->Db(dt); 
+                }
+            }
+        }
+    }
 
 }

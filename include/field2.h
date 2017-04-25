@@ -11,6 +11,7 @@
 #include <memory>
 #include "sources/source.h"
 #include "object.h"
+#include "dynamic_object.h"
 #include "geometry/geometry.h"
 #include "monitors/monitor.h"
 #include "pml.h"
@@ -39,14 +40,19 @@ namespace qbox {
         Field2D(grid_properties grid, std::string filename = "");
         void display_info();   //print basic info about system
         void update();         //update the fields for a single time step; also time steps sources/monitors
+        void update_material_grid(const material &mat);
         
         //Add objects, sources, and monitors. These are all polymorphic classes
+        void add_object(dynamic_object &new_object, const simple_material &mat);
         void add_object(object &new_object, const simple_material &mat);
         void add_object(object &new_object, const debye &mat);
         void add_object(object &new_object, const drude &mat);
         void add_object(object &new_object, const lorentz &mat);
         void add_source(source &new_source);
         void add_monitor(monitor &new_monitor);
+        void clear_monitors();
+        void clear_fields();
+        void reset_tfsf();
 
         void set_tfsf(const volume& vol, const time_profile& tp);
         void set_tfsf_freq(const freq_data &freq);
@@ -69,6 +75,7 @@ namespace qbox {
     private:
         void create_fields_dataset(fields field);
         void add_object(object &new_object, const material* mat);
+        void add_object(dynamic_object &new_object, const material* mat);
 
     public:
         //Grid properties (some reduntant)
@@ -84,6 +91,7 @@ namespace qbox {
 
         //Objects, sources, and monitors. These are all polymorphic classes
         std::vector<object*> obj_list;
+        std::vector<dynamic_object*> dynamic_objects;
         std::vector<source*> source_list;
         std::vector<monitor*> monitor_list;
 

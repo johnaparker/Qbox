@@ -27,6 +27,8 @@ namespace qbox {
 
         rE = tensor3(Nx, Ny, Nfreq);
         iE = tensor3(Nx, Ny, Nfreq);
+        rE.setConstant(0);
+        iE.setConstant(0);
 
         auto group = get_group();
         vol.write(group);
