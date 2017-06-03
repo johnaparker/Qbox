@@ -40,6 +40,9 @@ file(GLOB MONITORS_HEADERS "include/monitors/*.h")
 file(GLOB GEOMETRY_HEADERS "include/geometry/*.h")
 file(GLOB MATERIALS_HEADERS "include/materials/*.h")
 file(GLOB SOURCES_HEADERS "include/sources/*.h")
+
+#CmakeTools Helper
+include(CMakeToolsHelpers OPTIONAL)
  
 #Generate the shared library from the sources
 add_library(qbox SHARED ${SOURCES})
