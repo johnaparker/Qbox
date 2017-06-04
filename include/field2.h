@@ -19,13 +19,9 @@
 #include "vec.h"
 #include "h5cpp.h"
 #include "grid.h"
-#include "materials/simple_material.h"
 
-#include "materials/debye.h"
 #include "materials/debye_polarization.h"
-#include "materials/drude.h"
 #include "materials/drude_polarization.h"
-#include "materials/lorentz.h"
 #include "materials/lorentz_polarization.h"
 
 namespace qbox {
@@ -41,10 +37,7 @@ namespace qbox {
         void update();         //update the fields for a single time step; also time steps sources/monitors
         
         //Add objects, sources, and monitors. These are all polymorphic classes
-        void add_object(object &new_object, const simple_material &mat);
-        void add_object(object &new_object, const debye &mat);
-        void add_object(object &new_object, const drude &mat);
-        void add_object(object &new_object, const lorentz &mat);
+        void add_object(object &new_object);
         void add_source(source &new_source);
         void add_monitor(monitor &new_monitor);
 
@@ -68,7 +61,7 @@ namespace qbox {
 
     private:
         void create_fields_dataset(fields field);
-        void add_object(object &new_object, const material* mat);
+        void add_object(object &new_object, const material& mat);
 
     public:
         //Grid properties (some reduntant)

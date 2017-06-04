@@ -196,34 +196,38 @@ namespace qbox {
         
     }
 
-    void Field2D::add_object(object &new_object, const simple_material &mat) {
-        add_object(new_object, &mat);
-    }
+    void Field2D::add_object(object &new_object) {
+        material_variant m = new_object.get_material();
 
-    void Field2D::add_object(object &new_object, const debye &mat) {
-        add_object(new_object, &mat);
-        add_polarization(P_debye, mat, new_object, grid);
+        visit([this,&new_object](auto&& arg) {
 
-        if (!prevE)
-            prevE = make_unique<tensor>(Nx,Ny);
-    }
+            using T = decay_t<decltype(arg)>;
+            this->add_object(new_object, arg);
 
-    void Field2D::add_object(object &new_object, const drude &mat) {
-        add_object(new_object, &mat);
-        add_polarization(P_drude, mat, new_object, grid);
+            if constexpr (is_same<T, debye>::value) {
+                add_polarization(P_debye, arg, new_object, grid);
+                if (!prevE)
+                    prevE = make_unique<tensor>(Nx,Ny);
+            }
 
-        if (!prevE)
-            prevE = make_unique<tensor>(Nx,Ny);
-    }
+            else if constexpr (is_same<T, drude>::value) {
+                add_polarization(P_drude, arg, new_object, grid);
+                if (!prevE)
+                    prevE = make_unique<tensor>(Nx,Ny);
+            }
 
-    void Field2D::add_object(object &new_object, const lorentz &mat) {
-        add_object(new_object, &mat);
-        add_polarization(P_lorentz, mat, new_object, grid);
+            else if constexpr (is_same<T, lorentz>::value) {
+                add_polarization(P_lorentz, arg, new_object, grid);
+                if (!prevE)
+                    prevE = make_unique<tensor>(Nx,Ny);
+                if (!prev2E)
+                    prev2E = make_unique<tensor>(Nx,Ny);
+            }
 
-        if (!prevE)
-            prevE = make_unique<tensor>(Nx,Ny);
-        if (!prev2E)
-            prev2E = make_unique<tensor>(Nx,Ny);
+            else if constexpr (is_same<T, simple_material>::value) {
+
+            }
+        }, m);
     }
 
     void Field2D::add_source(source &new_source) {
@@ -352,17 +356,15 @@ namespace qbox {
         }
     }
 
-    void Field2D::add_object(object &new_object, const material* mat) {
-        obj_list.push_back(&new_object);
-        new_object.set_owner(this);
-
-        auto mat_name = mat->get_name();
+    void Field2D::add_object(object &new_object, const material& mat) {
+        auto mat_name = mat.get_name();
         if (find(materials_added.begin(), materials_added.end(), mat_name) == materials_added.end()) {
             materials_added.push_back(mat_name);
-            mat->write(*outFile);
+            mat.write(*outFile);
         }
-        new_object.write_material(mat);
-
+        
+        obj_list.push_back(&new_object);
+        new_object.set_owner(this);
 
         for (int i = 0; i != Nx; i++) {
             for (int j = 0; j != Ny; j++) {
@@ -370,10 +372,10 @@ namespace qbox {
                 vec p = grid.to_real(pi);
 
                 if (new_object.inside(p)) {
-                    Ca(pi) = mat->Ca(dt); 
-                    Cb(pi) = mat->Cb(dt); 
-                    Da(pi) = mat->Da(dt); 
-                    Db(pi) = mat->Db(dt); 
+                    Ca(pi) = mat.Ca(dt); 
+                    Cb(pi) = mat.Cb(dt); 
+                    Da(pi) = mat.Da(dt); 
+                    Db(pi) = mat.Db(dt); 
                 }
             }
         }
