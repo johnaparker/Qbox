@@ -55,7 +55,6 @@ namespace qbox {
 
         auto dset = my_group.create_dataset("material", h5cpp::dtype::Reference);
         auto group_path = visit([this](auto&& arg)->string{return arg.get_group_path();}, mat);
-        cout << group_path << endl;
         auto mat_reference = outFile->create_reference(group_path); 
         dset.write(&mat_reference);
         //auto mat_group = mat->get_group(*outFile);
