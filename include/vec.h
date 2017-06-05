@@ -38,6 +38,21 @@ namespace qbox {
         Hy
     };
 
+    //automatic type-deduction of dtype
+    //struct get_dtype {
+      //constexpr h5cpp::dtype operator()(int) const { return h5cpp::dtype::Double; }
+      //constexpr h5cpp::dtype operator()(double) const { return h5cpp::dtype::Int; }
+    //};
+
+    //template<class T>
+    //struct TypeToObjectType;
+
+    //template<>
+    //struct TypeToObjectType<double> {
+        //typedef Double type;
+    //};
+
+
     template<class T, h5cpp::dtype M>
     h5cpp::h5dset write_vec(const h5cpp::h5group &group, const Eigen::Matrix<T,Eigen::Dynamic,1> &p, std::string name) {
         auto dspace = h5cpp::dspace(std::vector<hsize_t>{static_cast<hsize_t>(p.size())});

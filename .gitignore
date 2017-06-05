@@ -4,6 +4,7 @@
 //out files
 *.out
 *.dat
+*.h5
 
 //object files
 *.o
@@ -28,5 +29,8 @@ docs/latex
 //output directories
 post/output
 
-*.gch
+//other directories
+bench/
 
+*.gch
+*.json

@@ -10,11 +10,11 @@ namespace qbox {
 
     int object::num_created = 0;
 
-    object::object(string name, const geometry& geometryType, vec position, vec orientation): 
-                  name(name), geometryType(geometryType.clone()), position(position), orientation(orientation) {}
+    object::object(string name, const geometry& geometryType, const material_variant &mat, vec position, vec orientation): 
+                  name(name), geometryType(geometryType.clone()), mat(mat), position(position), orientation(orientation) {}
 
-    object::object(const geometry& geometryType, vec position, vec orientation): 
-                  object("object_" + to_string(num_created), geometryType, position, orientation) {num_created++;}
+    object::object(const geometry& geometryType, const material_variant &mat, vec position, vec orientation): 
+                  object("object_" + to_string(num_created), geometryType, mat, position, orientation) {num_created++;}
 
     bool object::inside(const vec& v) const {
         double theta = atan2(orientation(1), orientation(0)) - M_PI/2;
@@ -47,19 +47,19 @@ namespace qbox {
         write_vec<double,h5cpp::dtype::Double>(my_group, position, "position");
         write_vec<double,h5cpp::dtype::Double>(my_group, orientation, "orientation");
         geometryType->write(my_group);
+        write_material();
     }
 
-    void object::write_material(const material* mat) const {
+    void object::write_material() const {
         auto my_group = get_group();
 
         auto dset = my_group.create_dataset("material", h5cpp::dtype::Reference);
-        auto mat_reference = outFile->create_reference(mat->get_group_path()); 
+        auto group_path = visit([this](auto&& arg)->string{return arg.get_group_path();}, mat);
+        auto mat_reference = outFile->create_reference(group_path); 
         dset.write(&mat_reference);
-
         //auto mat_group = mat->get_group(*outFile);
         //auto mat_name = mat->get_name();
         //dset.write(&mat_name);
-
     }
 
     void object::set_owner(Field2D* F) {

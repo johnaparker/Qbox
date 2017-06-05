@@ -10,11 +10,11 @@ namespace qbox {
 
     int dynamic_object::num_created = 0;
 
-    dynamic_object::dynamic_object(string name, const geometry& geometryType, vec position, double theta): 
-                  name(name), geometryType(geometryType.clone()), position(position), theta(theta) {}
+    dynamic_object::dynamic_object(string name, const geometry& geometryType, const material_variant& mat, vec position, double theta): 
+                  name(name), geometryType(geometryType.clone()), mat(mat), position(position), theta(theta) {}
 
-    dynamic_object::dynamic_object(const geometry& geometryType, vec position, double theta): 
-                  dynamic_object("object_" + to_string(num_created), geometryType, position, theta) {num_created++;}
+    dynamic_object::dynamic_object(const geometry& geometryType, const material_variant& mat, vec position, double theta): 
+                  dynamic_object("object_" + to_string(num_created), geometryType, mat, position, theta) {num_created++;}
 
     bool dynamic_object::inside(const vec& v) const {
         auto R = Eigen::Rotation2Dd(theta).inverse();
@@ -54,19 +54,19 @@ namespace qbox {
         write_vec<double,h5cpp::dtype::Double>(my_group, position, "position");
         //write_vec<double,h5cpp::dtype::Double>(my_group, orientation, "orientation");
         geometryType->write(my_group);
+        write_material();
     }
 
-    void dynamic_object::write_material(const material* mat) const {
+    void dynamic_object::write_material() const {
         auto my_group = get_group();
 
         auto dset = my_group.create_dataset("material", h5cpp::dtype::Reference);
-        auto mat_reference = outFile->create_reference(mat->get_group_path()); 
+        auto group_path = visit([this](auto&& arg)->string{return arg.get_group_path();}, mat);
+        auto mat_reference = outFile->create_reference(group_path); 
         dset.write(&mat_reference);
-
         //auto mat_group = mat->get_group(*outFile);
         //auto mat_name = mat->get_name();
         //dset.write(&mat_name);
-
     }
 
     void dynamic_object::set_owner(Field2D* F) {

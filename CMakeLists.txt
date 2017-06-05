@@ -4,10 +4,10 @@ project(Qbox)
 enable_testing()
  
 #Compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "RELEASE")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -O3 -fopt-info-vec-optimized -ftree-vectorize")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fopt-info-vec-optimized -ftree-vectorize")
 elseif(${CMAKE_BUILD_TYPE} STREQUAL "DEBUG")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g -Og")
 endif()
@@ -40,6 +40,9 @@ file(GLOB MONITORS_HEADERS "include/monitors/*.h")
 file(GLOB GEOMETRY_HEADERS "include/geometry/*.h")
 file(GLOB MATERIALS_HEADERS "include/materials/*.h")
 file(GLOB SOURCES_HEADERS "include/sources/*.h")
+
+#CmakeTools Helper
+include(CMakeToolsHelpers OPTIONAL)
  
 #Generate the shared library from the sources
 add_library(qbox SHARED ${SOURCES})
