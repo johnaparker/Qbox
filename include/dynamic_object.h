@@ -32,6 +32,9 @@ namespace qbox {
 
         std::unique_ptr<geometry> get_geometry() {return geometryType->clone();}
         material_variant get_material() const {return mat;}
+        std::unique_ptr<material> get_material_base() const {
+            return std::visit([](auto&& arg){return arg.clone();}, mat);
+        }
 
         void set_owner(Field2D* F);
 

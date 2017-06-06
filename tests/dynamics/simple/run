@@ -1,0 +1,5 @@
+#!/bin/bash
+
+g++ -std=c++17 -I/home/john/projects/Qbox/include /home/john/projects/Qbox/build/libqbox.so moving.cpp -lhdf5 -lh5cpp \
+&& ./a.out \
+&& python animation.py

@@ -36,7 +36,7 @@ namespace qbox {
         Field2D(grid_properties grid, std::string filename = "");
         void display_info();   //print basic info about system
         void update();         //update the fields for a single time step; also time steps sources/monitors
-        void update_material_grid(const material &mat);
+        void update_material_grid();
         
         //Add objects, sources, and monitors. These are all polymorphic classes
         void add_object(dynamic_object &new_object);
