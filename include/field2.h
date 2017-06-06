@@ -9,6 +9,7 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <optional>
 #include "sources/source.h"
 #include "object.h"
 #include "dynamic_object.h"
@@ -101,11 +102,11 @@ namespace qbox {
         //PML + Auxillary fields
         std::unique_ptr<pml> BC;
         Array khdx, khdy, kedx, kedy;     //scaling factors for pml
-        std::unique_ptr<tensor> prevE = nullptr;
-        std::unique_ptr<tensor> prev2E = nullptr;
+        std::optional<tensor> prevE;
+        std::optional<tensor> prev2E;
 
         //TFSF
-        std::unique_ptr<tfsf> total;   //This is nullptr if not in use
+        std::optional<tfsf> total;   //This is nullptr if not in use
 
         //Polarization auxillary fields, map from material_name -> polarization object
         std::map<std::string, debye_polarization>   P_debye;

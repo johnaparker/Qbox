@@ -46,8 +46,6 @@ namespace qbox {
         BC = make_unique<pml>(grid); 
         BC->set_scaling_factors(kedx, khdx, kedy, khdy);
 
-        total = nullptr;
-
         field_components = {{"Ez", &Ez}, {"Hx", &Hx}, {"Hy", &Hy}};
 
         if (!filename.empty()) {
@@ -134,9 +132,9 @@ namespace qbox {
         
         clocks.start(clock_name::looping);
         if (prev2E)
-            *prev2E = *prevE;
+            prev2E = prevE;
         if (prevE)
-            *prevE = Ez;
+            prevE = Ez;
 
         for (int i=1; i<Nx-1; i++) {
 #pragma GCC ivdep
@@ -245,21 +243,21 @@ namespace qbox {
             if constexpr (is_same<T, debye>::value) {
                 add_polarization(P_debye, arg, new_object, grid);
                 if (!prevE)
-                    prevE = make_unique<tensor>(Nx,Ny);
+                    prevE = tensor(Nx,Ny);
             }
 
             else if constexpr (is_same<T, drude>::value) {
                 add_polarization(P_drude, arg, new_object, grid);
                 if (!prevE)
-                    prevE = make_unique<tensor>(Nx,Ny);
+                    prevE = tensor(Nx,Ny);
             }
 
             else if constexpr (is_same<T, lorentz>::value) {
                 add_polarization(P_lorentz, arg, new_object, grid);
                 if (!prevE)
-                    prevE = make_unique<tensor>(Nx,Ny);
+                    prevE = tensor(Nx,Ny);
                 if (!prev2E)
-                    prev2E = make_unique<tensor>(Nx,Ny);
+                    prev2E = tensor(Nx,Ny);
             }
 
             else if constexpr (is_same<T, simple_material>::value) {
@@ -291,7 +289,7 @@ namespace qbox {
     }
 
     void Field2D::set_tfsf(const volume& vol, const time_profile& tp) {
-        total = make_unique<tfsf>(grid, tp, vol, dt);
+        total = tfsf(grid, tp, vol, dt);
         //auto sources_group = outFile->create_or_open_group("sources");
         //auto group = sources_group.create_or_open_group("tfsf");
         //total->write(group);
@@ -310,6 +308,7 @@ namespace qbox {
         if (total) {
             auto sources_group = outFile->create_or_open_group("sources");
             auto group = sources_group.create_or_open_group("tfsf");
+            total->write(group);
             Array S = total->compute_flux();
             write_array<double, h5cpp::dtype::Double>(group,S,"flux");
         }
