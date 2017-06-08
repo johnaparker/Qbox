@@ -23,9 +23,10 @@ namespace qbox {
         t = 0;
         tStep = 0;
         dt = grid.dt;
-        Ez = tensor(Nx,Ny); 
-        Hx = tensor(Nx,Ny);
-        Hy = tensor(Nx,Ny);
+        Ez = tensor(Nx,Ny); Ez.setZero(); 
+        Hx = tensor(Nx,Ny); Hx.setZero();
+        Hy = tensor(Nx,Ny); Hy.setZero();
+        
         Ca = tensor(Nx,Ny);
         Cb = tensor(Nx,Ny);
         Da = tensor(Nx,Ny);
@@ -33,8 +34,8 @@ namespace qbox {
 
         background = make_unique<simple_material>(1);
 
-        for (int i = 0; i != Nx; i++) {
-            for (int j = 0; j != Ny; j++) {
+        for (int i = 0; i < Nx; i++) {
+            for (int j = 0; j < Ny; j++) {
                 //*** this kind of loop needs to be its own function since add_object uses the same code
                 Ca(i,j) = background->Ca(dt); 
                 Cb(i,j) = background->Cb(dt); 
@@ -243,25 +244,22 @@ namespace qbox {
             if constexpr (is_same<T, debye>::value) {
                 add_polarization(P_debye, arg, new_object, grid);
                 if (!prevE)
-                    prevE = tensor(Nx,Ny);
+                    prevE = Ez;
             }
-
             else if constexpr (is_same<T, drude>::value) {
                 add_polarization(P_drude, arg, new_object, grid);
                 if (!prevE)
-                    prevE = tensor(Nx,Ny);
+                    prevE = Ez;
             }
-
             else if constexpr (is_same<T, lorentz>::value) {
                 add_polarization(P_lorentz, arg, new_object, grid);
                 if (!prevE)
-                    prevE = tensor(Nx,Ny);
+                    prevE = Ez;
                 if (!prev2E)
-                    prev2E = tensor(Nx,Ny);
+                    prevE = Ez;
             }
-
             else if constexpr (is_same<T, simple_material>::value) {
-
+                // Do nothing?
             }
         }, m);
     }

@@ -5,7 +5,7 @@ using namespace std;
 
 namespace qbox {
     debye_polarization::debye_polarization(const grid_properties &grid, const debye &mat): polarization(grid, mat.Npoles()), mat(mat) {
-        beta = tensor3(grid.Nx, grid.Ny, Npoles);
+        beta = tensor3(grid.Nx, grid.Ny, Npoles); beta.setZero();
     }
 
     void debye_polarization::insert_object(const object &new_object) {

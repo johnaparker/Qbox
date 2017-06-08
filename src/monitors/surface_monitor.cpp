@@ -22,10 +22,10 @@ namespace qbox {
         length = isurf.dim.norm();
 
         prevE = Array::Zero(length);
-        rE = tensor(length, freq.size());
-        iE = tensor(length, freq.size());
-        rH = tensor(length, freq.size());
-        iH = tensor(length, freq.size());
+        rE = tensor(length, freq.size()); rE.setZero();
+        iE = tensor(length, freq.size()); iE.setZero();
+        rH = tensor(length, freq.size()); rH.setZero();
+        iH = tensor(length, freq.size()); iH.setZero();
 
         auto group = get_group();
         surf.write(group);

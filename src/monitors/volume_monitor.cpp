@@ -25,10 +25,8 @@ namespace qbox {
         Nx = ivol.dim(0) + 1;
         Ny = ivol.dim(1) + 1;
 
-        rE = tensor3(Nx, Ny, Nfreq);
-        iE = tensor3(Nx, Ny, Nfreq);
-        rE.setConstant(0);
-        iE.setConstant(0);
+        rE = tensor3(Nx, Ny, Nfreq); rE.setZero();
+        iE = tensor3(Nx, Ny, Nfreq); iE.setZero();
 
         auto group = get_group();
         vol.write(group);

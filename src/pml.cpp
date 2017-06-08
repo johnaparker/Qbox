@@ -48,15 +48,15 @@ namespace qbox {
             }
 
             // iniaitialize all 2-d arrays for pml
-            psi_Ezx1 = tensor(grid.pml_thickness+1, grid.Ny);
-            psi_Ezx2 = tensor(grid.pml_thickness+1, grid.Ny);
-            psi_Hyx1 = tensor(grid.pml_thickness+1, grid.Ny);
-            psi_Hyx2 = tensor(grid.pml_thickness+1, grid.Ny);
+            psi_Ezx1 = tensor(grid.pml_thickness+1, grid.Ny); psi_Ezx1.setZero();
+            psi_Ezx2 = tensor(grid.pml_thickness+1, grid.Ny); psi_Ezx2.setZero();
+            psi_Hyx1 = tensor(grid.pml_thickness+1, grid.Ny); psi_Hyx1.setZero();
+            psi_Hyx2 = tensor(grid.pml_thickness+1, grid.Ny); psi_Hyx2.setZero();
 
-            psi_Ezy1 = tensor(grid.Nx, grid.pml_thickness+1);
-            psi_Ezy2 = tensor(grid.Nx, grid.pml_thickness+1);
-            psi_Hxy1 = tensor(grid.Nx, grid.pml_thickness+1);
-            psi_Hxy2 = tensor(grid.Nx, grid.pml_thickness+1);
+            psi_Ezy1 = tensor(grid.Nx, grid.pml_thickness+1); psi_Ezy1.setZero();
+            psi_Ezy2 = tensor(grid.Nx, grid.pml_thickness+1); psi_Ezy2.setZero();
+            psi_Hxy1 = tensor(grid.Nx, grid.pml_thickness+1); psi_Hxy1.setZero();
+            psi_Hxy2 = tensor(grid.Nx, grid.pml_thickness+1); psi_Hxy2.setZero();
 
         }
 

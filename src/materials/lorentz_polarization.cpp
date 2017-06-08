@@ -5,8 +5,8 @@ using namespace std;
 
 namespace qbox {
     lorentz_polarization::lorentz_polarization(const grid_properties &grid, const lorentz &mat): polarization(grid, mat.Npoles()), mat(mat) {
-        delta = tensor3(grid.Nx, grid.Ny, Npoles);
-        prevJ = tensor3(grid.Nx, grid.Ny, Npoles);
+        delta = tensor3(grid.Nx, grid.Ny, Npoles); delta.setZero();
+        prevJ = tensor3(grid.Nx, grid.Ny, Npoles); prevJ.setZero();
     }
 
     void lorentz_polarization::insert_object(const object &new_object) {
