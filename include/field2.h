@@ -71,6 +71,7 @@ namespace qbox {
     private:
         void create_fields_dataset(fields field);
         void add_object(object &new_object, const material& mat);
+        void update_object_material_grid(const object &obj);    ///< update material grid points for a given object
 
     public:
         //Grid properties (some reduntant)

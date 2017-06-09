@@ -191,20 +191,7 @@ namespace qbox {
         clear_materials();
         
         for (auto obj_ptr : obj_list) {
-            auto mat = obj_ptr->get_material_base();
-            for (int i = 0; i < Nx; i++) {
-                for (int j = 0; j < Ny; j++) {
-                    ivec pi = {i,j};
-                    vec p = grid.to_real(pi);
-
-                    if (obj_ptr->inside(p)) {
-                        Ca(pi) = mat->Ca(dt); 
-                        Cb(pi) = mat->Cb(dt); 
-                        Da(pi) = mat->Da(dt); 
-                        Db(pi) = mat->Db(dt); 
-                    }
-                }
-            }
+            update_object_material_grid(*obj_ptr);
         }
     }
 
@@ -399,16 +386,21 @@ namespace qbox {
         obj_list.push_back(&new_object);
         new_object.set_owner(this);
 
+        update_object_material_grid(new_object);
+    }
+
+    void Field2D::update_object_material_grid(const object &obj) {
+        auto mat = obj.get_material_base();
         for (int i = 0; i < Nx; i++) {
             for (int j = 0; j < Ny; j++) {
                 ivec pi = {i,j};
                 vec p = grid.to_real(pi);
 
-                if (new_object.inside(p)) {
-                    Ca(pi) = mat.Ca(dt); 
-                    Cb(pi) = mat.Cb(dt); 
-                    Da(pi) = mat.Da(dt); 
-                    Db(pi) = mat.Db(dt); 
+                if (obj.inside(p)) {
+                    Ca(pi) = mat->Ca(dt); 
+                    Cb(pi) = mat->Cb(dt); 
+                    Da(pi) = mat->Da(dt); 
+                    Db(pi) = mat->Db(dt); 
                 }
             }
         }
