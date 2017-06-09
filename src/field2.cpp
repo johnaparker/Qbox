@@ -34,15 +34,7 @@ namespace qbox {
 
         background = make_unique<simple_material>(1);
 
-        for (int i = 0; i < Nx; i++) {
-            for (int j = 0; j < Ny; j++) {
-                //*** this kind of loop needs to be its own function since add_object uses the same code
-                Ca(i,j) = background->Ca(dt); 
-                Cb(i,j) = background->Cb(dt); 
-                Da(i,j) = background->Da(dt); 
-                Db(i,j) = background->Db(dt); 
-             }
-        }
+        clear_materials();
 
         BC = make_unique<pml>(grid); 
         BC->set_scaling_factors(kedx, khdx, kedy, khdy);
@@ -196,14 +188,7 @@ namespace qbox {
     }
 
     void Field2D::update_material_grid() {
-        for (int i = 0; i < Nx; i++) {
-            for (int j = 0; j < Ny; j++) {
-                Ca(i,j) = background->Ca(dt); 
-                Cb(i,j) = background->Cb(dt); 
-                Da(i,j) = background->Da(dt); 
-                Db(i,j) = background->Db(dt); 
-            }
-        }
+        clear_materials();
         
         for (auto obj_ptr : dynamic_objects) {
             auto mat = obj_ptr->get_material_base();
@@ -284,6 +269,17 @@ namespace qbox {
         Ez = 0*Ez; 
         Hx = 0*Ez; 
         Hy = 0*Ez; 
+    }
+
+    void Field2D::clear_materials() {
+        for (int i = 0; i < Nx; i++) {
+            for (int j = 0; j < Ny; j++) {
+                Ca(i,j) = background->Ca(dt); 
+                Cb(i,j) = background->Cb(dt); 
+                Da(i,j) = background->Da(dt); 
+                Db(i,j) = background->Db(dt); 
+             }
+        }
     }
 
     void Field2D::set_tfsf(const volume& vol, const time_profile& tp) {

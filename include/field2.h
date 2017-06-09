@@ -45,8 +45,10 @@ namespace qbox {
 
         void add_source(source &new_source);
         void add_monitor(monitor &new_monitor);
+
         void clear_monitors();
         void clear_fields();
+        void clear_materials();          ///< Set all grid points to have material of the background
         void reset_tfsf();
 
         void set_tfsf(const volume& vol, const time_profile& tp);
