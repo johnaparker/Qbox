@@ -52,6 +52,12 @@ namespace qbox {
         //typedef Double type;
     //};
 
+    template<class T, h5cpp::dtype M>
+    h5cpp::h5dset write_scalar(const h5cpp::h5group &group, const T &scalar, std::string name) {
+        auto dset = group.create_dataset(name, M);
+        dset.write(&scalar);
+        return dset;
+    }
 
     template<class T, h5cpp::dtype M>
     h5cpp::h5dset write_vec(const h5cpp::h5group &group, const Eigen::Matrix<T,Eigen::Dynamic,1> &p, std::string name) {

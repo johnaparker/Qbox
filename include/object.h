@@ -22,13 +22,10 @@ namespace qbox {
 
     class object {
     public:
-        object(std::string name, const geometry& geometryType, const material_variant& mat, vec position, vec orientation = vec(0,1));
-        object(const geometry& geometryType, const material_variant& mat, vec position, vec orientation = vec(0,1));
+        object(std::string name, const geometry& geometryType, const material_variant& mat, vec position, double theta = 0);
+        object(const geometry& geometryType, const material_variant& mat, vec position, double theta = 0);
 
         bool inside(const vec& p) const;
-
-        void move(const vec& dr);
-        void rotate(quat rot);
 
         h5cpp::h5group get_group() const;
         void write() const;
@@ -45,7 +42,7 @@ namespace qbox {
         std::unique_ptr<geometry> geometryType;
         material_variant mat;
         vec position;
-        vec orientation;
+        double theta;
 
         std::unique_ptr<h5cpp::h5file> outFile = nullptr;
 

@@ -10,27 +10,18 @@ namespace qbox {
 
     int object::num_created = 0;
 
-    object::object(string name, const geometry& geometryType, const material_variant &mat, vec position, vec orientation): 
-                  name(name), geometryType(geometryType.clone()), mat(mat), position(position), orientation(orientation) {}
+    object::object(string name, const geometry& geometryType, const material_variant &mat, vec position, double theta):
+                  name(name), geometryType(geometryType.clone()), mat(mat), position(position), theta(theta) {}
 
-    object::object(const geometry& geometryType, const material_variant &mat, vec position, vec orientation): 
-                  object("object_" + to_string(num_created), geometryType, mat, position, orientation) {num_created++;}
+    object::object(const geometry& geometryType, const material_variant &mat, vec position, double theta):
+                  object("object_" + to_string(num_created), geometryType, mat, position, theta) {num_created++;}
 
     bool object::inside(const vec& v) const {
-        double theta = atan2(orientation(1), orientation(0)) - M_PI/2;
         auto R = Eigen::Rotation2Dd(theta).inverse();
         auto T = Eigen::Translation<double,2>(position).inverse();
         auto tr = R*T;
         vec transformed_v = tr*v;
         return geometryType->inside(transformed_v); 
-    }
-
-    void object::move(const vec& dr) {
-        position += dr;
-    }
-
-    void object::rotate(quat rot) {
-        //orientation = rot._transformVector(orientation);
     }
 
     h5cpp::h5group object::get_group() const {
@@ -45,7 +36,7 @@ namespace qbox {
         auto my_group = get_group();
 
         write_vec<double,h5cpp::dtype::Double>(my_group, position, "position");
-        write_vec<double,h5cpp::dtype::Double>(my_group, orientation, "orientation");
+        write_scalar<double,h5cpp::dtype::Double>(my_group, theta, "theta");
         geometryType->write(my_group);
         write_material();
     }
