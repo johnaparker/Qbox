@@ -6,9 +6,9 @@ enable_testing()
 #Compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 
-if(${CMAKE_BUILD_TYPE} STREQUAL "RELEASE")
+if(${CMAKE_BUILD_TYPE} STREQUAL "Relase")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fopt-info-vec-optimized -ftree-vectorize")
-elseif(${CMAKE_BUILD_TYPE} STREQUAL "DEBUG")
+elseif(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g -Og")
 endif()
 message(STATUS "FLAGS: ${CMAKE_CXX_FLAGS}")
