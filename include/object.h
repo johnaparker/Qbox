@@ -27,16 +27,19 @@ namespace qbox {
 
         bool inside(const vec& p) const;
 
-        h5cpp::h5group get_group() const;
-        void write() const;
+        virtual h5cpp::h5group get_group() const;
+        virtual void write() const;
         void write_material() const;
 
         std::unique_ptr<geometry> get_geometry() const {return geometryType->clone();}
         material_variant get_material() const {return mat;}
+        std::unique_ptr<material> get_material_base() const {
+            return std::visit([](auto&& arg){return arg.clone();}, mat);
+        }
 
         void set_owner(Field2D* F);
 
-    private:
+    protected:
         std::string name;
 
         std::unique_ptr<geometry> geometryType;
