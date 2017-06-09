@@ -12,7 +12,7 @@ namespace qbox {
     class polarization {
     public:
         polarization(const grid_properties &grid, int Npoles): grid(grid), Npoles(Npoles) {
-            J = tensor3(grid.Nx, grid.Ny, Npoles);
+            J = tensor3(grid.Nx, grid.Ny, Npoles); J.setZero();
         }
         virtual void update_J(Field2D &f) = 0;
         virtual void insert_object(const object &new_object) = 0;
