@@ -36,4 +36,9 @@ namespace qbox {
             }
         }
     }
+
+    void debye_polarization::reset() {
+        polarization::reset();
+        beta.setZero();
+    }
 }

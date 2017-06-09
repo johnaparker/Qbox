@@ -16,6 +16,7 @@ namespace qbox {
         }
         virtual void update_J(Field2D &f) = 0;
         virtual void insert_object(const object &new_object) = 0;
+        virtual void reset() {J.setZero();}
 
     protected:
         grid_properties grid;

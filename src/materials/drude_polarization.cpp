@@ -36,4 +36,10 @@ namespace qbox {
             }
         }
     }
+
+    void drude_polarization::reset() {
+        polarization::reset();
+        beta.setZero();
+    }
+
 }

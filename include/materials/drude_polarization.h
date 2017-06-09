@@ -13,6 +13,7 @@ namespace qbox {
         drude_polarization(const grid_properties &grid, const drude &mat);
         void update_J(Field2D &f) override;
         void insert_object(const object &new_object) override;
+        void reset() override;
 
     private:
         drude mat;

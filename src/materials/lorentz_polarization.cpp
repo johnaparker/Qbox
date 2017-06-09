@@ -44,4 +44,10 @@ namespace qbox {
             }
         }
     }
+
+    void lorentz_polarization::reset() {
+        polarization::reset();
+        delta.setZero();
+        prevJ.setZero();
+    }
 }
