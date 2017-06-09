@@ -40,7 +40,6 @@ namespace qbox {
         void update_material_grid();
         
         //Add objects, sources, and monitors. These are all polymorphic classes
-        void add_object(dynamic_object &new_object);
         void add_object(object &new_object);
 
         void add_source(source &new_source);
@@ -72,7 +71,6 @@ namespace qbox {
     private:
         void create_fields_dataset(fields field);
         void add_object(object &new_object, const material& mat);
-        void add_object(dynamic_object &new_object, const material& mat);
 
     public:
         //Grid properties (some reduntant)
