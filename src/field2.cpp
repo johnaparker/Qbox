@@ -192,6 +192,7 @@ namespace qbox {
         
         for (auto obj_ptr : obj_list) {
             update_object_material_grid(*obj_ptr);
+            update_object_polarization_grid(*obj_ptr);
         }
     }
 
@@ -398,20 +399,34 @@ namespace qbox {
     }
 
     void Field2D::update_object_material_grid(const object &obj) {
-        auto mat = obj.get_material_base();
+        auto mat_ptr = obj.get_material_base();
         for (int i = 0; i < Nx; i++) {
             for (int j = 0; j < Ny; j++) {
                 ivec pi = {i,j};
                 vec p = grid.to_real(pi);
 
                 if (obj.inside(p)) {
-                    Ca(pi) = mat->Ca(dt); 
-                    Cb(pi) = mat->Cb(dt); 
-                    Da(pi) = mat->Da(dt); 
-                    Db(pi) = mat->Db(dt); 
+                    Ca(pi) = mat_ptr->Ca(dt); 
+                    Cb(pi) = mat_ptr->Cb(dt); 
+                    Da(pi) = mat_ptr->Da(dt); 
+                    Db(pi) = mat_ptr->Db(dt); 
                 }
             }
         }
+    }
+
+    void Field2D::update_object_polarization_grid(const object &obj) {
+        material_variant mat = obj.get_material();
+        visit([this,&obj](auto&& arg) {
+            using T = decay_t<decltype(arg)>;
+
+            if constexpr (is_same<T, debye>::value)
+                P_debye.at(arg.get_name()).insert_object(obj);
+            else if constexpr (is_same<T, drude>::value)
+                P_drude.at(arg.get_name()).insert_object(obj);
+            else if constexpr (is_same<T, lorentz>::value)
+                P_lorentz.at(arg.get_name()).insert_object(obj);
+        }, mat);
     }
 
 }
