@@ -243,9 +243,17 @@ namespace qbox {
     void Field2D::clear_fields() {
         t = 0;
         tStep = 0;
-        Ez = 0*Ez; 
-        Hx = 0*Ez; 
-        Hy = 0*Ez; 
+
+        Ez.setZero(); 
+        Hx.setZero(); 
+        Hy.setZero(); 
+
+        for (auto& p: P_debye)
+            p.second.reset();
+        for (auto& p: P_drude)
+            p.second.reset();
+        for (auto& p: P_lorentz)
+            p.second.reset();
     }
 
     void Field2D::clear_materials() {
