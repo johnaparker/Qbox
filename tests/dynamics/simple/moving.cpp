@@ -42,6 +42,7 @@ int main() {
                 test.add_monitor(m1);
         }
         m1.write_dft();
+        obj.write_current();
         cout << "\nBig time step: " << T << endl;
     }
 }

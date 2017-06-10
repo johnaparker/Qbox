@@ -38,6 +38,11 @@ namespace qbox {
         Hy
     };
 
+    enum class append: bool {
+        True = true,
+        False = false
+    };
+
     //automatic type-deduction of dtype
     //struct get_dtype {
       //constexpr h5cpp::dtype operator()(int) const { return h5cpp::dtype::Double; }
@@ -53,15 +58,34 @@ namespace qbox {
     //};
 
     template<class T, h5cpp::dtype M>
-    h5cpp::h5dset write_scalar(const h5cpp::h5group &group, const T &scalar, std::string name) {
-        auto dset = group.create_dataset(name, M);
+    h5cpp::h5dset write_scalar(const h5cpp::h5group &group, const T &scalar, std::string name, append a = append::False) {
+        h5cpp::dspace dspace;
+        if (static_cast<bool>(a)) {
+            std::vector<hsize_t> dims       = {1, 1};
+            std::vector<hsize_t> max_dims   = {1, h5cpp::inf};
+            std::vector<hsize_t> chunk_dims = dims;
+            dspace = h5cpp::dspace(dims, max_dims, chunk_dims);
+        }
+        else
+            dspace = h5cpp::dspace();
+
+        auto dset = group.create_dataset(name, M, dspace);
         dset.write(&scalar);
         return dset;
     }
 
     template<class T, h5cpp::dtype M>
-    h5cpp::h5dset write_vec(const h5cpp::h5group &group, const Eigen::Matrix<T,Eigen::Dynamic,1> &p, std::string name) {
-        auto dspace = h5cpp::dspace(std::vector<hsize_t>{static_cast<hsize_t>(p.size())});
+    h5cpp::h5dset write_vec(const h5cpp::h5group &group, const Eigen::Matrix<T,Eigen::Dynamic,1> &p, std::string name, append a = append::False) {
+        h5cpp::dspace dspace;
+        if (static_cast<bool>(a)) {
+            std::vector<hsize_t> dims       = {hsize_t(p.size()), 1};
+            std::vector<hsize_t> max_dims   = {hsize_t(p.size()), h5cpp::inf};
+            std::vector<hsize_t> chunk_dims = dims;
+            dspace = h5cpp::dspace(dims, max_dims, chunk_dims);
+        }
+        else
+            dspace = h5cpp::dspace(std::vector<hsize_t>{static_cast<hsize_t>(p.size())});
+
         auto dset = group.create_dataset(name, M, dspace);
         dset.write(p.data());
         return dset;

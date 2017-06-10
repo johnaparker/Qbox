@@ -25,6 +25,7 @@ namespace qbox {
 
         h5cpp::h5group get_group() const override;
         void write() const override;
+        void write_current() const;
     };
 
 }

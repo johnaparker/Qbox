@@ -31,6 +31,8 @@ post/output
 
 //other directories
 bench/
+temp/
 
 *.gch
 *.json
+*.txt

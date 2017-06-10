@@ -41,10 +41,18 @@ namespace qbox {
     void dynamic_object::write() const {
         auto my_group = get_group();
 
-        write_vec<double,h5cpp::dtype::Double>(my_group, position, "position");
-        write_scalar<double,h5cpp::dtype::Double>(my_group, theta, "theta");
+        write_vec<double,h5cpp::dtype::Double>(my_group, position, "position", append::True);
+        write_scalar<double,h5cpp::dtype::Double>(my_group, theta, "theta", append::True);
         geometryType->write(my_group);
         write_material();
     }
 
+    void dynamic_object::write_current() const {
+        auto my_group = get_group();
+
+        auto dset = my_group.open_dataset("position");
+        dset.append(position.data());
+        dset = my_group.open_dataset("theta");
+        dset.append(&theta);
+    }
 }
