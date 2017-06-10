@@ -24,7 +24,7 @@ int main() {
     double r = 20;
     
     for (int T = 0; T != 30; T++) {
-        test.clear_monitors();         // Reset monitors
+        test.remove_monitors();         // Reset monitors
         test.clear_fields();           // Reset fields
         test.set_tfsf(volume(center, 80), continuous_time(f));
         double x = r*cos(omega_1*T) + center(0);
