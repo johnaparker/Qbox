@@ -60,7 +60,7 @@ namespace qbox {
                     result(i,j,k) = rE(i,j,k) + 1i*iE(i,j,k);
 
         auto my_group = get_group();
-        write_tensor<complex<double>,3,h5cpp::dtype::Complexd>(my_group, result, "dft");
+        h5cpp::write_tensor(result, my_group, "dft");
     }
 
 }

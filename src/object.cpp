@@ -35,8 +35,8 @@ namespace qbox {
     void object::write() const {
         auto my_group = get_group();
 
-        write_vec<double,h5cpp::dtype::Double>(my_group, position, "position");
-        write_scalar<double,h5cpp::dtype::Double>(my_group, theta, "theta");
+        h5cpp::write_vector<double>(position, my_group, "position");
+        h5cpp::write_scalar(theta, my_group, "theta");
         geometryType->write(my_group);
         write_material();
     }

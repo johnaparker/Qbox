@@ -290,7 +290,7 @@ namespace qbox {
             auto group = sources_group.create_or_open_group("tfsf");
             total->write(group);
             Array S = total->compute_flux();
-            write_array<double, h5cpp::dtype::Double>(group,S,"flux");
+            h5cpp::write_array<double>(S, group, "flux");
         }
     }
 

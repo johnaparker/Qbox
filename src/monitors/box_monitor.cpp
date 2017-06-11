@@ -79,7 +79,7 @@ namespace qbox {
         ComplexTensor result = ntff_sphere(radius, N);
 
         auto my_group = get_group();
-        auto dset = write_tensor<complex<double>,2,h5cpp::dtype::Complexd>(my_group, result, "ntff");
+        auto dset = h5cpp::write_tensor(result, my_group, "ntff");
         auto attr = dset.create_attribute("radius", h5cpp::dtype::Double);
         attr.write(&radius);
     }

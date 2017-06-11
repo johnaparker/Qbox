@@ -19,7 +19,7 @@ namespace qbox {
 
     void point_source::write() {
         source::write();
-        write_vec<double, h5cpp::dtype::Double>(get_group(), p, "position");
+        h5cpp::write_vector<double>(p, get_group(), "position");
         //write field component (enum?)
     }
 
