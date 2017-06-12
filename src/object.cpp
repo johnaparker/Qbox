@@ -44,10 +44,10 @@ namespace qbox {
     void object::write_material() const {
         auto my_group = get_group();
 
-        auto dset = my_group.create_dataset("material", h5cpp::dtype::Reference);
         auto group_path = visit([this](auto&& arg)->string{return arg.get_group_path();}, mat);
         auto mat_reference = outFile->create_reference(group_path); 
-        dset.write(&mat_reference);
+        h5cpp::write_scalar(mat_reference, my_group, "material");
+
         //auto mat_group = mat->get_group(*outFile);
         //auto mat_name = mat->get_name();
         //dset.write(&mat_name);

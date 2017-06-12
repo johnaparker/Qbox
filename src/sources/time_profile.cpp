@@ -10,12 +10,9 @@ namespace qbox {
     }
 
     void gaussian_time::write(const h5cpp::h5group &group) const {
-        auto dset = group.create_dataset("frequency", h5cpp::dtype::Double);
-        dset.write(&f);
-        dset = group.create_dataset("T0", h5cpp::dtype::Double);
-        dset.write(&T0);
-        dset = group.create_dataset("sig", h5cpp::dtype::Double);
-        dset.write(&sig);
+        h5cpp::write_scalar(f, group, "frequency");
+        h5cpp::write_scalar(T0, group, "T0");
+        h5cpp::write_scalar(sig, group, "sig");
     }
 
     unique_ptr<time_profile> gaussian_time::clone() const {
@@ -29,8 +26,7 @@ namespace qbox {
     }
 
     void continuous_time::write(const h5cpp::h5group &group) const {
-        auto dset = group.create_dataset("frequency", h5cpp::dtype::Double);
-        dset.write(&f);
+        h5cpp::write_scalar(f, group, "frequency");
     }
 
     unique_ptr<time_profile> continuous_time::clone() const {

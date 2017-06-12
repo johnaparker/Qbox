@@ -40,22 +40,14 @@ namespace qbox {
     }
 
     void grid_properties::write(const h5cpp::h5group &group) {
-        auto dset = group.create_dataset("Lx", h5cpp::dtype::Double);
-        dset.write(&Lx);
-        dset = group.create_dataset("Ly", h5cpp::dtype::Double);
-        dset.write(&Ly);
-        dset = group.create_dataset("Nx", h5cpp::dtype::Int);
-        dset.write(&Nx);
-        dset = group.create_dataset("Ny", h5cpp::dtype::Int);
-        dset.write(&Ny);
-        dset = group.create_dataset("dx", h5cpp::dtype::Double);
-        dset.write(&dx);
-        dset = group.create_dataset("dt", h5cpp::dtype::Double);
-        dset.write(&dt);
-        dset = group.create_dataset("resolution", h5cpp::dtype::Double);
-        dset.write(&res);
-        dset = group.create_dataset("pml_thickness", h5cpp::dtype::Int);
-        dset.write(&pml_thickness);
+        h5cpp::write_scalar(Lx, group, "Lx");
+        h5cpp::write_scalar(Ly, group, "Ly");
+        h5cpp::write_scalar(Nx, group, "Nx");
+        h5cpp::write_scalar(Ny, group, "Ny");
+        h5cpp::write_scalar(dx, group, "dx");
+        h5cpp::write_scalar(dt, group, "dt");
+        h5cpp::write_scalar(res, group, "resolution");
+        h5cpp::write_scalar(pml_thickness, group, "pml_thickness");
     }
 
 }

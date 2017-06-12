@@ -16,9 +16,7 @@ namespace qbox {
     }
 
     void block::write(const h5cpp::h5group& group) const {
-        auto dspace = h5cpp::dspace(vector<hsize_t>{2});
-        auto dset = group.create_dataset("dimensions", h5cpp::dtype::Double, dspace);
-        dset.write(dim.data());
+        h5cpp::write_vector<double>(dim, group, "dimensions");
     }
 
     unique_ptr<geometry> block::clone() const {

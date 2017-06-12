@@ -19,6 +19,10 @@ using namespace std;
 
 namespace qbox {
 
+    map<fields,string> const field_names = { {fields::Ez, "Ez"},
+                                             {fields::Hx, "Hx"},
+                                             {fields::Hy, "Hy"} };
+
     Field2D::Field2D(grid_properties grid, string filename): grid(grid), Nx(grid.Nx), Ny(grid.Ny), dx(grid.dx), Lx(grid.Lx), Ly(grid.Ly) {
         t = 0;
         tStep = 0;
@@ -57,7 +61,7 @@ namespace qbox {
         auto gFields = outFile->create_or_open_group("fields");
         switch(field) {
             case fields::Ez: if (!gFields.object_exists("Ez")) {
-                                     create_fields_dataset(field);
+                                 create_fields_dataset(field);
                              }
                              else {
                                  auto dset = gFields.open_dataset("Ez");
@@ -65,15 +69,15 @@ namespace qbox {
                              }
                              break;
             case fields::Hx: if (!gFields.object_exists("Hx")) {
-                                     create_fields_dataset(field);
+                                 create_fields_dataset(field);
                              }
                              else {
                                  auto dset = gFields.open_dataset("Hx");
                                  dset.append(Hx.data());
                              }
                              break;
-            case fields::Hy: if (!gFields.object_exists("fields/Hy")) {
-                                     create_fields_dataset(field);
+            case fields::Hy: if (!gFields.object_exists("Hy")) {
+                                 create_fields_dataset(field);
                              }
                              else {
                                  auto dset = gFields.open_dataset("Hy");
@@ -359,30 +363,8 @@ namespace qbox {
     }
 
     void Field2D::create_fields_dataset(fields field) {
-
-        vector<hsize_t> dims = {hsize_t(Nx),hsize_t(Ny),1};
-        vector<hsize_t> max_dims = {hsize_t(Nx),hsize_t(Ny),h5cpp::inf};
-        vector<hsize_t> chunk_dims = dims;
-        h5cpp::dspace ds(dims, max_dims, chunk_dims, false);
-
         auto gFields = outFile->create_or_open_group("fields");
-        h5cpp::h5dset dset;
-
-        switch(field) {
-            case fields::Ez:  dset = gFields.create_dataset("Ez", 
-                                     h5cpp::dtype::Double, ds); 
-                              dset.write(Ez.data());
-                              break;
-            case fields::Hx:  dset = gFields.create_dataset("Hx", 
-                                     h5cpp::dtype::Double, ds); 
-                              dset.write(Hx.data());
-                              break;
-            case fields::Hy:  dset = gFields.create_dataset("Hy", 
-                                     h5cpp::dtype::Double, ds); 
-                              dset.write(Hy.data());
-                              break;
-            default: throw std::invalid_argument("not a valid field component");
-        }
+        h5cpp::write_tensor(get_field_ref(field), gFields, field_names.at(field), h5cpp::append::True);
     }
 
     void Field2D::add_object(object &new_object, const material& mat) {

@@ -35,7 +35,7 @@ namespace qbox {
     enum class fields {
         Ez,
         Hx,
-        Hy
+        Hy,
     };
 
     struct cylinder_surface {

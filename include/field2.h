@@ -31,6 +31,8 @@ namespace qbox {
     class source;
     class tfsf;
 
+    extern const std::map<fields,std::string> field_names;
+
     //Field object that does all of the work
     class Field2D {
     public:

@@ -17,14 +17,10 @@ namespace qbox {
     void simple_material::write(const h5cpp::h5file &outFile) const {
         auto group = get_group(outFile);
 
-        auto dset = group.create_dataset("material_type", h5cpp::dtype::String);
-        dset.write(&group_name);
-        dset = group.create_dataset("eps", h5cpp::dtype::Double);
-        dset.write(&eps);
-        dset = group.create_dataset("mu", h5cpp::dtype::Double);
-        dset.write(&mu);
-        dset = group.create_dataset("conduc", h5cpp::dtype::Double);
-        dset.write(&conduc);
+        h5cpp::write_scalar(group_name, group, "material_type");
+        h5cpp::write_scalar(eps, group, "eps");
+        h5cpp::write_scalar(mu, group, "mu");
+        h5cpp::write_scalar(conduc, group, "conduc");
     }
 
     double simple_material::Ca(double dt) const {
