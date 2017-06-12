@@ -4,7 +4,7 @@
 #include <memory>
 #include "h5cpp.h"
 #include "../vec.h"
-
+#include <optional>
 
 ///Geometry
 //
@@ -13,10 +13,6 @@ namespace qbox {
     class geometry {
     public:
         geometry() = default;
-        geometry (const geometry& other) { 
-            bounding_box = other.bounding_box ? std::unique_ptr<volume>(new volume(*other.bounding_box)) : nullptr;
-            interior_box = other.interior_box ? std::unique_ptr<volume>(new volume(*other.interior_box)) : nullptr;
-        }
 
         virtual bool inside(const vec& v) const = 0;
         virtual void write(const h5cpp::h5group& group) const = 0;
@@ -24,17 +20,20 @@ namespace qbox {
 
         virtual std::string group_name() const = 0;
 
-    protected:
-        void set_bounding_box(const vec& a, const vec& b) {
-            bounding_box = std::make_unique<volume>(a,b);
-        }
-        void set_interior_box(const vec& a, const vec& b) {
-            interior_box = std::make_unique<volume>(a,b);
-        }
+        std::optional<volume> get_bounding_box() const {return bounding_box;}
+        std::optional<volume> get_interior_box() const {return interior_box;}
 
     protected:
-        std::unique_ptr<volume> bounding_box = nullptr;
-        std::unique_ptr<volume> interior_box = nullptr;
+        void set_bounding_box(const vec& a, const vec& b) {
+            bounding_box = volume(a,b);
+        }
+        void set_interior_box(const vec& a, const vec& b) {
+            interior_box = volume(a,b);
+        }
+
+    private:
+        std::optional<volume> bounding_box;
+        std::optional<volume> interior_box;
     };
 
 }
