@@ -57,4 +57,19 @@ namespace qbox {
         outFile = make_unique<h5cpp::h5file>(*F->outFile.get());
         write();
     }
+
+    std::optional<volume> object::get_bounding_box() const {
+        auto box = geometryType->get_bounding_box();
+        if (box) {
+            Eigen::Matrix2d R;
+            R << cos(theta), sin(theta),
+                 sin(theta), cos(theta);
+            R = R.array().abs();
+            
+            vec new_dim = R*box->dim;
+            box = volume(position - new_dim/2, position + new_dim/2);
+        }
+
+        return box;
+    }
 }

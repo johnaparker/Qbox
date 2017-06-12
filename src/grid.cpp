@@ -39,6 +39,40 @@ namespace qbox {
         return volume(to_real(vol.a), to_real(vol.b));
     }
 
+    volume grid_properties::clip(const volume &vol) const {
+        vec a = vol.a;
+        vec b = vol.b;
+
+        if (a(0) < 0)
+            a(0) = 0;
+        if (b(0) < 0)
+            b(0) = 0;
+        if (a(1) > Lx)
+            a(1) = Lx;
+        if (b(1) > Ly)
+            b(1) = Ly;
+
+        return volume(a,b);
+    }
+
+    ivolume grid_properties::clip(const ivolume &ivol) const {
+        ivec a = ivol.a;
+        ivec b = ivol.b;
+
+        if (a(0) < 0)
+            a(0) = 0;
+        if (b(0) < 0)
+            b(0) = 0;
+        if (a(1) > Nx-1)
+            a(1) = Nx-1;
+        if (b(1) > Ny-1)
+            b(1) = Ny-1;
+
+        return ivolume(a,b);
+    }
+    //*** other clip functions... and does to_grid etc. clip automatically?
+
+
     void grid_properties::write(const h5cpp::h5group &group) {
         h5cpp::write_scalar(Lx, group, "Lx");
         h5cpp::write_scalar(Ly, group, "Ly");

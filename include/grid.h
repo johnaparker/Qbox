@@ -23,6 +23,11 @@ namespace qbox {
         ivolume to_grid(const volume &vol) const;     //take real p into grid 
         volume to_real(const ivolume &vol) const;    //take grid pi into real
 
+        volume clip(const volume &vol) const;      // clip a volume in the grid
+        ivolume clip(const ivolume &ivol) const;      // clip an ivolume in the grid
+
+        volume domain() const {return volume({0,0},{Lx,Ly});}
+
         void write(const h5cpp::h5group &group);
 
     public:

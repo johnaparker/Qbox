@@ -31,6 +31,7 @@ namespace qbox {
         virtual void write() const;
         void write_material() const;
 
+        std::optional<volume> get_bounding_box() const;
         std::unique_ptr<geometry> get_geometry() const {return geometryType->clone();}
         material_variant get_material() const {return mat;}
         std::unique_ptr<material> get_material_base() const {

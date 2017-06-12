@@ -382,8 +382,12 @@ namespace qbox {
 
     void Field2D::update_object_material_grid(const object &obj) {
         auto mat_ptr = obj.get_material_base();
-        for (int i = 0; i < Nx; i++) {
-            for (int j = 0; j < Ny; j++) {
+        std::optional<volume> box = obj.get_bounding_box();
+        ivolume ibox = grid.to_grid(box.value_or(grid.domain()));
+        ibox = grid.clip(ibox);
+
+        for (int i = ibox.a(0); i <= ibox.b(0) ; i++) {
+            for (int j = ibox.a(1); j <= ibox.b(1); j++) {
                 ivec pi = {i,j};
                 vec p = grid.to_real(pi);
 
