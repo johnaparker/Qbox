@@ -80,8 +80,7 @@ namespace qbox {
 
         auto my_group = get_group();
         auto dset = h5cpp::write_tensor(result, my_group, "ntff");
-        auto attr = dset.create_attribute("radius", h5cpp::dtype::Double);
-        attr.write(&radius);
+        h5cpp::write_scalar(radius, dset, "radius");
     }
 
     void box_monitor::write_flux_sides() {
