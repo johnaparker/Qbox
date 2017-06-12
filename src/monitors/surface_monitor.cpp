@@ -47,7 +47,7 @@ namespace qbox {
             //E = (F->Ez(p) + F->Ez(p + isurf.tangent)
                     //+ prevE(i) + prevE(i+1))/4;
                     
-            H = ((*Hfield)(p) + (*Hfield)(p - isurf.normal))/2;
+            H = ((*Hfield)(p) + (*Hfield)(p - isurf.normal.array().cwiseAbs().matrix()))/2;
             E = (F->Ez(p) + prevE(i))/2;
             prevE(i) = F->Ez(p);
 
@@ -85,7 +85,9 @@ namespace qbox {
                 S[j] += rE(i,j)*rH(i,j) + iE(i,j)*iH(i,j);
             }
         }
-        S *= F->dx;
+
+        int factor = surf.dim[0] == 0 ? -1 : +1;
+        S *= F->dx*int(surf.Sign)*factor;
         return S;
     }
 
@@ -99,14 +101,14 @@ namespace qbox {
         
 
         vec tangent = surf.tangent;
-        vec normal = surf.normal;  //*** this needs to be outward normal
+        vec normal = surf.normal.array().cwiseAbs();  //*** this needs to be outward normal
 
         double Jsgn = tangent.dot(vec(1,1));
         double Msgn = tangent.dot(vec(-1,1));
 
         for (int i = 0; i < length; i++) {
             vec p_prime = surf.a + tangent*i*F->dx - center; //*** account for yee grid half-step here
-            double angle = p.dot(normal)/r;  //*** worry about the sign of tangent here
+            double angle = p.dot(normal)/r;  //*** worry about the sign of normal here
             for (int j = 0; j < freq.size(); j++) {
                 auto E = rE(i,j) + 1i*iE(i,j);
                 auto H = rH(i,j) + 1i*iH(i,j);

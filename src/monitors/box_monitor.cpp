@@ -42,11 +42,10 @@ namespace qbox {
     }
 
     Array box_monitor::compute_flux() const {
-        double sign_values[] = {-1, -1, 1, 1};
         Array S = Array::Zero(freq.size());
 
         for (int i = 0; i != 4; i++) {
-            Array Sm = sign_values[i]*monitors[i].compute_flux();
+            Array Sm = monitors[i].compute_flux();
             S += Sm;
         }
         return S;

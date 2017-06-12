@@ -6,7 +6,6 @@
 #include <eigen3/unsupported/Eigen/CXX11/Tensor>
 #include <stdexcept>
 #include "h5cpp.h"
-#include <vector>
 #include <string>
 #include <complex>
 #include "math.h"
@@ -38,6 +37,11 @@ namespace qbox {
         Hy,
     };
 
+    enum class sign: int {
+        Positive = +1,
+        Negative = -1
+    };
+
     struct cylinder_surface {
         cylinder_surface() = default;
         cylinder_surface(vec center, double radius): center(center), radius(radius) {}
@@ -65,11 +69,11 @@ namespace qbox {
     template<class T, h5cpp::dtype M>
     struct surface_template {
         surface_template() = default;
-        surface_template(Eigen::Matrix<T,2,1> a, Eigen::Matrix<T,2,1> b, int sign = 1): a(a), b(b), sign(sign) {
+        surface_template(Eigen::Matrix<T,2,1> a, Eigen::Matrix<T,2,1> b, sign Sign = sign::Positive): a(a), b(b), Sign(Sign) {
             dim = (a-b).cwiseAbs();
 
-            if (dim[0] == 0) {normal = sign*Eigen::Matrix<T,2,1>(1,0);}
-            else if (dim[1] == 0) {normal = sign*Eigen::Matrix<T,2,1>(0,1);}
+            if (dim[0] == 0) {normal = int(Sign)*Eigen::Matrix<T,2,1>(1,0);}
+            else if (dim[1] == 0) {normal = int(Sign)*Eigen::Matrix<T,2,1>(0,1);}
             else throw std::invalid_argument("vectors must have one component equal to each other");
             tangent = (b-a)/(b-a).norm();
         }
@@ -87,11 +91,12 @@ namespace qbox {
         void write(const h5cpp::h5group &group) const {
             h5cpp::write_vector<T>(a, group, "p1");
             h5cpp::write_vector<T>(b, group, "p2");
+            h5cpp::write_scalar(int(Sign), group, "sign");
         }
 
     public:
         Eigen::Matrix<T,2,1> a,b;       ///< vector coordinates of two corners
-        int sign;                       ///< 
+        sign Sign;                      ///< Positive or negative sign (orientatin of normal)
         Eigen::Matrix<T,2,1> dim;       ///< vector containing the dimensions
         Eigen::Matrix<T,2,1> normal;    ///< unit vector normal to the surface
         Eigen::Matrix<T,2,1> tangent;   ///< unit vector that points from a to b
@@ -123,15 +128,14 @@ namespace qbox {
         surface_template<T,M> get_surface(box_side side) const {
             switch(side) {
                 case box_side::y_bottom:
-                    return surface_template<T,M>(a, vec(b[0], a[1])); break;
+                    return surface_template<T,M>(a, vec(b[0], a[1]), sign::Negative); break;
                 case box_side::y_top:
-                    return surface_template<T,M>(b, vec(a[0], b[1])); break;
+                    return surface_template<T,M>(b, vec(a[0], b[1]), sign::Positive); break;
                 case box_side::x_bottom:
-                    return surface_template<T,M>(vec(a[0], b[1]), a); break;
+                    return surface_template<T,M>(vec(a[0], b[1]), a, sign::Negative); break;
                 case box_side::x_top:
-                    return surface_template<T,M>(vec(b[0], a[1]), b); break;
+                    return surface_template<T,M>(vec(b[0], a[1]), b, sign::Positive); break;
                 default: throw std::invalid_argument("not a valid box_side");
-
             }
         }
 

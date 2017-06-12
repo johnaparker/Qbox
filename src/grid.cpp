@@ -24,11 +24,11 @@ namespace qbox {
     }
 
     isurface grid_properties::to_grid(const surface &surf) const {
-        return isurface(to_grid(surf.a), to_grid(surf.b), surf.sign);
+        return isurface(to_grid(surf.a), to_grid(surf.b), surf.Sign);
     }
 
     surface grid_properties::to_real(const isurface &surf) const {
-        return surface(to_real(surf.a), to_real(surf.b), surf.sign);
+        return surface(to_real(surf.a), to_real(surf.b), surf.Sign);
     }
 
     ivolume grid_properties::to_grid(const volume &vol) const {
