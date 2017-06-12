@@ -26,7 +26,7 @@ namespace qbox {
     using ComplexTensor3 = Eigen::Tensor<std::complex<double>,3,Eigen::RowMajor>;
     using ComplexTensor4 = Eigen::Tensor<std::complex<double>,4,Eigen::RowMajor>;
 
-    enum class direction {
+    enum class box_side {
         x_bottom, x_top,
         y_bottom, y_top,
         //z_bottom, z_top,
@@ -120,17 +120,17 @@ namespace qbox {
             return (a + b)/2;
         }
 
-        surface_template<T,M> get_surface(direction dir) const {
-            switch(dir) {
-                case direction::y_bottom:
+        surface_template<T,M> get_surface(box_side side) const {
+            switch(side) {
+                case box_side::y_bottom:
                     return surface_template<T,M>(a, vec(b[0], a[1])); break;
-                case direction::y_top:
+                case box_side::y_top:
                     return surface_template<T,M>(b, vec(a[0], b[1])); break;
-                case direction::x_bottom:
+                case box_side::x_bottom:
                     return surface_template<T,M>(vec(a[0], b[1]), a); break;
-                case direction::x_top:
+                case box_side::x_top:
                     return surface_template<T,M>(vec(b[0], a[1]), b); break;
-                default: throw std::invalid_argument("not a valid direction");
+                default: throw std::invalid_argument("not a valid box_side");
 
             }
         }
