@@ -259,6 +259,8 @@ namespace qbox {
             p.second.reset();
         for (auto& p: P_lorentz)
             p.second.reset();
+        
+        //*** pml reset?
     }
 
     void Field2D::clear_materials() {

@@ -27,7 +27,7 @@ int main() {
     //*** grid.volume() should return a volume that guarentees this works
     //*** also have a tfsf.volume()
     //*** also have a grid.no_pml_volume()
-    volume_monitor m1("vol", volume(vec(0,0), vec(grid.Lx, grid.Ly)), freq_data(f)); 
+    volume_monitor m1("vol", grid.domain(), freq_data(f)); 
     test.add_monitor(m1);
 
 

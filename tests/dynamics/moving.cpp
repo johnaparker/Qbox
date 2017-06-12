@@ -42,7 +42,7 @@ int main() {
         obj.set_theta(theta);
         test.update_material_grid(mat);
 
-        volume_monitor m1(volume(vec(0,0), vec(grid.Lx, grid.Ly)), freq_data(f)); 
+        volume_monitor m1(grid.domain(), freq_data(f)); 
 
         for (int i = 0; i != 1300; i++) {
             test.update();
