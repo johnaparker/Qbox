@@ -16,26 +16,23 @@ namespace qbox {
     public:
         //various ways to construct. p1,p2 = corners. 
         cylinder_monitor() = default;
-        cylinder_monitor(std::string name, const cylinder_surface &surf, const freq_data &freq, bool extendable=false);   //using freq data
-        cylinder_monitor(const cylinder_surface &surf, const freq_data &freq, bool extendable=false);   //using freq data
+        cylinder_monitor(std::string name, const cylinder_surface &surf, const Array &freq);
+        cylinder_monitor(const cylinder_surface &surf, const Array &freq);
 
         void set_F(Field2D *newF);    //set ownership
         void update();   //update the DFT matrices
         Array compute_flux() const; //compute flux though face
 
         void operator-=(const cylinder_monitor& other) {
-            rE -= other.rE;
-            iE -= other.iE;
-            rH -= other.rH;
-            iH -= other.iH;
+            fourier -= other.fourier;
         }
 
     private:
-        bool extendable;
         cylinder_surface surf;
-        tensor rE, iE, rH, iH;    //DFT matrices
-        Array prevE;             ///< previous electric field values
-        int length; //length of monitor in grid points
+        Array prevE;  ///< previous electric field values
+        Array freq;
+        dft<1> fourier;
+        int length;   ///< length of monitor in grid points
     };
 
 }

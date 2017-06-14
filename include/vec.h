@@ -17,7 +17,10 @@ namespace qbox {
     using ivec = Eigen::Vector2i;
     using quat = Eigen::Quaterniond;
     using Array = Eigen::ArrayXd;
+    using iArray = Eigen::ArrayXi;
+
     using ComplexArray = Eigen::ArrayXcd;
+    using tensor1 = Eigen::Tensor<double,1,Eigen::RowMajor>;
     using tensor = Eigen::Tensor<double,2,Eigen::RowMajor>;
     using tensor3 = Eigen::Tensor<double,3,Eigen::RowMajor>;
     using tensor4 = Eigen::Tensor<double,4,Eigen::RowMajor>;

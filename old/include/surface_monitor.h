@@ -40,13 +40,9 @@ namespace qbox {
         }
 
     private:
-        bool extendable;
         surface surf;
-        //*** complex tensor ?
-        tensor rE, iE, rH, iH;    //DFT matrices
-        Array prevE;             ///< previous electric field values
-        int dir;    //orientation
-        int length; //length of monitor in grid points
+        Array prevE;     ///< previous electric field values
+        int length;      ///< length of monitor in grid points
     };
 
 }

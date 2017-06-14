@@ -281,22 +281,11 @@ namespace qbox {
         //total->write(group);
     }
 
-    void Field2D::set_tfsf_freq(const freq_data &freq) {
-        if (total) {
-            total->add_dft(freq);
-        }
-        auto sources_group = outFile->create_or_open_group("sources");
-        auto group = sources_group.create_or_open_group("tfsf");
-        freq.write(group);
-    }
-
     void Field2D::write_tfsf() {
         if (total) {
             auto sources_group = outFile->create_or_open_group("sources");
             auto group = sources_group.create_or_open_group("tfsf");
-            total->write(group);
-            Array S = total->compute_flux();
-            h5cpp::write_array<double>(S, group, "flux");
+            //*** and...
         }
     }
 

@@ -53,7 +53,6 @@ namespace qbox {
         void reset_tfsf();
 
         void set_tfsf(const volume& vol, const time_profile& tp);
-        void set_tfsf_freq(const freq_data &freq);
         void write_tfsf();
 
         //write to HDF5 with filename

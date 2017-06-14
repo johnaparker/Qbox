@@ -9,11 +9,11 @@ using namespace std;
 
 
 namespace qbox {
-    cylinder_monitor::cylinder_monitor(string name, const cylinder_surface &surf, const freq_data &freq, bool extendable): monitor(name,"cylinder_monitor",freq,extendable), surf(surf), length(0) {
+    cylinder_monitor::cylinder_monitor(string name, const cylinder_surface &surf, const Array &freq): monitor(name,"cylinder_monitor"), surf(surf), length(0), freq(freq) {
         F = nullptr;
     }
 
-    cylinder_monitor::cylinder_monitor(const cylinder_surface &surf, const freq_data &freq, bool extendable): monitor("cylinder_monitor",freq,extendable), surf(surf), length(0) {
+    cylinder_monitor::cylinder_monitor(const cylinder_surface &surf, const Array &freq): monitor("cylinder_monitor"), surf(surf), length(0), freq(freq) {
         F = nullptr;
     }
 
@@ -21,12 +21,8 @@ namespace qbox {
         monitor::set_F(newF);
 
         length = ceil(2*M_PI*surf.radius/F->dx);
-
+        fourier = dft<1>(freq, {"Ez", "H_rho"}, Array::Constant(1,length));
         prevE = Array::Zero(length);
-        rE = tensor(length, freq.size()); rE.setZero();
-        iE = tensor(length, freq.size()); iE.setZero();
-        rH = tensor(length, freq.size()); rH.setZero();
-        iH = tensor(length, freq.size()); iH.setZero();
 
         auto group = get_group();
         surf.write(group);
@@ -35,31 +31,21 @@ namespace qbox {
     void cylinder_monitor::update() {
         //*** this dir, Hfield combo is bad design (maybe use enum)
 
-        double E = 0;
-        double H = 0;
+        tensor1 E(length);
+        tensor1 H(length);
         freq.update(F->t);
 
         for (int i = 0; i < length; i++) {
             double theta = 2*M_PI*(i + 0.5)/(length + 1);
             vec pr = surf.position(theta);
-
             //H = -sin(theta)*F->interpolate(fields::Hx, pr) + cos(theta)*F->interpolate(fields::Hy, pr);
             H = vec(F->interpolate(fields::Hx, pr), F->interpolate(fields::Hy, pr)).dot(surf.tangent(theta));
             E = F->interpolate(fields::Ez, pr);
             double tempE = E;
             E = (E + prevE(i))/2;
-
             prevE(i) = tempE;
 
-            const int max_freq = freq.size();
-#pragma GCC ivdep
-            for (int j = 0; j < max_freq; j++) {
-                rE(i,j) += E*freq.get_cosf(j);
-                iE(i,j) += E*freq.get_sinf(j);
 
-                rH(i,j) += H*freq.get_cosf(j);
-                iH(i,j) += H*freq.get_sinf(j);
-            }
         }
     }
 
