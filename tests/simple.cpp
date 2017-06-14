@@ -14,7 +14,8 @@ int main() {
     
     double f = 2/30.0;
     // box_monitor m1("m1", volume({60,60}, 20,20), freq_data(1/30.0,3/30.0, 500), false); 
-    // test.add_monitor(m1);
+    surface_monitor m1("m1", surface({60,60}, {60,80}), Array::LinSpaced(500, 1/30.0, 3/30.0)); 
+    test.add_monitor(m1);
     // box_monitor m2("m2", volume({95,95}, 20,20), freq_data(1/30.0,3/30.0, 500), false); 
     // test.add_monitor(m2);
 

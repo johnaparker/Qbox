@@ -8,10 +8,18 @@
 
 namespace qbox {
 
+    using namespace std::complex_literals;
+
     template<int RANK>
     class dft {
         using grid_tensor = Eigen::Tensor<double, RANK, Eigen::RowMajor>;
         using dft_tensor  = Eigen::Tensor<std::complex<double>, RANK+1, Eigen::RowMajor>;
+
+        class Ez{};
+        class Hx{};
+        class Hy{};
+        class tangent{};
+        class all{};
 
     public:
         dft() = default;
@@ -40,7 +48,7 @@ namespace qbox {
                 std::string name = p.first;
 #pragma GCC ivdep
                 for (int k = 0; k < Nfreq; k++)
-                    fourier[name].chip(k, RANK) = p.second*cosf(k) + std::complex<double>(0,1)*p.second*sinf(k);
+                    fourier[name].chip(k, RANK) = p.second*cosf(k) + 1i*p.second*sinf(k);
             }
         }
 
