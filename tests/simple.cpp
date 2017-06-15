@@ -14,7 +14,7 @@ int main() {
     
     double f = 2/30.0;
     // box_monitor m1("m1", volume({60,60}, 20,20), freq_data(1/30.0,3/30.0, 500), false); 
-    surface_monitor m1("m1", surface({60,60}, {60,80}), Array::LinSpaced(500, 1/30.0, 3/30.0)); 
+    surface_monitor m1("m1", surface({40,80}, {80,80}), Array::LinSpaced(500, 1/30.0, 3/30.0)); 
     test.add_monitor(m1);
     // box_monitor m2("m2", volume({95,95}, 20,20), freq_data(1/30.0,3/30.0, 500), false); 
     // test.add_monitor(m2);
@@ -26,7 +26,8 @@ int main() {
         test.update();
         // test.writeE();
     }
-    // m1.write_flux();
+    auto flux = m1.flux();
+    flux.write();
     // m2.write_flux();
     // m2.write_flux_sides();
 }

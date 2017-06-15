@@ -10,16 +10,32 @@ namespace qbox {
 
     //*** Perhaps allow a res parameter to "skip" some grid cells 
     //surface monitor: monitors all points inside a plane
+    class Flux {
+    public:
+        Flux(const Array& S, const h5cpp::h5file &file, const h5cpp::h5group &group ): S(S) {
+            file_name = file.get_name();
+            group_path = group.get_path();
+        }
+
+        void write() {
+            h5cpp::h5file f(file_name, h5cpp::io::rw);
+            auto g = f.open_group(group_path);
+            h5cpp::write_array<double>(S, g, "flux");
+        }
+
+        Array flux() {return S;}
+
+    private:
+        Array S;
+        std::string file_name;
+        std::string group_path;
+    };
 
     class surface_monitor: public open_monitor {
-        static constexpr char* sub_group = "surface";
+        static constexpr char* sub_group = "surface_monitor";
     public:
-        surface_monitor(std::string name, const surface &surf, const Array &freq): rank_monitor(name, "surface"), surf(surf), freq(freq),  length(0) {
-            F = nullptr;
-        }
-        surface_monitor(const surface &surf, const Array &freq): rank_monitor("surface"), surf(surf), freq(freq), length(0) {
-            F = nullptr;
-        }
+        surface_monitor(std::string name, const surface &surf, const Array &freq): rank_monitor(name, sub_group, freq), surf(surf), length(0) {};
+        surface_monitor(const surface &surf, const Array &freq): rank_monitor(sub_group, freq), surf(surf), length(0) {};
 
         void set_F(Field2D *newF) {
             monitor::set_F(newF);
@@ -27,8 +43,16 @@ namespace qbox {
             length = isurf.dim.norm();
 
             prevE = Array::Zero(length);
+            fourier.add("Ez", {length});
+            fourier.add("H", {length});
+            // if (isurf.dim[0] == 0)
+            //     fourier.add("Hy", {length});
+            // else
+            //     fourier.add("Hx", {length});
+
             auto group = get_group();
             surf.write(group);
+            fourier.write_properties(group);
         }
 
         void update() {
@@ -36,8 +60,8 @@ namespace qbox {
             auto isurf = F->grid.to_grid(surf);
             auto *Hfield = isurf.dim[0] == 0 ? &F->Hy : &F->Hx;
 
-            double E = 0;
-            double H = 0;
+            ComplexTensor1 Ez(length);
+            ComplexTensor1 H(length);
 
             for (int i = 0; i < length; i++) {
                 ivec p = isurf.a + i*isurf.tangent;
@@ -59,37 +83,38 @@ namespace qbox {
                 //E = (E + prevE(i))/2;
                 //prevE(i) = tempE;
                         
-                H = ((*Hfield)(p) + (*Hfield)(p - isurf.normal.array().cwiseAbs().matrix()))/2;
-                E = (F->Ez(p) + prevE(i))/2;
+                H(i) = ((*Hfield)(p) + (*Hfield)(p - isurf.normal.array().cwiseAbs().matrix()))/2;
+                Ez(i) = (F->Ez(p) + prevE(i))/2;
                 prevE(i) = F->Ez(p);
             }
-
-
             //prevE(length) = F->Ez(isurf.b);
+            fourier.update({{"Ez", Ez}, {"H", H}}, F->t);
         }
 
-        //*** rename to flux
-        Array flux() const {
-            Array S = Array::Zero(freq.size());
+        Flux flux() const {
+            Array S = Array::Zero(fourier.Nfreq());
 
-            // for (int i = 0; i < length; i++) {
-            //     for (int j = 0; j < freq.size(); j++) {
-            //         S[j] += rE(i,j)*rH(i,j) + iE(i,j)*iH(i,j);
-            //     }
-            // }
+            const auto E = fourier.get("Ez");
+            const auto H = fourier.get("H");
 
-            // int factor = surf.dim[0] == 0 ? -1 : +1;
-            // S *= F->dx*int(surf.Sign)*factor;
-            return S;
+            for (int i = 0; i < length; i++) {
+                for (int j = 0; j < fourier.Nfreq(); j++) {
+                    S[j] += std::real(E(i,j)*std::conj(H(i,j)));
+                }
+            }
+
+            int factor = surf.dim[0] == 0 ? -1 : +1;
+            S *= F->dx*int(surf.Sign)*factor;
+            return Flux(S, *outFile, get_group());
         }
 
         ComplexArray ntff(const vec &center, const vec &pc) const {
             vec p = pc - center;
             double r = p.norm();
-            Array omega = 2*M_PI*freq;
+            Array omega = 2*M_PI*fourier.get_freq();
             Array k = omega;
             ComplexArray factor = Eigen::exp(1i*(M_PI/4 - k*r))/Eigen::sqrt(8*r*M_PI*k); 
-            ComplexArray integral = ComplexArray::Zero(freq.size());
+            ComplexArray integral = ComplexArray::Zero(fourier.Nfreq());
             
 
             vec tangent = surf.tangent;
@@ -123,7 +148,6 @@ namespace qbox {
     private:
         surface surf;
         Array prevE;     ///< previous electric field values
-        Array freq;
         int length;      ///< length of monitor in grid points
     };
 

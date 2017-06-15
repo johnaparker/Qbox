@@ -24,6 +24,7 @@ namespace qbox {
     using tensor = Eigen::Tensor<double,2,Eigen::RowMajor>;
     using tensor3 = Eigen::Tensor<double,3,Eigen::RowMajor>;
     using tensor4 = Eigen::Tensor<double,4,Eigen::RowMajor>;
+    using ComplexTensor1 = Eigen::Tensor<std::complex<double>,1,Eigen::RowMajor>;
     using ComplexTensor = Eigen::Tensor<std::complex<double>,2,Eigen::RowMajor>;
     using ComplexTensor3 = Eigen::Tensor<std::complex<double>,3,Eigen::RowMajor>;
     using ComplexTensor4 = Eigen::Tensor<std::complex<double>,4,Eigen::RowMajor>;

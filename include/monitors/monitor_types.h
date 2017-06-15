@@ -5,10 +5,12 @@
 
 namespace qbox {
 
+    class Flux;
+
     // Flux monitor: enables flux computation (requires 'tangent' or 'all')
     class flux_monitor: virtual public rank_monitor<1> {
     public:
-        virtual Array flux() const = 0;
+        virtual Flux flux() const = 0;
     };
 
     // ntff monitor: enables near-to-far-field computation (requires 'tangent' or 'all')
