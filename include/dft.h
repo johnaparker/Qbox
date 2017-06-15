@@ -7,12 +7,13 @@
 #include <vector>
 #include <complex>
 #include <initializer_list>
+#include <functional>
 
 namespace qbox {
 
     using namespace std::complex_literals;
 
-    template<int RANK>
+    template<unsigned int RANK>
     class dft {
         using grid_tensor = Eigen::Tensor<std::complex<double>, RANK, Eigen::RowMajor>;
         using dft_tensor  = Eigen::Tensor<std::complex<double>, RANK+1, Eigen::RowMajor>;
@@ -74,20 +75,9 @@ namespace qbox {
             }
         }
 
-        // void update(functor f) {
-        //     f(vec p, string name) -> double component
-        //     OR
-        //     f(string name) -> g(vec p)
-        //     OR
-        //     map m<name, f(vec p)>
+        template <class T>
+        void update(std::function<std::function<T>(std::string)> f, double tnew);
 
-        //     for (name: names)
-        //         for (i: 0->Nx)
-        //             for (j: 0->Ny)
-        //                 for (int k = 0; k < Nfreq(); k++)
-        //                     fourier[name](i,j,k) += f(i,j,name)*(cosf(k) + 1j*sinf(k));
-                    
-        // }
 
         void write_properties(const h5cpp::h5group &group) const {
             h5cpp::write_array<double>(freq, group, "frequency");
@@ -102,7 +92,7 @@ namespace qbox {
         double get_freq(int i) const {return freq[i];}
         int Nfreq() const {return freq.size();}
 
-        // const dft_tensor& operator() (std::string name) {return fourier[name];}
+        const dft_tensor& operator() (const std::string &name) const {return fourier.at(name);}
         const dft_tensor& get(const std::string &name) const {return fourier.at(name);}
 
         void operator-=(const dft& other) {
@@ -116,6 +106,33 @@ namespace qbox {
         std::map<std::string, dft_tensor> fourier;
     };
 
+
+    template<>
+    template<> void dft<1>::update(std::function<std::function<double(int)>(std::string)> f, double tnew) {
+        if (t == tnew)
+            return;
+        t = tnew;
+        // assert that keys match exactly
+        ComplexArray expf = Eigen::exp(2i*M_PI*freq*t);
+
+        const int kmax = Nfreq();
+        for (auto& p: fourier) {
+            auto g = f(p.first);
+            const int imax = p.second.dimensions()[0];
+            // std::cout << "kmax: " << kmax << std::endl;
+            // std::cout << "imax: " << imax << std::endl;
+            // tensor other;
+            // other = tensor(2,2);
+            // other.setZero();
+            
+            for (int i = 0; i < imax; i++ ) {
+                double g_val = g(i);
+#pragma GCC ivdep
+                for (int k = 0; k < kmax; k++)
+                    p.second(i,k) += g_val*expf(k);
+            }
+        }
+    }
 }
 
 #endif

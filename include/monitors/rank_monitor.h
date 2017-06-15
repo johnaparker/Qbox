@@ -23,6 +23,7 @@ namespace qbox {
 
     protected:
         dft<RANK> fourier;
+        // std::optional<Eigen::Tensor<double,RANK,Eigen::RowMajor>> prevE;
     };
 
 }

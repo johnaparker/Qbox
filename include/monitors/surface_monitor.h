@@ -55,16 +55,40 @@ namespace qbox {
             fourier.write_properties(group);
         }
 
-        void update() {
-            //*** this dir, Hfield combo is bad design (maybe use enum)
+        std::function<double(int)> locate(std::string comp) {
             auto isurf = F->grid.to_grid(surf);
-            auto *Hfield = isurf.dim[0] == 0 ? &F->Hy : &F->Hx;
 
-            ComplexTensor1 Ez(length);
-            ComplexTensor1 H(length);
+            if (comp == "Ez") {
+                return [this, &isurf](int i) {
+                    ivec p = isurf.a + i*isurf.tangent;
+                    double E = F->Ez(p);
+                    // std::cout << E << std::endl;
+                    // prevE(i) = F->Ez(p);
+                    return E;
+                };
+            }
 
-            for (int i = 0; i < length; i++) {
-                ivec p = isurf.a + i*isurf.tangent;
+            else if (comp == "H") {
+                auto *Hfield = isurf.dim[0] == 0 ? &F->Hy : &F->Hx;
+                return [this, &isurf, Hfield](int i) {
+                    ivec p = isurf.a + i*isurf.tangent;
+                    return ((*Hfield)(p) + (*Hfield)(p - isurf.normal.array().cwiseAbs().matrix()))/2;
+                };
+            }
+        }
+
+        void update() {
+            fourier.update<double(int)> (std::bind(&surface_monitor::locate, this, std::placeholders::_1), F->t);
+
+            //*** this dir, Hfield combo is bad design (maybe use enum)
+            // auto isurf = F->grid.to_grid(surf);
+            // auto *Hfield = isurf.dim[0] == 0 ? &F->Hy : &F->Hx;
+
+            // ComplexTensor1 Ez(length);
+            // ComplexTensor1 H(length);
+
+            // for (int i = 0; i < length; i++) {
+            //     ivec p = isurf.a + i*isurf.tangent;
                 //H = ((*Hfield)(p)+ (*Hfield)(p - isurf.normal)
                         //+ (*Hfield)(p + isurf.tangent) + (*Hfield)(p - isurf.normal + isurf.tangent))/4;
                 //E = (F->Ez(p) + F->Ez(p + isurf.tangent)
@@ -83,19 +107,19 @@ namespace qbox {
                 //E = (E + prevE(i))/2;
                 //prevE(i) = tempE;
                         
-                H(i) = ((*Hfield)(p) + (*Hfield)(p - isurf.normal.array().cwiseAbs().matrix()))/2;
-                Ez(i) = (F->Ez(p) + prevE(i))/2;
-                prevE(i) = F->Ez(p);
-            }
+                // H(i) = ((*Hfield)(p) + (*Hfield)(p - isurf.normal.array().cwiseAbs().matrix()))/2;
+                // Ez(i) = (F->Ez(p) + prevE(i))/2;
+                // prevE(i) = F->Ez(p);
+            // }
             //prevE(length) = F->Ez(isurf.b);
-            fourier.update({{"Ez", Ez}, {"H", H}}, F->t);
+            // fourier.update({{"Ez", Ez}, {"H", H}}, F->t);
         }
 
         Flux flux() const {
             Array S = Array::Zero(fourier.Nfreq());
 
-            const auto E = fourier.get("Ez");
-            const auto H = fourier.get("H");
+            const auto E = fourier("Ez");
+            const auto H = fourier("H");
 
             for (int i = 0; i < length; i++) {
                 for (int j = 0; j < fourier.Nfreq(); j++) {
