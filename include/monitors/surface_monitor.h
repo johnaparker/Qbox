@@ -1,10 +1,10 @@
 #ifndef GUARD_surface_monitor_h
 #define GUARD_surface_monitor_h
 
-#include "monitor_types.h"
+#include "rank_monitor.h"
 #include <vector>
 #include <math.h>
-#include "field2.h"
+#include "../field2.h"
 
 namespace qbox {
 
@@ -31,7 +31,8 @@ namespace qbox {
         std::string group_path;
     };
 
-    class surface_monitor: public open_monitor {
+    template <class T = DFT::tangent>
+    class surface_monitor: public rank_monitor<1> {
         static constexpr char* sub_group = "surface_monitor";
     public:
         surface_monitor(std::string name, const surface &surf, const Array &freq): rank_monitor(name, sub_group, freq), surf(surf), length(0) {};
@@ -43,8 +44,21 @@ namespace qbox {
             length = isurf.dim.norm();
 
             prevE = Array::Zero(length);
-            fourier.add("Ez", {length});
-            fourier.add("H", {length});
+
+            if constexpr (std::is_same<T, DFT::Ez>::value || std::is_same<T, DFT::all>::value)
+                fourier.add("Ez", {length});
+            if constexpr (std::is_same<T, DFT::Hx>::value || std::is_same<T, DFT::all>::value)
+                fourier.add("Hx", {length});
+            if constexpr (std::is_same<T, DFT::Hy>::value || std::is_same<T, DFT::all>::value)
+                fourier.add("Hy", {length});
+            if constexpr (std::is_same<T, DFT::tangent>::value) {
+                fourier.add("Ez", {length});
+                if (isurf.dim[0] == 0)
+                    fourier.add("Hy", {length});
+                else
+                    fourier.add("Hx", {length});
+            }
+
             // if (isurf.dim[0] == 0)
             //     fourier.add("Hy", {length});
             // else
@@ -62,14 +76,21 @@ namespace qbox {
                 return [this, &isurf](int i) {
                     ivec p = isurf.a + i*isurf.tangent;
                     double E = F->Ez(p);
-                    // std::cout << E << std::endl;
-                    // prevE(i) = F->Ez(p);
+                    prevE(i) = F->Ez(p);
                     return E;
                 };
             }
 
-            else if (comp == "H") {
-                auto *Hfield = isurf.dim[0] == 0 ? &F->Hy : &F->Hx;
+            else if (comp == "Hx") {
+                auto *Hfield = &F->Hx;
+                return [this, &isurf, Hfield](int i) {
+                    ivec p = isurf.a + i*isurf.tangent;
+                    return ((*Hfield)(p) + (*Hfield)(p - isurf.normal.array().cwiseAbs().matrix()))/2;
+                };
+            }
+
+            else if (comp == "Hy") {
+                auto *Hfield = &F->Hy;
                 return [this, &isurf, Hfield](int i) {
                     ivec p = isurf.a + i*isurf.tangent;
                     return ((*Hfield)(p) + (*Hfield)(p - isurf.normal.array().cwiseAbs().matrix()))/2;
@@ -79,6 +100,34 @@ namespace qbox {
 
         void update() {
             fourier.update<double(int)> (std::bind(&surface_monitor::locate, this, std::placeholders::_1), F->t);
+
+            // auto isurf = F->grid.to_grid(surf);
+            // fourier.update<double(int)> ([this,&isurf](std::string comp)->std::function<double(int)> {
+            //     if (comp == "Ez") {
+            //         return [this, &isurf](int i) {
+            //             ivec p = isurf.a + i*isurf.tangent;
+            //             double E = F->Ez(p);
+            //             prevE(i) = F->Ez(p);
+            //             return E;
+            //         };
+            //     }
+
+            //     else if (comp == "Hx") {
+            //         auto *Hfield = &F->Hx;
+            //         return [this, &isurf, Hfield](int i) {
+            //             ivec p = isurf.a + i*isurf.tangent;
+            //             return ((*Hfield)(p) + (*Hfield)(p - isurf.normal.array().cwiseAbs().matrix()))/2;
+            //         };
+            //     }
+
+            //     else if (comp == "Hy") {
+            //         auto *Hfield = &F->Hy;
+            //         return [this, &isurf, Hfield](int i) {
+            //             ivec p = isurf.a + i*isurf.tangent;
+            //             return ((*Hfield)(p) + (*Hfield)(p - isurf.normal.array().cwiseAbs().matrix()))/2;
+            //         };
+            //     }
+            // }, F->t);
 
             //*** this dir, Hfield combo is bad design (maybe use enum)
             // auto isurf = F->grid.to_grid(surf);
@@ -116,14 +165,15 @@ namespace qbox {
         }
 
         Flux flux() const {
-            Array S = Array::Zero(fourier.Nfreq());
+            static_assert(std::is_same<DFT::all,T>::value || std::is_same<DFT::tangent,T>::value, "DFT does not contain tangent");
 
+            Array S = Array::Zero(fourier.Nfreq());
             const auto E = fourier("Ez");
-            const auto H = fourier("H");
+            const auto H = surf.dim[0] == 0 ? fourier("Hy") : fourier("Hx");
 
             for (int i = 0; i < length; i++) {
                 for (int j = 0; j < fourier.Nfreq(); j++) {
-                    S[j] += std::real(E(i,j)*std::conj(H(i,j)));
+                    S[j] += E.real(i,j)*H.real(i,j) + E.imag(i,j)*H.imag(i,j);
                 }
             }
 
@@ -133,6 +183,8 @@ namespace qbox {
         }
 
         ComplexArray ntff(const vec &center, const vec &pc) const {
+            static_assert(std::is_same<DFT::all,T>::value || std::is_same<DFT::tangent,T>::value, "DFT does not contain tangent");
+
             vec p = pc - center;
             double r = p.norm();
             Array omega = 2*M_PI*fourier.get_freq();

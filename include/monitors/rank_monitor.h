@@ -2,7 +2,7 @@
 #define GUARD_rank_monitor_h
 
 #include "monitor.h"
-#include "dft.h"
+#include "../dft.h"
 
 namespace qbox {
 
