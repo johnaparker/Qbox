@@ -149,18 +149,13 @@ namespace qbox {
         Flux flux() const {
             static_assert(std::is_same<DFT::all,T>::value || std::is_same<DFT::tangent,T>::value, "DFT does not contain tangent");
 
-            Array S = Array::Zero(fourier.Nfreq());
             const auto E = fourier("Ez");
             const auto H = surf.dim[0] == 0 ? fourier("Hy") : fourier("Hx");
 
-            for (int i = 0; i < length; i++) {
-                for (int j = 0; j < fourier.Nfreq(); j++) {
-                    S[j] += E.real(i,j)*H.real(i,j) + E.imag(i,j)*H.imag(i,j);
-                }
-            }
-
             int factor = surf.dim[0] == 0 ? -1 : +1;
-            S *= F->dx*int(surf.Sign)*factor;
+            double da = factor*F->dx;
+            Array S = compute_flux(E,H,da,surf.Sign);
+
             return Flux(S, *outFile, get_group());
         }
 

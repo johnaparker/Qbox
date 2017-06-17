@@ -14,4 +14,21 @@ namespace qbox {
         auto g = f.open_group(group_path);
         h5cpp::write_array<double>(S, g, "flux");
     }
+
+
+    Array compute_flux(const complex_dft_tensor<1> &E, const complex_dft_tensor<1> &H, double da, sign Sign) {
+        const int length = E.real.dimensions()[0];
+        const int Nfreq = E.real.dimensions()[1];
+
+        Array S = Array::Zero(Nfreq);
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < Nfreq; j++) {
+                S[j] += E.real(i,j)*H.real(i,j) + E.imag(i,j)*H.imag(i,j);
+            }
+        }
+        
+        S *= da*int(Sign);
+        return S;
+    }
+
 }
