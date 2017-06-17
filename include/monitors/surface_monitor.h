@@ -17,7 +17,8 @@ namespace qbox {
     public:
         surface_monitor() = default;
         surface_monitor(std::string name, const surface &surf, const Array &freq): rank_monitor(name, sub_group, freq), surf(surf), length(0) {};
-        surface_monitor(const surface &surf, const Array &freq): rank_monitor(sub_group, freq), surf(surf), length(0) {};
+        surface_monitor(const surface &surf, const Array &freq): surface_monitor("monitor_" + std::to_string(_num_created), surf, freq) {_num_created++;}
+
 
         void set_F(Field2D *newF) {
             monitor::set_F(newF);

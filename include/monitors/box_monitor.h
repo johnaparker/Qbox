@@ -20,13 +20,7 @@ namespace qbox {
             monitors[3] = surface_monitor<T>(name + "_4", vol.get_surface(box_side::x_bottom), freq);
         }
 
-        box_monitor(const volume &vol, const Array &freq): rank_monitor(sub_group, freq), vol(vol) {
-            Nfreq = freq.size();
-            monitors[0] = surface_monitor<T>(name + "_1", vol.get_surface(box_side::y_bottom), freq);
-            monitors[1] = surface_monitor<T>(name + "_2", vol.get_surface(box_side::x_top),    freq);
-            monitors[2] = surface_monitor<T>(name + "_3", vol.get_surface(box_side::y_top),    freq);
-            monitors[3] = surface_monitor<T>(name + "_4", vol.get_surface(box_side::x_bottom), freq);
-        }
+        box_monitor(const volume &vol, const Array &freq): box_monitor("monitor_" + std::to_string(_num_created), vol, freq) {_num_created++;}
 
         void set_F(Field2D *newF) {
             monitor::set_F(newF);

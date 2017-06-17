@@ -15,9 +15,9 @@ namespace qbox {
         volume_monitor(std::string name, const volume &vol, const Array &freq): rank_monitor(name, sub_group, freq), vol(vol) {
             static_assert(!std::is_same<DFT::tangent,T>::value, "DFT::tangent is ambiguous for a volume monitor");
         };
-        volume_monitor(const volume &vol, const Array &freq): rank_monitor(sub_group, freq), vol(vol) {
-            static_assert(!std::is_same<DFT::tangent,T>::value, "DFT::tangent is ambiguous for a volume monitor");
-        };
+
+        volume_monitor(const volume &vol, const Array &freq): volume_monitor("monitor_" + std::to_string(_num_created), vol, freq) {_num_created++;}
+
 
         void set_F(Field2D *newF) {
             monitor::set_F(newF);

@@ -17,9 +17,8 @@ namespace qbox {
         cylinder_monitor(std::string name, const cylinder_surface &surf, const Array &freq): rank_monitor(name, sub_group, freq), surf(surf), length(0) {
             static_assert(!std::is_same<DFT::Ez,T>::value && !std::is_same<DFT::Hx,T>::value && !std::is_same<DFT::Hy,T>::value, "Cartesian components cannot be directly DFT'd for cylinder monitors");
         }
-        cylinder_monitor(const surface &cylinder_surf, const Array &freq): rank_monitor(sub_group, freq), surf(surf), length(0) {
-            static_assert(!std::is_same<DFT::Ez,T>::value && !std::is_same<DFT::Hx,T>::value && !std::is_same<DFT::Hy,T>::value, "Cartesian components cannot be directly DFT'd for cylinder monitors");
-        }
+
+        cylinder_monitor(const cylinder_surface &surf, const Array &freq): cylinder_monitor("monitor_" + std::to_string(_num_created), surf, freq) {_num_created++;}
 
         void set_F(Field2D *newF) {
             monitor::set_F(newF);

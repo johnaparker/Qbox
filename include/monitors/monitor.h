@@ -18,7 +18,6 @@ namespace qbox {
 
     public:
         monitor(std::string name, std::string sub_name): name(name), sub_name(sub_name) {};
-        monitor(std::string sub_name): monitor("monitor_" + std::to_string(_num_created), sub_name) {_num_created++;}
 
         //*** should probably be private:
         virtual void set_F(Field2D *newF);        //set the owning field
@@ -37,7 +36,6 @@ namespace qbox {
         Field2D *F;      //pointer to owning field object
         std::unique_ptr<h5cpp::h5file> outFile;
 
-    private:
         static int _num_created;
     };
 

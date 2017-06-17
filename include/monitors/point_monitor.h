@@ -15,9 +15,8 @@ namespace qbox {
         point_monitor(std::string name, const vec &pos, const Array &freq): rank_monitor(name, sub_group, freq), pos(pos) {
             static_assert(!std::is_same<DFT::tangent,T>::value, "DFT::tangent is ambiguous for a point monitor");
         };
-        point_monitor(const vec &pos, const Array &freq): rank_monitor(sub_group, freq), pos(pos) {
-            static_assert(!std::is_same<DFT::tangent,T>::value, "DFT::tangent is ambiguous for a point monitor");
-        };
+
+        point_monitor(const vec &pos, const Array &freq): point_monitor("monitor_" + std::to_string(_num_created), pos, freq) {_num_created++;}
 
         void set_F(Field2D *newF) {
             monitor::set_F(newF);
