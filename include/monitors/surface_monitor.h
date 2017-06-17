@@ -75,7 +75,7 @@ namespace qbox {
             if (comp == "Ez") {
                 return [this, &isurf](int i) {
                     ivec p = isurf.a + i*isurf.tangent;
-                    double E = F->Ez(p);
+                    double E = (F->Ez(p) + prevE(i))/2;
                     prevE(i) = F->Ez(p);
                     return E;
                 };
@@ -85,7 +85,7 @@ namespace qbox {
                 auto *Hfield = &F->Hx;
                 return [this, &isurf, Hfield](int i) {
                     ivec p = isurf.a + i*isurf.tangent;
-                    return ((*Hfield)(p) + (*Hfield)(p - isurf.normal.array().cwiseAbs().matrix()))/2;
+                    return ((*Hfield)(p) + (*Hfield)(p - ivec(1,0)))/2;
                 };
             }
 
@@ -93,7 +93,7 @@ namespace qbox {
                 auto *Hfield = &F->Hy;
                 return [this, &isurf, Hfield](int i) {
                     ivec p = isurf.a + i*isurf.tangent;
-                    return ((*Hfield)(p) + (*Hfield)(p - isurf.normal.array().cwiseAbs().matrix()))/2;
+                    return ((*Hfield)(p) + (*Hfield)(p - ivec(0,1)))/2;
                 };
             }
         }
