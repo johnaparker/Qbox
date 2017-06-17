@@ -52,7 +52,7 @@ namespace qbox {
         void clear_materials();          ///< Set all grid points to have material of the background
         void reset_tfsf();
 
-        void set_tfsf(const volume& vol, const time_profile& tp);
+        const tfsf& set_tfsf(const volume& vol, const time_profile& tp);
         void write_tfsf();
 
         //write to HDF5 with filename

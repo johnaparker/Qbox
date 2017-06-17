@@ -4,11 +4,6 @@ using namespace std;
 
 namespace qbox {
 
-    time_profile::time_profile(optional<Array> freq) {
-        if (freq)
-            fourier = dft<0>(*freq, "dft", {});
-    }
-
     void time_profile::update(double val, double t) {
         if (fourier) {
             function<double()> f = [val](){return val;};

@@ -74,7 +74,7 @@ namespace qbox {
 
 
         void write_properties(const h5cpp::h5group &group) const {
-            h5cpp::write_array<double>(freq, group, "frequency");
+            h5cpp::write_array<double>(freq, group, "dft_frequency");
         }
 
         void write(const h5cpp::h5group &group) const {

@@ -11,7 +11,7 @@ using namespace std;
 
 namespace qbox {
 
-    tfsf::tfsf(const grid_properties &grid, const time_profile &tp, const volume &vol, double dt): vol(vol), tp(tp.clone()), dx(grid.dx), dt(dt), t(0) {
+    tfsf::tfsf(std::string filename, const grid_properties &grid, const time_profile &tp, const volume &vol, double dt): filename(filename), vol(vol), tp(tp.clone()), dx(grid.dx), dt(dt), t(0) {
 
         auto ivol = grid.to_grid(vol);
         Nx = ivol.dim[1] + 5;
@@ -88,7 +88,29 @@ namespace qbox {
         }
     }
 
-    void tfsf::write(const h5cpp::h5group &group) {
+    Flux tfsf::flux() const {
+        auto fourier = tp->get_dft();
+        if (fourier) {
+            Array S = Array::Zero(fourier->Nfreq());
+            const auto E = fourier->get("dft");
+            for (int j = 0; j < fourier->Nfreq(); j++) {
+                S[j] += pow(E.real(j),2) + pow(E.imag(j),2);
+            }
+            return Flux(S, filename, "/sources/tfsf");
+        }
+        //throw
+    }
+
+    void tfsf::write_properties() const {
+        h5cpp::h5file outFile(filename, h5cpp::io::rw);
+        auto sources_group = outFile.create_or_open_group("sources");
+        auto group = sources_group.create_or_open_group("tfsf");
+
         vol.write(group);
+
+        auto fourier = tp->get_dft();
+        if (fourier) {
+            fourier->write_properties(group);
+        }
     }
 }

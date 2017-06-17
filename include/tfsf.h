@@ -4,6 +4,7 @@
 #include <memory>
 #include "vec.h"
 #include "qbox/sources/time_profile.h"
+#include "monitors/flux.h"
 
 namespace qbox {
 
@@ -27,7 +28,7 @@ namespace qbox {
  */
     class tfsf {
     public:
-        tfsf(const grid_properties &grid, const time_profile &tp, const volume &vol, double dt);
+        tfsf(const std::string filename, const grid_properties &grid, const time_profile &tp, const volume &vol, double dt);
 
         /// update the source in 1D sim
         void pulse();               
@@ -38,9 +39,11 @@ namespace qbox {
         /// @param f pointer to owning Field2D object
         void updateH(Field2D* f);
 
-        void write(const h5cpp::h5group &group);
+        Flux flux() const;
+        void write_properties() const;
 
     private:
+        std::string filename;
         volume vol;
         int ia,ib,ja,jb;    ///< position of 4 corners
         std::unique_ptr<time_profile> tp;       ///< A 1D field simulation to produce perfect plane wave

@@ -274,21 +274,11 @@ namespace qbox {
         }
     }
 
-    void Field2D::set_tfsf(const volume& vol, const time_profile& tp) {
-        total = tfsf(grid, tp, vol, dt);
-        //auto sources_group = outFile->create_or_open_group("sources");
-        //auto group = sources_group.create_or_open_group("tfsf");
-        //total->write(group);
+    const tfsf& Field2D::set_tfsf(const volume& vol, const time_profile& tp) {
+        total = tfsf(outFile->get_name(), grid, tp, vol, dt);
+        total->write_properties();
+        return *total;
     }
-
-    void Field2D::write_tfsf() {
-        if (total) {
-            auto sources_group = outFile->create_or_open_group("sources");
-            auto group = sources_group.create_or_open_group("tfsf");
-            //*** and...
-        }
-    }
-
 
     double Field2D::interpolate(fields C, const vec &p) {
         vec ps = p/dx; 
