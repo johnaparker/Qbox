@@ -14,13 +14,10 @@ int main() {
     
     double f = 2/30.0;
     auto freq_data = Array::LinSpaced(500, 1/30.0, 3/30.0);
-    // box_monitor m1("m1", volume({60,60}, 20,20), freq_data(1/30.0,3/30.0, 500), false); 
-    surface_monitor m1("m1", surface({40,80}, {80,80}), freq_data);
+    box_monitor<DFT::tangent> m1("m1", volume({60,60}, 20,20), freq_data);
+    box_monitor<DFT::tangent> m2("m2", volume({95,95}, 20,20), freq_data);
     test.add_monitor(m1);
-    point_monitor m2("m2", vec(40,40), freq_data);
     test.add_monitor(m2);
-    box_monitor m3("m3", volume({95,95}, 20,20), freq_data);
-    test.add_monitor(m3);
 
     point_source s1(fields::Ez, {60,60}, gaussian_time(f, 1/200.0, 80));
     test.add_source(s1);
@@ -29,10 +26,10 @@ int main() {
         test.update();
         // test.writeE();
     }
-    auto flux = m1.flux();
-    flux.write();
-    m2.write();
-    m3.flux().write();
-    // m2.write_flux();
-    // m2.write_flux_sides();
+
+    //*** don't allow this if setF hasn't been called (add_monitor)
+    //*** (really though, shouldn't monitors require field to be passed at construction?)
+    m1.flux().write();
+    m2.flux().write();
+    //*** compare this to pre-monitor code ... m2 flux is much larger 
 }

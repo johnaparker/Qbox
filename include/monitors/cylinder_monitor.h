@@ -15,10 +15,10 @@ namespace qbox {
     public:
         cylinder_monitor() = default;
         cylinder_monitor(std::string name, const cylinder_surface &surf, const Array &freq): rank_monitor(name, sub_group, freq), surf(surf), length(0) {
-            static_assert(!std::is_same<DFT::Ez,T>::value || !std::is_same<DFT::Hx,T>::value || !std::is_same<DFT::Hy,T>::value, "Cartesian components cannot be directly DFT'd for cylinder monitors");
+            static_assert(!std::is_same<DFT::Ez,T>::value && !std::is_same<DFT::Hx,T>::value && !std::is_same<DFT::Hy,T>::value, "Cartesian components cannot be directly DFT'd for cylinder monitors");
         }
         cylinder_monitor(const surface &cylinder_surf, const Array &freq): rank_monitor(sub_group, freq), surf(surf), length(0) {
-            static_assert(!std::is_same<DFT::Ez,T>::value || !std::is_same<DFT::Hx,T>::value || !std::is_same<DFT::Hy,T>::value, "Cartesian components cannot be directly DFT'd for cylinder monitors");
+            static_assert(!std::is_same<DFT::Ez,T>::value && !std::is_same<DFT::Hx,T>::value && !std::is_same<DFT::Hy,T>::value, "Cartesian components cannot be directly DFT'd for cylinder monitors");
         }
 
         void set_F(Field2D *newF) {
@@ -83,7 +83,8 @@ namespace qbox {
 
             for (int i = 0; i < length; i++) {
                 for (int j = 0; j < fourier.Nfreq(); j++) {
-                    S[j] += E.real(i,j)*H.real(i,j) + E.imag(i,j)*H.imag(i,j);
+                    // E cross H points inward
+                    S[j] -= E.real(i,j)*H.real(i,j) + E.imag(i,j)*H.imag(i,j);
                 }
             }
 
