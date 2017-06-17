@@ -48,14 +48,14 @@ namespace qbox {
             else if (comp == "Hx") {
                 auto *Hfield = &F->Hx;
                 return [this, &ipos, Hfield]() {
-                    return ((*Hfield)(ipos) + (*Hfield)(ipos - ivec(1,0)))/2;
+                    return ((*Hfield)(ipos) + (*Hfield)(ipos - ivec(0,1)))/2;
                 };
             }
 
             else if (comp == "Hy") {
                 auto *Hfield = &F->Hy;
                 return [this, &ipos, Hfield]() {
-                    return ((*Hfield)(ipos) + (*Hfield)(ipos - ivec(0,1)))/2;
+                    return ((*Hfield)(ipos) + (*Hfield)(ipos - ivec(1,0)))/2;
                 };
             }
         }

@@ -5,32 +5,12 @@
 #include <vector>
 #include <math.h>
 #include "../field2.h"
+#include "monitors/flux.h"
 
 namespace qbox {
 
     //*** Perhaps allow a res parameter to "skip" some grid cells 
     //surface monitor: monitors all points inside a plane
-    class Flux {
-    public:
-        Flux(const Array& S, const h5cpp::h5file &file, const h5cpp::h5group &group ): S(S) {
-            file_name = file.get_name();
-            group_path = group.get_path();
-        }
-
-        void write() {
-            h5cpp::h5file f(file_name, h5cpp::io::rw);
-            auto g = f.open_group(group_path);
-            h5cpp::write_array<double>(S, g, "flux");
-        }
-
-        Array flux() {return S;}
-
-    private:
-        Array S;
-        std::string file_name;
-        std::string group_path;
-    };
-
     template <class T = DFT::tangent>
     class surface_monitor: public rank_monitor<1> {
         static constexpr char* sub_group = "surface_monitor";
@@ -76,8 +56,9 @@ namespace qbox {
             if (comp == "Ez") {
                 return [this, &isurf](int i) {
                     ivec p = isurf.a + i*isurf.tangent;
-                    double E = (F->Ez(p) + prevE(i))/2;
-                    prevE(i) = F->Ez(p);
+                    double tempE = F->Ez(p);
+                    double E = (tempE + prevE(i))/2;
+                    prevE(i) = tempE;
                     return E;
                 };
             }
@@ -86,7 +67,7 @@ namespace qbox {
                 auto *Hfield = &F->Hx;
                 return [this, &isurf, Hfield](int i) {
                     ivec p = isurf.a + i*isurf.tangent;
-                    return ((*Hfield)(p) + (*Hfield)(p - ivec(1,0)))/2;
+                    return ((*Hfield)(p) + (*Hfield)(p - ivec(0,1)))/2;
                 };
             }
 
@@ -94,7 +75,7 @@ namespace qbox {
                 auto *Hfield = &F->Hy;
                 return [this, &isurf, Hfield](int i) {
                     ivec p = isurf.a + i*isurf.tangent;
-                    return ((*Hfield)(p) + (*Hfield)(p - ivec(0,1)))/2;
+                    return ((*Hfield)(p) + (*Hfield)(p - ivec(1,0)))/2;
                 };
             }
         }
