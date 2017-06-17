@@ -35,6 +35,7 @@ namespace qbox {
     class surface_monitor: public rank_monitor<1> {
         static constexpr char* sub_group = "surface_monitor";
     public:
+        surface_monitor() = default;
         surface_monitor(std::string name, const surface &surf, const Array &freq): rank_monitor(name, sub_group, freq), surf(surf), length(0) {};
         surface_monitor(const surface &surf, const Array &freq): rank_monitor(sub_group, freq), surf(surf), length(0) {};
 

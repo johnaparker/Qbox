@@ -10,6 +10,7 @@ namespace qbox {
     class rank_monitor: public monitor {
 
     public:
+        rank_monitor() = default;
         rank_monitor(std::string name, std::string sub_name, const Array &freq): monitor(name, sub_name), fourier(freq) {};
         rank_monitor(std::string sub_name, const Array &freq): monitor(sub_name), fourier(freq) {};
 
