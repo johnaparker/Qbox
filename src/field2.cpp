@@ -36,7 +36,7 @@ namespace qbox {
         Da = tensor(Nx,Ny);
         Db = tensor(Nx,Ny);
 
-        background = make_unique<simple_material>(1);
+        background = make_unique<simple_material>("medium", 1);
 
         clear_materials();
 
