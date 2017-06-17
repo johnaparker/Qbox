@@ -24,9 +24,9 @@ namespace qbox{}
 //monitors
 #include "qbox/monitors/point_monitor.h"
 #include "qbox/monitors/surface_monitor.h"
- #include "qbox/monitors/cylinder_monitor.h"
+#include "qbox/monitors/cylinder_monitor.h"
 #include "qbox/monitors/box_monitor.h"
-// #include "qbox/monitors/volume_monitor.h"
+#include "qbox/monitors/volume_monitor.h"
 
 //sources
 #include "qbox/sources/point_source.h"

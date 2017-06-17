@@ -34,14 +34,14 @@ int main() {
         obj.set_theta(theta);
         test.update_material_grid();  // update material grid
 
-        volume_monitor m1(grid.domain(), freq_data(f)); 
+        volume_monitor<DFT::Ez> m1(grid.domain(), Array::Constant(1,f)); 
 
         for (int i = 0; i != 1300; i++) {
             test.update();
             if (i == 300)
                 test.add_monitor(m1);
         }
-        m1.write_dft();
+        m1.write();
         obj.write_current();
         cout << "\nBig time step: " << T << endl;
     }

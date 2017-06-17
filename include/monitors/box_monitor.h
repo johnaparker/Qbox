@@ -5,7 +5,7 @@
 #include <vector>
 #include <math.h>
 #include "../field2.h"
-#include "monitors/flux.h"
+#include "flux.h"
 
 namespace qbox {
     template <class T = DFT::all>

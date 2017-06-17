@@ -12,7 +12,7 @@ filename = "metal_block"
 filename = "out"
 
 with h5py.File('{}.h5'.format(filename), 'r') as f:
-    d = f["monitors/volume_monitor/monitor_0/dft"][...]
+    d = f["monitors/volume_monitor/monitor_0/Ez"][...]
     Er = d['real']
     Ei = d['imag']
     I = Er**2 + Ei**2
@@ -23,7 +23,7 @@ with h5py.File('{}.h5'.format(filename), 'r') as f:
     im = plt.pcolormesh(I.T, cmap=colors.cmap['parula'], vmax = vmax, vmin = vmin)
     
     def updatefig(frame):
-        d = f["monitors/volume_monitor/monitor_{0}/dft".format(frame)][...]
+        d = f["monitors/volume_monitor/monitor_{0}/Ez".format(frame)][...]
         Er = d['real']
         Ei = d['imag']
         I = Er**2 + Ei**2

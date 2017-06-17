@@ -4,7 +4,7 @@
 #include <memory>
 #include <optional>
 #include "h5cpp.h"
-#include "dft.h"
+#include "../dft.h"
 
 namespace qbox {
 
