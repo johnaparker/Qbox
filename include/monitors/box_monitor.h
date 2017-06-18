@@ -10,7 +10,7 @@
 namespace qbox {
     template <class T = DFT::all>
     class box_monitor: public rank_monitor<1> {
-        static constexpr char* sub_group = "box_monitor";
+        static constexpr char const* sub_group = "box_monitor";
     public:
         box_monitor(std::string name, const volume &vol, const Array &freq): rank_monitor(name, sub_group, freq), vol(vol) {
             Nfreq = freq.size();

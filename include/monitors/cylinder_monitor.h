@@ -11,7 +11,7 @@ namespace qbox {
 
     template <class T = DFT::all>
     class cylinder_monitor: public rank_monitor<1> {
-        static constexpr char* sub_group = "cylinder_monitor";
+        static constexpr char const* sub_group = "cylinder_monitor";
     public:
         cylinder_monitor() = default;
         cylinder_monitor(std::string name, const cylinder_surface &surf, const Array &freq): rank_monitor(name, sub_group, freq), surf(surf), length(0) {

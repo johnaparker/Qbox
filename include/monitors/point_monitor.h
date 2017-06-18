@@ -10,7 +10,7 @@ namespace qbox {
 
     template <class T = DFT::all>
     class point_monitor: public rank_monitor<0> {
-        static constexpr char* sub_group = "point_monitor";
+        static constexpr char const* sub_group = "point_monitor";
     public:
         point_monitor(std::string name, const vec &pos, const Array &freq): rank_monitor(name, sub_group, freq), pos(pos) {
             static_assert(!std::is_same<DFT::tangent,T>::value, "DFT::tangent is ambiguous for a point monitor");
