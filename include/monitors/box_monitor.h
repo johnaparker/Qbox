@@ -41,7 +41,7 @@ namespace qbox {
             Array S = Array::Zero(Nfreq);
 
             for (int i = 0; i < 4; i++) {
-                Array Sm = monitors[i].flux().flux();
+                Array Sm = monitors[i].flux().data();
                 S += Sm;
             }
             return Flux(S, *outFile, get_group());
