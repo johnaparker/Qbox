@@ -23,16 +23,20 @@ int main() {
     cylinder_monitor<DFT::tangent> box_scat("box_scat", cylinder_surface(vec(60,60), 50), freq_data); 
     // box_monitor box_scat("box_scat",volume({60,60}, 75), freq_data); 
     scat.add_monitor(box_scat);
+    cylinder_monitor<DFT::tangent> absorb("absorn", cylinder_surface(vec(60,60), 25), freq_data); 
+    // box_monitor box_scat("box_scat",volume({60,60}, 75), freq_data); 
+    scat.add_monitor(absorb);
 
     //line_source s2(fields::Ez, surface({0,30},{120,30}), gaussian_time(f, 1/200.0, 80));
     //scat.add_source(s2);
 
-    for (int i = 0; i != 8000; i++) {
+    for (int i = 0; i != 2000; i++) {
         scat.update();
-        // scat.writeE();
+         scat.writeE();
     }
     tfsf.flux().write();
     box_scat.flux().write();
+    absorb.flux().write();
     // box_scat.write();
     // scat.write_tfsf();
 }

@@ -47,27 +47,27 @@ namespace qbox {
             return Flux(S, *outFile, get_group());
         }
 
-        ComplexArray ntff(const vec &p) const {
+        ntff_point ntff(const vec &p) const {
             vec center = vol.center();
             ComplexArray result = ComplexArray::Zero(Nfreq);
 
             for (int i = 0; i < 4; i++)
-                result += monitors[i].ntff(center, p);
+                result += monitors[i].ntff(center, p).data();
 
-            return result;
+            return ntff_point(result, *outFile, get_group());
         }
 
-        ComplexTensor ntff_sphere(double radius, int N) const {
+        ntff_sphere ntff(double radius, int N) const {
             ComplexTensor result(N, Nfreq);
             Array theta = Array::LinSpaced(N, 0, 2*M_PI);
 
             for (int i = 0; i < N; i++) {
                 vec p = radius*vec(cos(theta[i]), sin(theta[i]));
-                ComplexArray p_ntff = ntff(p);
+                ComplexArray p_ntff = ntff(p).data();
                 for (int j = 0; j < Nfreq; j++)
                     result(i,j) = p_ntff(j);
             }
-            return result;
+            return ntff_sphere(result, *outFile, get_group());
         }
 
         // void write() const {

@@ -5,7 +5,10 @@
 #include <vector>
 #include <math.h>
 #include "../field2.h"
+
 #include "flux.h"
+#include "ntff.h"
+#include "force.h"
 
 namespace qbox {
 
@@ -160,39 +163,43 @@ namespace qbox {
             return Flux(S, *outFile, get_group());
         }
 
-        ComplexArray ntff(const vec &center, const vec &pc) const {
+        ntff_point ntff(const vec &center, const vec &pc) const {
             static_assert(std::is_same<DFT::all,T>::value || std::is_same<DFT::tangent,T>::value, "DFT does not contain tangent");
+
+            const int Nfreq = fourier.Nfreq();
 
             vec p = pc - center;
             double r = p.norm();
             Array omega = 2*M_PI*fourier.get_freq();
             Array k = omega;
             ComplexArray factor = Eigen::exp(1i*(M_PI/4 - k*r))/Eigen::sqrt(8*r*M_PI*k); 
-            ComplexArray integral = ComplexArray::Zero(fourier.Nfreq());
+            ComplexArray integral = ComplexArray::Zero(Nfreq);
             
-
             vec tangent = surf.tangent;
             vec normal = surf.normal.array().cwiseAbs();  //*** this needs to be outward normal
 
             double Jsgn = tangent.dot(vec(1,1));
             double Msgn = tangent.dot(vec(-1,1));
 
-            // for (int i = 0; i < length; i++) {
-            //     vec p_prime = surf.a + tangent*i*F->dx - center; //*** account for yee grid half-step here
-            //     double angle = p.dot(normal)/r;  //*** worry about the sign of normal here
-            //     for (int j = 0; j < freq.size(); j++) {
-            //         auto E = rE(i,j) + 1i*iE(i,j);
-            //         auto H = rH(i,j) + 1i*iH(i,j);
+            const auto E = fourier("Ez");
+            const auto H = surf.dim[0] == 0 ? fourier("Hy") : fourier("Hx");
 
-            //         auto Jeq_term = Jsgn*omega[j]*H;
-            //         auto Meq_term = Msgn*k[j]*E*angle;
-            //         auto integand = (Jeq_term + Meq_term)*exp(1i*k[j]*p.dot(p_prime)/r);
-            //         integral[j] += integand; 
 
-            //     }
-            // }
+             for (int i = 0; i < length; i++) {
+                 vec p_prime = surf.a + tangent*i*F->dx - center; //*** account for yee grid half-step here
+                 double angle = p.dot(normal)/r;  //*** worry about the sign of normal here
+                 for (int j = 0; j < Nfreq; j++) {
+                     auto Ec = E.real(i,j) + 1i*E.imag(i,j);
+                     auto Hc = H.real(i,j) + 1i*H.imag(i,j);
 
-            return factor*integral;
+                     auto Jeq_term = Jsgn*omega[j]*Hc;
+                     auto Meq_term = Msgn*k[j]*Ec*angle;
+                     auto integand = (Jeq_term + Meq_term)*exp(1i*k[j]*p.dot(p_prime)/r);
+                     integral[j] += integand; 
+                 }
+             }
+
+             return ntff_point(factor*integral, *outFile, get_group());
         }
 
         //equivalent currents
