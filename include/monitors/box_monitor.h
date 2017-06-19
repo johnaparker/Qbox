@@ -62,7 +62,7 @@ namespace qbox {
             Array theta = Array::LinSpaced(N, 0, 2*M_PI);
 
             for (int i = 0; i < N; i++) {
-                vec p = radius*vec(cos(theta[i]), sin(theta[i]));
+                vec p = radius*vec(cos(theta[i]), sin(theta[i])) + vol.center();
                 ComplexArray p_ntff = ntff(p).data();
                 for (int j = 0; j < Nfreq; j++)
                     result(i,j) = p_ntff(j);

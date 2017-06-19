@@ -6,7 +6,7 @@ using namespace qbox;
 
 int main() {
     int pml_thickness = 7;
-    int res = 6;
+    int res = 2;
     double Lx = 100;
     double Ly = 100;
 
@@ -21,7 +21,9 @@ int main() {
 
 
     box_monitor<DFT::tangent> m1(volume(center, 40),  Array::LinSpaced(100,1/30.0,3/30.0)); 
+    cylinder_monitor<DFT::tangent> m2(cylinder_surface(center, 30),  Array::LinSpaced(100,1/30.0,3/30.0)); 
     test.add_monitor(m1);
+    test.add_monitor(m2);
 
     point_source s1(fields::Ez, center - g, gaussian_time(f, 1/200.0, 80));
     point_source s2(fields::Ez, center + g, gaussian_time(f, 1/200.0, 80));
@@ -37,4 +39,6 @@ int main() {
     }
     m1.flux().write();
     m1.ntff(100000, 150).write();
+    m2.flux().write();
+    m2.ntff(100000, 150).write();
 }

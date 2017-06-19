@@ -44,7 +44,7 @@ namespace qbox {
         //radius
     };
 
-    ComplexArray compute_ntff_point(const complex_dft_tensor<1> &E, const complex_dft_tensor<1> &H, double da, sign Sign);
+    ComplexArray compute_ntff_point(const complex_dft_tensor<1> &E, const complex_dft_tensor<1> &H, const Array &freq, const vec &center, const vec &pc);
 
     ComplexTensor compute_ntff_sphere(const complex_dft_tensor<1> &E, const complex_dft_tensor<1> &H, double da, sign Sign);
 

@@ -50,13 +50,13 @@ namespace qbox {
         cylinder_surface() = default;
         cylinder_surface(vec center, double radius): center(center), radius(radius) {}
 
-        vec tangent(double theta) {
+        vec tangent(double theta) const {
             return vec(-sin(theta), cos(theta));
         }
-        vec normal(double theta) {
+        vec normal(double theta) const {
             return vec(cos(theta), sin(theta));
         }
-        vec position(double theta) {
+        vec position(double theta) const {
             return radius*normal(theta) + center;
         }
 

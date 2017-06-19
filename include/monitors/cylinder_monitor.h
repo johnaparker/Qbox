@@ -6,6 +6,7 @@
 #include <math.h>
 #include "../field2.h"
 #include "flux.h"
+#include "ntff.h"
 
 namespace qbox {
 
@@ -43,7 +44,7 @@ namespace qbox {
         std::function<double(int)> locate(std::string comp) {
             if (comp == "Ez") {
                 return [this](int i) {
-                    double theta = 2*M_PI*(i + 0.5)/(length + 1);
+                    double theta = 2*M_PI*(i + 0.5)/length;
                     vec pr = surf.position(theta);
                     double tempE = F->interpolate(fields::Ez, pr);
                     double E = (tempE + prevE[i])/2;
@@ -54,7 +55,7 @@ namespace qbox {
 
             else if (comp == "Hp") {
                 return [this](int i) {
-                    double theta = 2*M_PI*(i + 0.5)/(length + 1);
+                    double theta = 2*M_PI*(i + 0.5)/length;
                     vec pr = surf.position(theta);
                     return vec(F->interpolate(fields::Hx, pr), F->interpolate(fields::Hy, pr)).dot(surf.tangent(theta));
                 };
@@ -62,7 +63,7 @@ namespace qbox {
 
             else if (comp == "Hr") {
                 return [this](int i) {
-                    double theta = 2*M_PI*(i + 0.5)/(length + 1);
+                    double theta = 2*M_PI*(i + 0.5)/length;
                     vec pr = surf.position(theta);
                     return vec(F->interpolate(fields::Hx, pr), F->interpolate(fields::Hy, pr)).dot(surf.normal(theta));
                 };
@@ -84,41 +85,56 @@ namespace qbox {
             return Flux(S, *outFile, get_group());
         }
 
-        ComplexArray ntff(const vec &center, const vec &pc) const {
+        ntff_point ntff(const vec &pc) const {
             static_assert(std::is_same<DFT::all,T>::value || std::is_same<DFT::tangent,T>::value, "DFT does not contain tangent");
 
-            vec p = pc - center;
+            const int Nfreq = fourier.Nfreq();
+
+            vec p = pc - surf.center;
             double r = p.norm();
             Array omega = 2*M_PI*fourier.get_freq();
             Array k = omega;
             ComplexArray factor = Eigen::exp(1i*(M_PI/4 - k*r))/Eigen::sqrt(8*r*M_PI*k); 
-            //ComplexArray integral = ComplexArray::Zero(fourier.Nfreq());
+            ComplexArray integral = ComplexArray::Zero(Nfreq);
             
 
-            //vec tangent = surf.tangent;
-            //vec normal = surf.normal.array().cwiseAbs();  /[>** this needs to be outward normal
+            const auto E = fourier("Ez");
+            const auto H = fourier("Hp");
 
-            //double Jsgn = tangent.dot(vec(1,1));
-            //double Msgn = tangent.dot(vec(-1,1));
+            for (int i = 0; i < length; i++) {
+                double theta = 2*M_PI*(i + 0.5)/length;
+                vec tangent = surf.tangent(theta);
+                vec normal = surf.normal(theta);
+                vec p_prime = surf.position(theta) - surf.center; //*** account for yee grid half-step here
+                double angle = p.dot(normal)/r;  //*** worry about the sign of normal here
+                for (int j = 0; j < Nfreq; j++) {
+                    auto Ec = E.real(i,j) + 1i*E.imag(i,j);
+                    auto Hc = H.real(i,j) + 1i*H.imag(i,j);
 
-            // for (int i = 0; i < length; i++) {
-            //     vec p_prime = surf.a + tangent*i*F->dx - center; //*** account for yee grid half-step here
-            //     double angle = p.dot(normal)/r;  //*** worry about the sign of normal here
-            //     for (int j = 0; j < freq.size(); j++) {
-            //         auto E = rE(i,j) + 1i*iE(i,j);
-            //         auto H = rH(i,j) + 1i*iH(i,j);
+                    auto Jeq_term = 1*omega[j]*Hc;
+                    auto Meq_term = -1*k[j]*Ec*angle;
+                    auto integand = (Jeq_term + Meq_term)*exp(1i*k[j]*p.dot(p_prime)/r);
+                    integral[j] += integand; 
+                }
+            }
 
-            //         auto Jeq_term = Jsgn*omega[j]*H;
-            //         auto Meq_term = Msgn*k[j]*E*angle;
-            //         auto integand = (Jeq_term + Meq_term)*exp(1i*k[j]*p.dot(p_prime)/r);
-            //         integral[j] += integand; 
-
-            //     }
-            // }
-
-            return factor;
+            return ntff_point(factor*integral, *outFile, get_group());
         }
 
+        ntff_sphere ntff(double radius, int N) const {
+            const int Nfreq = fourier.Nfreq();
+
+            ComplexTensor result(N, Nfreq);
+            Array theta = Array::LinSpaced(N, 0, 2*M_PI);
+
+            for (int i = 0; i < N; i++) {
+                vec p = radius*vec(cos(theta[i]), sin(theta[i])) + surf.center;
+                ComplexArray p_ntff = ntff(p).data();
+                for (int j = 0; j < Nfreq; j++)
+                    result(i,j) = p_ntff(j);
+            }
+            return ntff_sphere(result, *outFile, get_group());
+        }
         //equivalent currents
         //ComplexTensor Jeq() const;
         //ComplexTensor Meq() const;
