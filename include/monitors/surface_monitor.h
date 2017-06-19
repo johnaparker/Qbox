@@ -58,9 +58,10 @@ namespace qbox {
             auto isurf = F->grid.to_grid(surf);
 
             if (comp == "Ez") {
-                return [this, &isurf](int i) {
+                auto *Efield = &F->Ez;
+                return [this, &isurf, Efield](int i) {
                     ivec p = isurf.a + i*isurf.tangent;
-                    double tempE = F->Ez(p);
+                    double tempE = (*Efield)(p);
                     double E = (tempE + prevE(i))/2;
                     prevE(i) = tempE;
                     return E;
@@ -200,6 +201,36 @@ namespace qbox {
              }
 
              return ntff_point(factor*integral, *outFile, get_group());
+        }
+
+        Force partial_force() const {
+            static_assert(std::is_same<DFT::all,T>::value, "DFT::all required for partial force calculation");
+
+            const int Nfreq = fourier.Nfreq();
+            const auto E = fourier("Ez");
+            const auto Hx = fourier("Hx");
+            const auto Hy = fourier("Hy");
+            const vec normal = surf.normal;
+
+            double da = F->dx;
+            tensor S(2, Nfreq); S.setZero();
+
+            for (int i = 0; i < length; i++) {
+                for (int j = 0; j < Nfreq; j++) {
+                    auto Hxc = Hx.real(i,j) + 1i*Hx.imag(i,j);
+                    auto Hyc = Hy.real(i,j) + 1i*Hy.imag(i,j);
+                    auto Hsq = std::norm(Hxc) + std::norm(Hyc);
+                    Eigen::Matrix2d sigma;
+                    sigma << std::norm(Hxc) - 0.5*Hsq     , std::real(std::conj(Hxc)*Hyc),
+                             std::real(Hxc*std::conj(Hyc)), std::norm(Hyc) - 0.5*Hsq;   // Maxwell Stress Tensor for 2D TM
+
+                    vec dF = sigma*normal*da;
+                    S(0,j) += dF(0);
+                    S(1,j) += dF(1);
+                }
+            }
+
+            return Force(S, *outFile, get_group());
         }
 
         //equivalent currents

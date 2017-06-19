@@ -5,7 +5,10 @@
 #include <vector>
 #include <math.h>
 #include "../field2.h"
+
 #include "flux.h"
+#include "ntff.h"
+#include "force.h"
 
 namespace qbox {
     template <class T = DFT::all>
@@ -70,6 +73,15 @@ namespace qbox {
             return ntff_sphere(result, *outFile, get_group());
         }
 
+        Force force() const {
+            tensor S(2, Nfreq); S.setZero();
+
+            for (int i = 0; i < 4; i++) {
+                tensor Sm = monitors[i].partial_force().data();
+                S += Sm;
+            }
+            return Force(S, *outFile, get_group());
+        }
         // void write() const {
         // }
 
