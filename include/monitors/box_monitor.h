@@ -82,6 +82,17 @@ namespace qbox {
             }
             return Force(S, *outFile, get_group());
         }
+
+        Torque torque() const {
+            Array S = Array::Zero(Nfreq);
+
+            for (int i = 0; i < 4; i++) {
+                Array Sm = monitors[i].partial_torque(vol.center()).data();
+                S += Sm;
+            }
+            return Torque(S, *outFile, get_group());
+        }
+
         // void write() const {
         // }
 

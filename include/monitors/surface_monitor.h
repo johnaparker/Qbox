@@ -233,6 +233,39 @@ namespace qbox {
             return Force(S, *outFile, get_group());
         }
 
+        Torque partial_torque(const vec &center) const {
+            static_assert(std::is_same<DFT::all,T>::value, "DFT::all required for partial force calculation");
+
+            const int Nfreq = fourier.Nfreq();
+            const auto E = fourier("Ez");
+            const auto Hx = fourier("Hx");
+            const auto Hy = fourier("Hy");
+            const vec normal = surf.normal;
+
+            double da = F->dx;
+            Array S = Array::Zero(Nfreq);
+
+            for (int i = 0; i < length; i++) {
+                vec r = surf.a + i*surf.tangent*F->dx - center;
+                for (int j = 0; j < Nfreq; j++) {
+                    auto Ezc = E.real(i,j) +  1i*E.imag(i,j);
+                    auto Hxc = Hx.real(i,j) + 1i*Hx.imag(i,j);
+                    auto Hyc = Hy.real(i,j) + 1i*Hy.imag(i,j);
+                    auto Hsq = std::norm(Hxc) + std::norm(Hyc);
+                    auto Esq = std::norm(Ezc) + std::norm(Ezc);
+                    Eigen::Matrix2d sigma;
+                    sigma << std::norm(Hxc) - 0.5*Hsq -0.5*Esq    , std::real(std::conj(Hxc)*Hyc),
+                             std::real(Hxc*std::conj(Hyc)), std::norm(Hyc) - 0.5*Hsq-0.5*Esq;   // Maxwell Stress Tensor for 2D TM
+
+                    vec dF = sigma*normal*da;
+                    double tau = r(0)*dF(1) - r(1)*dF(0);
+                    S(j) += tau;
+                }
+            }
+
+            return Torque(S, *outFile, get_group());
+        }
+
         //equivalent currents
         //ComplexTensor Jeq() const;
         //ComplexTensor Meq() const;

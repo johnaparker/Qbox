@@ -24,14 +24,14 @@ namespace qbox {
 
     class Torque {
     public:
-        Torque(const tensor& S, const h5cpp::h5file &file, const h5cpp::h5group &group );
-        Torque(const tensor& S, const std::string &file_name, const std::string &group_path);
+        Torque(const Array& S, const h5cpp::h5file &file, const h5cpp::h5group &group );
+        Torque(const Array& S, const std::string &file_name, const std::string &group_path);
 
         void write();
-        tensor data() {return S;}
+        Array data() {return S;}
 
     private:
-        tensor S;  // 2 x Nfreq output tensor
+        Array S;  // 2 x Nfreq output tensor
         std::string file_name;
         std::string group_path;
     };
