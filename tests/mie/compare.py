@@ -20,18 +20,15 @@ with h5py.File("scat.h5", 'r') as f:
 scat_qbox = scat/inc
 plt.plot(wav, scat_qbox, label = "qbox")
 
-plt.figure(2)
-plt.plot(wav, inc)
-
 plt.figure(1)
-with h5py.File('../bench/test2.h5', 'r') as f:
+with h5py.File('../../bench/test2.h5', 'r') as f:
     inc = f['inc'][...]
     scat = f['box_scat'][...]
 
     scat_meep = scat/inc*40
     plt.plot(wav,scat_meep, label="meep")
 
-theory = np.loadtxt("../bench/mie-theory-cylinder/sig.mie.dat").T
+theory = np.loadtxt("../../bench/mie-theory-cylinder/sig.mie.dat").T
 plt.plot(theory[0], theory[1], label="exact")
 
 print("L2 norm (meep): {0:.2f}".format(L2_norm(theory[1], scat_meep[::-1])))

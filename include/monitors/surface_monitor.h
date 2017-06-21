@@ -217,13 +217,15 @@ namespace qbox {
 
             for (int i = 0; i < length; i++) {
                 for (int j = 0; j < Nfreq; j++) {
+                    auto Ezc = E.real(i,j) +  1i*E.imag(i,j);
                     auto Hxc = Hx.real(i,j) + 1i*Hx.imag(i,j);
                     auto Hyc = Hy.real(i,j) + 1i*Hy.imag(i,j);
                     auto Hsq = std::norm(Hxc) + std::norm(Hyc);
+                    auto Esq = std::norm(Ezc) + std::norm(Hyc);
                     Eigen::Matrix2d sigma;
-                    sigma << std::norm(Hxc) - 0.5*Hsq     , std::real(std::conj(Hxc)*Hyc),
-                             std::real(Hxc*std::conj(Hyc)), std::norm(Hyc) - 0.5*Hsq;   // Maxwell Stress Tensor for 2D TM
-
+                    
+                    sigma << std::norm(Hxc) - 0.5*Hsq-0.5*Esq     , real(std::conj(Hxc)*Hyc),
+                             real(Hxc*std::conj(Hyc)), std::norm(Hyc) - 0.5*Hsq-0.5*Esq;   // Maxwell Stress Tensor for 2D TM
                     vec dF = sigma*normal*da;
                     S(0,j) += dF(0);
                     S(1,j) += dF(1);
@@ -247,12 +249,13 @@ namespace qbox {
 
             for (int i = 0; i < length; i++) {
                 vec r = surf.a + i*surf.tangent*F->dx - center;
+                std::cout << "rx: " << r(0) << " ry: " << r(1) << std::endl;
                 for (int j = 0; j < Nfreq; j++) {
                     auto Ezc = E.real(i,j) +  1i*E.imag(i,j);
                     auto Hxc = Hx.real(i,j) + 1i*Hx.imag(i,j);
                     auto Hyc = Hy.real(i,j) + 1i*Hy.imag(i,j);
                     auto Hsq = std::norm(Hxc) + std::norm(Hyc);
-                    auto Esq = std::norm(Ezc) + std::norm(Ezc);
+                    auto Esq = std::norm(Ezc);
                     Eigen::Matrix2d sigma;
                     sigma << std::norm(Hxc) - 0.5*Hsq -0.5*Esq    , std::real(std::conj(Hxc)*Hyc),
                              std::real(Hxc*std::conj(Hyc)), std::norm(Hyc) - 0.5*Hsq-0.5*Esq;   // Maxwell Stress Tensor for 2D TM

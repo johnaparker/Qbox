@@ -4,6 +4,8 @@ project(Qbox)
 enable_testing()
  
 #Compiler flags
+SET(CMAKE_C_COMPILER gcc-7)
+SET(CMAKE_CXX_COMPILER g++-7)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
@@ -56,6 +58,9 @@ target_link_libraries(emag ${PROJECT_LINK_LIBS} )
 
 add_executable(mie tests/mie.cpp)
 target_link_libraries(mie ${PROJECT_LINK_LIBS} )
+
+add_executable(force tests/force/force.cpp)
+target_link_libraries(force ${PROJECT_LINK_LIBS} )
 
 #Tests
 #Simple Test
