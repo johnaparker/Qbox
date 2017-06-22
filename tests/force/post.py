@@ -12,7 +12,7 @@ with h5py.File("../../build/scat.h5", 'r') as f:
 
     plt.plot(wav, F[0,:]/inc, label = 'Fx, qbox')
     plt.plot(wav, F[1,:]/inc, label = 'Fy, qbox')
-    # plt.plot(T/inc/40, label = 'Tz,')
+    plt.plot(wav,T/inc/40, label = 'Tz, qbox')
 
 with h5py.File('../../bench/force.h5', 'r') as f:
     inc = f['inc'][...]
@@ -20,7 +20,7 @@ with h5py.File('../../bench/force.h5', 'r') as f:
     Fy = f["Fy"][...]
 
     plt.plot(wav, Fx/inc, label = 'Fx, meep')
-    plt.plot(wav, Fy/inc*20, label = 'Fy, meep')
+    plt.plot(wav, Fy/inc*40, label = 'Fy, meep')
 
 plt.legend()
 plt.show()

@@ -61,7 +61,9 @@ namespace qbox {
                 auto *Efield = &F->Ez;
                 return [this, &isurf, Efield](int i) {
                     ivec p = isurf.a + i*isurf.tangent;
-                    double tempE = (*Efield)(p);
+                    vec pr = F->grid.to_real(p) + F->dx/2.0*surf.tangent;
+                    double tempE = F->interpolate(fields::Ez, pr);
+                    // double tempE = (*Efield)(p);
                     double E = (tempE + prevE(i))/2;
                     prevE(i) = tempE;
                     return E;
@@ -72,7 +74,9 @@ namespace qbox {
                 auto *Hfield = &F->Hx;
                 return [this, &isurf, Hfield](int i) {
                     ivec p = isurf.a + i*isurf.tangent;
-                    return ((*Hfield)(p) + (*Hfield)(p - ivec(0,1)))/2;
+                    vec pr = F->grid.to_real(p) + F->dx/2.0*surf.tangent;
+                    return F->interpolate(fields::Hx, pr);
+                    // return ((*Hfield)(p) + (*Hfield)(p - ivec(0,1)))/2;
                 };
             }
 
@@ -80,41 +84,48 @@ namespace qbox {
                 auto *Hfield = &F->Hy;
                 return [this, &isurf, Hfield](int i) {
                     ivec p = isurf.a + i*isurf.tangent;
-                    return ((*Hfield)(p) + (*Hfield)(p - ivec(1,0)))/2;
+                    vec pr = F->grid.to_real(p) + F->dx/2.0*surf.tangent;
+                    return F->interpolate(fields::Hy, pr);
+                    // return ((*Hfield)(p) + (*Hfield)(p - ivec(1,0)))/2;
                 };
             }
         }
 
         void update() {
-            fourier.update<double(int)> (std::bind(&surface_monitor::locate, this, std::placeholders::_1), F->t);
+            // fourier.update<double(int)> (std::bind(&surface_monitor::locate, this, std::placeholders::_1), F->t);
 
-            // auto isurf = F->grid.to_grid(surf);
-            // fourier.update<double(int)> ([this,&isurf](std::string comp)->std::function<double(int)> {
-            //     if (comp == "Ez") {
-            //         return [this, &isurf](int i) {
-            //             ivec p = isurf.a + i*isurf.tangent;
-            //             double E = F->Ez(p);
-            //             prevE(i) = F->Ez(p);
-            //             return E;
-            //         };
-            //     }
+            auto isurf = F->grid.to_grid(surf);
+            fourier.update<double(int)> ([this,&isurf](std::string comp)->std::function<double(int)> {
+                if (comp == "Ez") {
+                    auto *Efield = &F->Ez;
+                    return [this, &isurf, Efield](int i) {
+                        ivec p = isurf.a + i*isurf.tangent;
+                        vec pr = F->grid.to_real(p) + F->dx/2.0*surf.tangent;
+                        double tempE = F->interpolate(fields::Ez, pr);
+                        double E = (tempE + prevE(i))/2;
+                        prevE(i) = tempE;
+                        return E;
+                    };
+                }
 
-            //     else if (comp == "Hx") {
-            //         auto *Hfield = &F->Hx;
-            //         return [this, &isurf, Hfield](int i) {
-            //             ivec p = isurf.a + i*isurf.tangent;
-            //             return ((*Hfield)(p) + (*Hfield)(p - isurf.normal.array().cwiseAbs().matrix()))/2;
-            //         };
-            //     }
+                else if (comp == "Hx") {
+                    auto *Hfield = &F->Hx;
+                    return [this, &isurf, Hfield](int i) {
+                        ivec p = isurf.a + i*isurf.tangent;
+                        vec pr = F->grid.to_real(p) + F->dx/2.0*surf.tangent;
+                        return F->interpolate(fields::Hx, pr);
+                    };
+                }
 
-            //     else if (comp == "Hy") {
-            //         auto *Hfield = &F->Hy;
-            //         return [this, &isurf, Hfield](int i) {
-            //             ivec p = isurf.a + i*isurf.tangent;
-            //             return ((*Hfield)(p) + (*Hfield)(p - isurf.normal.array().cwiseAbs().matrix()))/2;
-            //         };
-            //     }
-            // }, F->t);
+                else if (comp == "Hy") {
+                    auto *Hfield = &F->Hy;
+                    return [this, &isurf, Hfield](int i) {
+                        ivec p = isurf.a + i*isurf.tangent;
+                        vec pr = F->grid.to_real(p) + F->dx/2.0*surf.tangent;
+                        return F->interpolate(fields::Hy, pr);
+                    };
+                }
+            }, F->t);
 
             //*** this dir, Hfield combo is bad design (maybe use enum)
             // auto isurf = F->grid.to_grid(surf);
@@ -221,7 +232,7 @@ namespace qbox {
                     auto Hxc = Hx.real(i,j) + 1i*Hx.imag(i,j);
                     auto Hyc = Hy.real(i,j) + 1i*Hy.imag(i,j);
                     auto Hsq = std::norm(Hxc) + std::norm(Hyc);
-                    auto Esq = std::norm(Ezc) + std::norm(Hyc);
+                    auto Esq = std::norm(Ezc);
                     Eigen::Matrix2d sigma;
                     
                     sigma << std::norm(Hxc) - 0.5*Hsq-0.5*Esq     , real(std::conj(Hxc)*Hyc),
@@ -248,8 +259,7 @@ namespace qbox {
             Array S = Array::Zero(Nfreq);
 
             for (int i = 0; i < length; i++) {
-                vec r = surf.a + i*surf.tangent*F->dx - center;
-                std::cout << "rx: " << r(0) << " ry: " << r(1) << std::endl;
+                vec r = surf.a + (i+0.5)*surf.tangent*F->dx - center;
                 for (int j = 0; j < Nfreq; j++) {
                     auto Ezc = E.real(i,j) +  1i*E.imag(i,j);
                     auto Hxc = Hx.real(i,j) + 1i*Hx.imag(i,j);
@@ -257,8 +267,8 @@ namespace qbox {
                     auto Hsq = std::norm(Hxc) + std::norm(Hyc);
                     auto Esq = std::norm(Ezc);
                     Eigen::Matrix2d sigma;
-                    sigma << std::norm(Hxc) - 0.5*Hsq -0.5*Esq    , std::real(std::conj(Hxc)*Hyc),
-                             std::real(Hxc*std::conj(Hyc)), std::norm(Hyc) - 0.5*Hsq-0.5*Esq;   // Maxwell Stress Tensor for 2D TM
+                    sigma << std::norm(Hxc) - 0.5*Hsq-0.5*Esq     , real(std::conj(Hxc)*Hyc),
+                             real(Hxc*std::conj(Hyc)), std::norm(Hyc) - 0.5*Hsq-0.5*Esq;   // Maxwell Stress Tensor for 2D TM
 
                     vec dF = sigma*normal*da;
                     double tau = r(0)*dF(1) - r(1)*dF(0);

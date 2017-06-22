@@ -285,9 +285,9 @@ namespace qbox {
         auto &F = get_field_ref(C);
 
         switch(C) {
-            case fields::Ez:  ps += vec(-dx/2.0, dx/2.0); break;
-            case fields::Hx: ps += vec(-dx/2.0, 0); break;
-            case fields::Hy: ps += vec(0, dx/2.0); break;
+            case fields::Ez:  ps += vec(0,0); break;
+            case fields::Hx: ps += 2*vec(0, -dx/2.0); break;
+            case fields::Hy: ps += 2*vec(-dx/2.0, 0); break;
             default: throw std::invalid_argument("not a valid field component");
         }
 
