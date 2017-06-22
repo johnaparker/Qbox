@@ -20,7 +20,7 @@ int main() {
     //scat.add_object(o1, simple_material(2));
     scat.add_object(o1);
 
-    box_monitor box("box",volume({60,60}, 50), freq_data); 
+    auto box = o1.get_box_monitor(freq_data, grid.dx);
     scat.add_monitor(box);
 
 

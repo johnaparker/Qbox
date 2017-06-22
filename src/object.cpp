@@ -4,6 +4,8 @@
 #include "field2.h"
 #include "materials/material.h"
 
+#include "monitors/box_monitor.h"
+
 using namespace std;
 
 namespace qbox {
@@ -51,6 +53,14 @@ namespace qbox {
         //auto mat_group = mat->get_group(*outFile);
         //auto mat_name = mat->get_name();
         //dset.write(&mat_name);
+    }
+
+    box_monitor<DFT::all> object::get_box_monitor(const Array& freq, double a) {
+        //*** name monitor 'object_name'_monitor?
+        //*** write a h5ref in object to monitor (requires set_owner to be called first...)
+        auto tight_box = get_bounding_box().value();
+        volume box(tight_box.a - vec(a,a), tight_box.b + vec(a,a));
+        return box_monitor<DFT::all>(box, freq); 
     }
 
     void object::set_owner(Field2D* F) {

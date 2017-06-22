@@ -2,6 +2,7 @@
 #define GUARD_box_monitor_h
 
 #include "rank_monitor.h"
+#include "surface_monitor.h"
 #include <vector>
 #include <math.h>
 #include "../field2.h"

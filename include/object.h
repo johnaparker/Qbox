@@ -13,10 +13,14 @@
 #include "materials/drude.h"
 #include "materials/lorentz.h"
 
+#include "dft.h"
+
 namespace qbox {
 
     class Field2D;
     class material;
+
+    template<class T> class box_monitor;
 
     using material_variant = std::variant<simple_material,debye,drude,lorentz>;
 
@@ -37,6 +41,8 @@ namespace qbox {
         std::unique_ptr<material> get_material_base() const {
             return std::visit([](auto&& arg){return arg.clone();}, mat);
         }
+
+        box_monitor<DFT::all> get_box_monitor(const Array& freq, double a = 0);
 
         void set_owner(Field2D* F);
 

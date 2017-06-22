@@ -7,8 +7,8 @@ wav = 1/freq
 
 with h5py.File("../../build/scat.h5", 'r') as f:
     inc = f["sources/tfsf/flux"][...]
-    F = f["monitors/box_monitor/box/force"][...]
-    T = f["monitors/box_monitor/box/torque"][...]
+    F = f["monitors/box_monitor/monitor_0/force"][...]
+    T = f["monitors/box_monitor/monitor_0/torque"][...]
 
     plt.plot(wav, F[0,:]/inc, label = 'Fx, qbox')
     plt.plot(wav, F[1,:]/inc, label = 'Fy, qbox')

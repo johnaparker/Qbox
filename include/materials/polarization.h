@@ -1,9 +1,9 @@
 #ifndef GUARD_polarization_h
 #define GUARD_polarization_h
 
-#include "qbox/grid.h"
-#include "qbox/object.h"
-#include "qbox/vec.h"
+#include "../grid.h"
+#include "../object.h"
+#include "../vec.h"
 
 namespace qbox {
 

@@ -1,8 +1,5 @@
 #ifndef GUARD_field2_h
 #define GUARD_field2_h
-#ifndef _DEFAULT_SOURCE
-#define _DEFAULT_SOURCE
-#endif
 
 #include <vector>
 #include <fstream>
