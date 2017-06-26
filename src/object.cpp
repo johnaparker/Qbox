@@ -69,15 +69,10 @@ namespace qbox {
     }
 
     std::optional<volume> object::get_bounding_box() const {
-        auto box = geometryType->get_bounding_box();
+        auto box = geometryType->get_bounding_box(theta);
         if (box) {
-            Eigen::Matrix2d R;
-            R << cos(theta), sin(theta),
-                 sin(theta), cos(theta);
-            R = R.array().abs();
-            
-            vec new_dim = R*box->dim;
-            box = volume(position - new_dim/2, position + new_dim/2);
+            vec dim = box->dim;
+            box = volume(position - dim/2, position + dim/2);
         }
 
         return box;

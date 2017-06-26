@@ -20,20 +20,17 @@ namespace qbox {
 
         virtual std::string group_name() const = 0;
 
+        virtual std::optional<volume> get_bounding_box(double theta) const;
+
         std::optional<volume> get_bounding_box() const {return bounding_box;}
-        std::optional<volume> get_interior_box() const {return interior_box;}
 
     protected:
         void set_bounding_box(const vec& a, const vec& b) {
             bounding_box = volume(a,b);
         }
-        void set_interior_box(const vec& a, const vec& b) {
-            interior_box = volume(a,b);
-        }
 
     private:
         std::optional<volume> bounding_box;
-        std::optional<volume> interior_box;
     };
 
 }

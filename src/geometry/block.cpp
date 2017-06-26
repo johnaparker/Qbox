@@ -6,7 +6,6 @@ namespace qbox {
 
     block::block(vec dim): dim(dim) {
         set_bounding_box(-dim/2,dim/2);
-        set_interior_box(-dim/2,dim/2);
     }
 
     bool block::inside(const vec& v) const {

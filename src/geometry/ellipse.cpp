@@ -6,7 +6,6 @@ namespace qbox {
 
     ellipse::ellipse(double rx, double ry): rx(rx), ry(ry) {
         set_bounding_box(vec(-rx,-ry), vec(rx,ry));
-        //set_interior_box(vec(-r,-r)/sqrt(2), vec(r,r)/sqrt(2));
     };
 
     bool ellipse::inside(const vec& p) const{

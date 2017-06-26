@@ -6,7 +6,6 @@ namespace qbox {
 
     cylinder::cylinder(double r): r(r) {
         set_bounding_box(vec(-r,-r), vec(r,r));
-        set_interior_box(vec(-r,-r)/sqrt(2), vec(r,r)/sqrt(2));
     };
 
     bool cylinder::inside(const vec& p) const{
@@ -23,5 +22,8 @@ namespace qbox {
         return unique_ptr<cylinder>(new cylinder(*this));
     }
 
+    std::optional<volume> cylinder::get_bounding_box(double theta) const {
+        return geometry::get_bounding_box();
+    }
 
 }
