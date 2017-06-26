@@ -14,6 +14,7 @@ int main() {
 
     grid_properties grid(Lx,Ly,res,pml_thickness);
     Field2D test(grid, "out.h5");
+    test.set_tfsf(volume(center, 80), continuous_time(f));
 
     simple_material mat(5,1,10);
     dynamic_object obj(ellipse(6,12), mat, center, 0); 
@@ -26,13 +27,13 @@ int main() {
     for (int T = 0; T != 30; T++) {
         test.remove_monitors();         // Reset monitors
         test.clear_fields();           // Reset fields
-        test.set_tfsf(volume(center, 80), continuous_time(f));
+
         double x = r*cos(omega_1*T) + center(0);
         double y = r*sin(omega_1*T) + center(1);
         double theta = omega_2*T;
         obj.set_position(vec(x,y));
         obj.set_theta(theta);
-        test.update_material_grid();  // update material grid
+        test.update_material_grid();
 
         volume_monitor<DFT::Ez> m1(grid.domain(), Array::Constant(1,f)); 
 

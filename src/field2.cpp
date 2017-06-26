@@ -260,6 +260,11 @@ namespace qbox {
         for (auto& p: P_lorentz)
             p.second.reset();
         
+        if (total)
+            total->reset();
+
+        //*** reset sources/monitors?
+
         //*** pml reset?
     }
 

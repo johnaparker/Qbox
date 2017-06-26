@@ -88,6 +88,18 @@ namespace qbox {
         }
     }
 
+    void tfsf::reset() {
+        Ez.setZero();
+        Dz.setZero();
+        Hx.setZero();
+        Iz.setZero();
+        pml.left.setZero();
+        pml.right.setZero();
+        t = 0;
+
+        //*** reset fourier in tp
+    }
+
     Flux tfsf::flux() const {
         auto fourier = tp->get_dft();
         if (fourier) {

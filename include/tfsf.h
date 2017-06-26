@@ -39,8 +39,11 @@ namespace qbox {
         /// @param f pointer to owning Field2D object
         void updateH(Field2D* f);
 
+        void reset();
+
         Flux flux() const;
         void write_properties() const;
+
 
     private:
         std::string filename;
