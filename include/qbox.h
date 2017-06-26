@@ -21,12 +21,14 @@ namespace qbox{}
 #include "qbox/materials/lorentz.h"
 #include "qbox/materials/creation.h"
 
-//monitors
+//monitors (DFT)
 #include "qbox/monitors/point_monitor.h"
 #include "qbox/monitors/surface_monitor.h"
 #include "qbox/monitors/cylinder_monitor.h"
 #include "qbox/monitors/box_monitor.h"
 #include "qbox/monitors/volume_monitor.h"
+
+//monitors (time)
 
 //sources
 #include "qbox/sources/point_source.h"

@@ -39,6 +39,9 @@ namespace qbox {
         Ez,
         Hx,
         Hy,
+        E,
+        H,
+        all,
     };
 
     enum class sign: int {
