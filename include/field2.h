@@ -15,6 +15,7 @@
 #include "dynamic_object.h"
 #include "geometry/geometry.h"
 #include "monitors/monitor.h"
+#include "time_monitors/time_monitor.h"
 #include "pml.h"
 #include "tfsf.h"
 #include "timer.h"
@@ -46,6 +47,7 @@ namespace qbox {
 
         void add_source(source &new_source);
         void add_monitor(monitor &new_monitor);
+        void add_monitor(time_monitor &new_monitor);
 
         void remove_monitors();
         void clear_fields();

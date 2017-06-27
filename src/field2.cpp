@@ -241,6 +241,10 @@ namespace qbox {
         monitor_list.push_back(&new_monitor);
     } 
 
+    void Field2D::add_monitor(time_monitor &new_monitor) {
+        new_monitor.set_F(this);
+    }
+
     void Field2D::remove_monitors() {
         monitor_list.clear();
     }

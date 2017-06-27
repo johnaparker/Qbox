@@ -3,6 +3,7 @@
 
 #include "time_monitor.h"
 #include "../vec.h"
+#include <unordered_map>
 
 namespace qbox {
 
@@ -12,10 +13,12 @@ namespace qbox {
         surface_time_monitor(std::string name, const surface &surf);
         surface_time_monitor(const surface &surf);
 
-        void write(const fields& A) const override;
+        void set_F(Field2D *newF) override;
+        void write(const fields& A) override;
 
     private:
         surface surf;
+        std::unordered_map<fields, h5cpp::h5dset> dsets;
     };
 
 }

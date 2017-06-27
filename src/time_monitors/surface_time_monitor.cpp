@@ -8,7 +8,12 @@ namespace qbox {
     surface_time_monitor::surface_time_monitor(const surface &surf): 
         surface_time_monitor("monitor_" + std::to_string(_num_created), surf) {_num_created++;}
 
-    void surface_time_monitor::write(const fields& A) const {
+    void surface_time_monitor::set_F(Field2D *newF) {
+        time_monitor::set_F(newF);
+        surf.write(get_group());
+    }
+
+    void surface_time_monitor::write(const fields& A) {
         switch(A) {
             case fields::E   : write(fields::Ez); return; break;
             case fields::H   : write(fields::Hx); 
@@ -28,8 +33,26 @@ namespace qbox {
             sub_field(i) = field(pi);
         }
 
-        auto h5group = get_group();
-        std::string name = field_names.at(A);
-        write_tensor(sub_field, h5group, name, h5cpp::append::True);
+
+        auto iter = dsets.find(A);
+        if (iter != dsets.end())
+            iter->second.append(sub_field.data());
+        else {
+            std::string name = field_names.at(A);
+            auto h5group = get_group();
+            auto dset = h5cpp::write_tensor(sub_field, h5group, name, h5cpp::append::True);
+            dsets[A] = std::move(dset);
+
+            // vector<hsize_t> new_dims(dataspace.dims);
+            // new_dims[dataspace.drank-1] += 1;
+            // extend(new_dims);
+
+            // vector<hsize_t> offset(dataspace.drank, 0);
+            // offset[dataspace.drank-1] = new_dims[dataspace.drank-1] - 1;
+            // vector<hsize_t> count(new_dims);
+            // count[dataspace.drank-1] = 1;
+
+            // select_write(data, offset, count);
+        }
     }
 }
