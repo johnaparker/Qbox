@@ -29,6 +29,7 @@ namespace qbox{}
 #include "qbox/monitors/volume_monitor.h"
 
 //monitors (time)
+#include "qbox/time_monitors/surface_time_monitor.h"
 
 //sources
 #include "qbox/sources/point_source.h"

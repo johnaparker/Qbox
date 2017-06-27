@@ -15,7 +15,7 @@ namespace qbox {
     public:
         time_monitor(std::string name): name(name) {};
 
-        virtual void write(fields A) const = 0;
+        virtual void write(const fields& A) const = 0;
 
         virtual void set_F(Field2D *newF);        //set the owning field
         h5cpp::h5group get_group() const;
