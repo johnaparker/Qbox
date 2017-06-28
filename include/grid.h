@@ -26,7 +26,8 @@ namespace qbox {
         volume clip(const volume &vol) const;      // clip a volume in the grid
         ivolume clip(const ivolume &ivol) const;      // clip an ivolume in the grid
 
-        volume domain() const {return volume({0,0},{Lx,Ly});}
+        volume domain() const   {return volume({0,0},{Lx,Ly});}
+        volume interior() const {return volume({dx*pml_thickness,dx*pml_thickness},{Lx-dx*pml_thickness,Ly-dx*pml_thickness});}
 
         void write(const h5cpp::h5group &group);
 

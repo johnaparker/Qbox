@@ -15,8 +15,8 @@ namespace qbox {
 
     void volume_time_monitor::write_impl(const fields& A) {
         const ivolume ivol = F->grid.to_grid(vol);
-        const int Nx = ivol.dim(0);
-        const int Ny = ivol.dim(1);
+        const int Nx = ivol.dim(0) + 1;
+        const int Ny = ivol.dim(1) + 1;
         tensor sub_field(Nx,Ny);
 
         tensor& field = F->get_field_ref(A);
