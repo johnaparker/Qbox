@@ -42,17 +42,6 @@ namespace qbox {
             auto h5group = get_group();
             auto dset = h5cpp::write_tensor(sub_field, h5group, name, h5cpp::append::True);
             dsets[A] = std::move(dset);
-
-            // vector<hsize_t> new_dims(dataspace.dims);
-            // new_dims[dataspace.drank-1] += 1;
-            // extend(new_dims);
-
-            // vector<hsize_t> offset(dataspace.drank, 0);
-            // offset[dataspace.drank-1] = new_dims[dataspace.drank-1] - 1;
-            // vector<hsize_t> count(new_dims);
-            // count[dataspace.drank-1] = 1;
-
-            // select_write(data, offset, count);
         }
     }
 }
