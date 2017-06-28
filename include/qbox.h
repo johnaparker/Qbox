@@ -31,6 +31,7 @@ namespace qbox{}
 //monitors (time)
 #include "qbox/time_monitors/point_time_monitor.h"
 #include "qbox/time_monitors/surface_time_monitor.h"
+#include "qbox/time_monitors/volume_time_monitor.h"
 
 //sources
 #include "qbox/sources/point_source.h"
