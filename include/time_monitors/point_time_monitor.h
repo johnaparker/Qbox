@@ -3,7 +3,6 @@
 
 #include "time_monitor.h"
 #include "../vec.h"
-#include <unordered_map>
 
 namespace qbox {
 
@@ -14,11 +13,12 @@ namespace qbox {
         point_time_monitor(const vec &pos);
 
         void set_F(Field2D *newF) override;
-        void write(const fields& A) override;
+
+    protected:
+        void write_impl(const fields& A) override;
 
     private:
         vec pos;
-        std::unordered_map<fields, h5cpp::h5dset> dsets;
     };
 
 }

@@ -13,16 +13,7 @@ namespace qbox {
         surf.write(get_group());
     }
 
-    void surface_time_monitor::write(const fields& A) {
-        switch(A) {
-            case fields::E   : write(fields::Ez); return; break;
-            case fields::H   : write(fields::Hx); 
-                               write(fields::Hy); return; break;
-            case fields::all : write(fields::E); 
-                               write(fields::H);  return; break;
-            default : break;
-        }
-
+    void surface_time_monitor::write_impl(const fields& A) {
         isurface isurf = F->grid.to_grid(surf);
         int length = isurf.dim.norm();
         tensor1 sub_field(length);

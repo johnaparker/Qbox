@@ -16,4 +16,16 @@ namespace qbox {
 
         return my_group;
     }
+
+    void time_monitor::write(const fields& A) {
+        switch(A) {
+            case fields::E:    write(fields::Ez); break;
+            case fields::H:    write(fields::Hx); 
+                               write(fields::Hy); break;
+            case fields::all:  write(fields::E); 
+                               write(fields::H);  break;
+            default:           write_impl(A);     break;
+        }
+    }
+
 }
