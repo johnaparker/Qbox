@@ -12,7 +12,7 @@ namespace qbox {
     class pml {
     public:
         pml() = default;
-        pml(grid_properties grid, int m = 3, int ma = 1, double k_max = 10, double a_max = 0.2, double sig_scale = 1);
+        pml(grid_properties grid, int m = 3, int ma = 1, double k_max = 1, double a_max = 0.2, double sig_scale = 1);
 
         double b_func(double t);
         double c_func(double t);
