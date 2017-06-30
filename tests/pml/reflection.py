@@ -19,7 +19,7 @@ plt.semilogy(error_B, label = 'Point B')
 plt.legend()
 plt.xlabel('Time step')
 plt.ylabel('Relative error')
-plt.ylim([1e-6, 1e-1])
+plt.ylim([1e-8, 1e-4])
 
 plt.figure(2)
 plt.plot(B_large)

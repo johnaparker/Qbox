@@ -36,7 +36,7 @@ int main() {
         point_time_monitor m2("B", vec{Lx/2 - Dx, Ly/2 - Dy});
         test.add_monitor(m1);
         test.add_monitor(m2);
-        for (int i = 0; i != 1000; i++) {
+        for (int i = 0; i != 3000; i++) {
             test.update();
             m1.write(fields::Ez);
             m2.write(fields::Ez);
@@ -55,7 +55,7 @@ int main() {
         point_time_monitor m2("B", vec{Lx/2 - Dx, Ly/2 - Dy});
         test.add_monitor(m1);
         test.add_monitor(m2);
-        for (int i = 0; i != 1000; i++) {
+        for (int i = 0; i != 3000; i++) {
             test.update();
             m1.write(fields::Ez);
             m2.write(fields::Ez);
