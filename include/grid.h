@@ -32,7 +32,6 @@ namespace qbox {
         void write(const h5cpp::h5group &group);
 
     public:
-        bool totalFieldScatteredField;      //True if TFSF is in use
         double Lx, Ly;          //Actual length in x,y direction
         int Nx, Ny;          //Number of grid cells in x,y direction
         double dx;           //Actual length between grid points; dx = 1/res, Nx*dx = Lx

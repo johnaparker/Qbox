@@ -44,6 +44,7 @@ namespace qbox {
         Flux flux() const;
         void write_properties() const;
 
+        volume domain() const {return vol;}
 
     private:
         std::string filename;
