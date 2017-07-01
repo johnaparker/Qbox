@@ -28,7 +28,7 @@ namespace qbox {
 
     h5cpp::h5group object::get_group() const {
         string sub_group_name = geometryType->group_name();
-        auto gObjects = outFile->create_or_open_group("objects");
+        auto gObjects = F->outFile->create_or_open_group("objects");
         auto gSubObject = gObjects.create_or_open_group(sub_group_name);
         auto my_group = gSubObject.create_or_open_group(name);
         return my_group;
@@ -47,24 +47,25 @@ namespace qbox {
         auto my_group = get_group();
 
         auto group_path = visit([this](auto&& arg)->string{return arg.get_group_path();}, mat);
-        auto mat_reference = outFile->create_reference(group_path); 
+        auto mat_reference = F->outFile->create_reference(group_path); 
         h5cpp::write_scalar(mat_reference, my_group, "material");
 
-        //auto mat_group = mat->get_group(*outFile);
+        //auto mat_group = mat->get_group(*F->outFile);
         //auto mat_name = mat->get_name();
         //dset.write(&mat_name);
     }
 
-    box_monitor<DFT::all> object::get_box_monitor(const Array& freq, double a) {
+    box_monitor<DFT::all>& object::get_box_monitor(const Array& freq, int buffer) {
         //*** name monitor 'object_name'_monitor?
         //*** write a h5ref in object to monitor (requires set_owner to be called first...)
         auto tight_box = get_bounding_box().value();
+        double a = buffer*F->dx;
         volume box(tight_box.a - vec(a,a), tight_box.b + vec(a,a));
-        return box_monitor<DFT::all>(box, freq); 
+        return F->add<box_monitor<DFT::all>>(box, freq); 
     }
 
-    void object::set_owner(Field2D* F) {
-        outFile = make_unique<h5cpp::h5file>(*F->outFile.get());
+    void object::set_owner(Field2D* newF) {
+        F = newF;
         write();
     }
 

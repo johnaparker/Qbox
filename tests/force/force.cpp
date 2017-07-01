@@ -16,7 +16,7 @@ int main() {
     auto& tfsf = scat.set_tfsf(volume({60,60}, 65), gaussian_time(f, 1/100.0, 80).freq(freq_data));
     auto& o1 = scat.add<object>(cylinder(20), simple_material(2), vec(60,60));
 
-    auto box = o1.get_box_monitor(freq_data, grid.dx);
+    auto& box = o1.get_box_monitor(freq_data);
 
     for (int i = 0; i != 8000; i++) {
         scat.update();

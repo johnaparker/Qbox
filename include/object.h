@@ -42,7 +42,7 @@ namespace qbox {
             return std::visit([](auto&& arg){return arg.clone();}, mat);
         }
 
-        box_monitor<DFT::all> get_box_monitor(const Array& freq, double a = 0);
+        box_monitor<DFT::all>& get_box_monitor(const Array& freq, int buffer = 1);
 
         void set_owner(Field2D* F);
 
@@ -54,7 +54,7 @@ namespace qbox {
         vec position;
         double theta;
 
-        std::unique_ptr<h5cpp::h5file> outFile = nullptr;
+        Field2D* F;
 
         static int num_created;
     };

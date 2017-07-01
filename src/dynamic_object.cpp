@@ -32,7 +32,7 @@ namespace qbox {
 
     h5cpp::h5group dynamic_object::get_group() const {
         string sub_group_name = geometryType->group_name();
-        auto gObjects = outFile->create_or_open_group("dynamic_objects");
+        auto gObjects = F->outFile->create_or_open_group("dynamic_objects");
         auto gSubObject = gObjects.create_or_open_group(sub_group_name);
         auto my_group = gSubObject.create_or_open_group(name);
         return my_group;
