@@ -17,12 +17,10 @@ int main() {
     
     double f = 2/30.0;
 
-    point_source s1(fields::Ez, {30,30}, gaussian_time(f, 1/200.0, 80));
-    test.add_source(s1);
+    test.add<point_source> (fields::Ez, vec(30,30), gaussian_time(f, 1/200.0, 80));
 
     for (int i = 0; i != 3000; i++) {
         test.update();
         test.writeE();
     }
-    //m1.write_flux_sides();
 }

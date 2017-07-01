@@ -33,6 +33,6 @@ with h5py.File('{}.h5'.format(filename), 'r') as f:
         return im,
 
     writer = animation.FFMpegWriter(fps=30, bitrate=4000)
-    ani = animation.FuncAnimation(plt.gcf(), updatefig, np.arange(0,30), interval=30, blit=False)
+    ani = animation.FuncAnimation(plt.gcf(), updatefig, np.arange(0,100), interval=30, blit=False)
     # ani.save("{}.mp4".format(filename), writer=writer)
     plt.show()

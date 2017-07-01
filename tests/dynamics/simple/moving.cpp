@@ -24,9 +24,9 @@ int main() {
     double omega_2 = -0.06; 
     double r = 20;
     
-    for (int T = 0; T != 30; T++) {
+    for (int T = 0; T != 100; T++) {
         test.remove_monitors();         // Reset monitors
-        test.clear_fields();           // Reset fields
+        //test.clear_fields();           // Reset fields
 
         double x = r*cos(omega_1*T) + center(0);
         double y = r*sin(omega_1*T) + center(1);
@@ -37,9 +37,9 @@ int main() {
 
         volume_monitor<DFT::Ez> m1(grid.domain(), Array::Constant(1,f)); 
 
-        for (int i = 0; i != 1300; i++) {
+        for (int i = 0; i != 400; i++) {
             test.update();
-            if (i == 300)
+            if (i == 100)
                 test.add_monitor(m1);
         }
         m1.write();

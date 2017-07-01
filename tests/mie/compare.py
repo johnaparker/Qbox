@@ -14,7 +14,7 @@ def sup_norm(y1,y2):
 
 with h5py.File("scat.h5", 'r') as f:
     inc = f["sources/tfsf/flux"][...]
-    scat = f["monitors/cylinder_monitor/box_scat/flux"][...]
+    scat = f["monitors/cylinder_monitor/scat/flux"][...]
     # scat = f["monitors/box_monitor/box_scat/flux"][...]
 
 scat_qbox = scat/inc

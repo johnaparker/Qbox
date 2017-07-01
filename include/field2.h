@@ -32,6 +32,8 @@ namespace qbox {
     class source;
     class tfsf;
 
+    template<class T> struct always_false : std::false_type {};
+
     extern const std::map<fields,std::string> field_names;
 
     //Field object that does all of the work
@@ -43,11 +45,8 @@ namespace qbox {
         void update_material_grid();
         
         //Add objects, sources, and monitors. These are all polymorphic classes
-        void add_object(object &new_object);
-
-        void add_source(source &new_source);
-        void add_monitor(monitor &new_monitor);
-        void add_monitor(time_monitor &new_monitor);
+        template<class T, class... Args>
+        T& add(Args&&... args);
 
         void remove_monitors();
         void clear_fields();
@@ -73,7 +72,8 @@ namespace qbox {
 
     private:
         void create_fields_dataset(fields field);
-        void add_object(object &new_object, const material& mat);
+        void insert_object(object &new_object);
+        void insert_object_helper(object &new_object, const material& mat);
         void update_object_material_grid(const object &obj);    ///< update material grid points for a given object
         void update_object_polarization_grid(const object &obj);    ///< update polarization grid points for a given object
 
@@ -90,10 +90,11 @@ namespace qbox {
         tensor Ez,Hx,Hy,Ca,Cb,Da,Db;  //Fields + auxillary fields
 
         //Objects, sources, and monitors. These are all polymorphic classes
-        std::vector<object*> obj_list;
-        std::vector<dynamic_object*> dynamic_objects;
-        std::vector<source*> source_list;
-        std::vector<monitor*> monitor_list;
+        std::vector<std::unique_ptr<object>>          obj_list;
+        std::vector<std::unique_ptr<dynamic_object>>  dynamic_objects;
+        std::vector<std::unique_ptr<source>>          source_list;
+        std::vector<std::unique_ptr<monitor>>         monitor_list;
+        std::vector<std::unique_ptr<time_monitor>>    time_monitor_list;
 
         //list of materials added so far
         std::vector<std::string> materials_added;
@@ -129,6 +130,44 @@ namespace qbox {
         timers clocks;
     };
 
+    template<class T, class... Args>
+    T& Field2D::add(Args&&... args) {
+
+        if constexpr (std::is_base_of<object,T>::value) {
+            std::unique_ptr<object> new_object = std::make_unique<T>(std::forward<Args>(args)...);
+            insert_object(*new_object);
+            new_object->set_owner(this);
+            obj_list.push_back(std::move(new_object));
+            return static_cast<T&>(*obj_list.back());
+        }
+
+        else if constexpr (std::is_base_of<monitor,T>::value) {
+            std::unique_ptr<monitor> new_monitor = std::make_unique<T>(std::forward<Args>(args)...);
+            new_monitor->set_F(this);
+            monitor_list.push_back(std::move(new_monitor));
+            return static_cast<T&>(*monitor_list.back());
+        }
+
+        else if constexpr (std::is_base_of<time_monitor,T>::value) {
+            std::unique_ptr<time_monitor> new_monitor = std::make_unique<T>(std::forward<Args>(args)...);
+            new_monitor->set_F(this);
+            time_monitor_list.push_back(std::move(new_monitor));
+            return static_cast<T&>(*time_monitor_list.back());
+        }
+
+        else if constexpr (std::is_base_of<source,T>::value) {
+            std::unique_ptr<source> new_source = std::make_unique<T>(std::forward<Args>(args)...);
+            new_source->set_F(this);
+            source_list.push_back(std::move(new_source));
+            return static_cast<T&>(*source_list.back());
+        }
+
+        else {
+            static_assert(always_false<T>::value, "type 'T' is not allowed to be added");
+        }
+    }
+    
+
     template <class POL, class MAT>
     void add_polarization(std::map<std::string,POL> &P_map, const MAT &mat,
             const object &new_object, const grid_properties &grid) {
@@ -143,7 +182,6 @@ namespace qbox {
             iter->second.insert_object(new_object);
         }
     }
-
 }
 
 #endif

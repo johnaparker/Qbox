@@ -14,29 +14,16 @@ int main() {
     Field2D scat(grid, "scat.h5");
 
     auto& tfsf = scat.set_tfsf(volume({60,60}, 65), gaussian_time(f, 1/100.0, 80).freq(freq_data));
-    //scat.set_tfsf(volume({60,60}, 65), continuous_time(1/28.0));
+    scat.add<object> (cylinder(20), simple_material(2), vec(60,60));
 
-    object o1(cylinder(20), simple_material(2), vec(60,60));
-    //scat.add_object(o1, simple_material(2));
-    scat.add_object(o1);
-
-    cylinder_monitor<DFT::tangent> box_scat("box_scat", cylinder_surface(vec(60,60), 50), freq_data); 
-    // box_monitor box_scat("box_scat",volume({60,60}, 75), freq_data); 
-    scat.add_monitor(box_scat);
-    cylinder_monitor<DFT::tangent> absorb("absorb", cylinder_surface(vec(60,60), 25), freq_data); 
-    scat.add_monitor(absorb);
-
-    //line_source s2(fields::Ez, surface({0,30},{120,30}), gaussian_time(f, 1/200.0, 80));
-    //scat.add_source(s2);
+    auto& m_scat   = scat.add<cylinder_monitor<DFT::tangent>> ("scat", cylinder_surface(vec(60,60), 50), freq_data); 
+    auto& m_absorb = scat.add<cylinder_monitor<DFT::tangent>> ("absorb", cylinder_surface(vec(60,60), 25), freq_data); 
 
     for (int i = 0; i != 8000; i++) {
         scat.update();
-         //scat.writeE();
     }
 
     tfsf.flux().write();
-    box_scat.flux().write();
-    absorb.flux().write();
-    // box_scat.write();
-    // scat.write_tfsf();
+    m_absorb.flux().write();
+    m_scat.flux().write();
 }

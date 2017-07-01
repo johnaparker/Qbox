@@ -194,55 +194,10 @@ namespace qbox {
     void Field2D::update_material_grid() {
         clear_materials();
         
-        for (auto obj_ptr : obj_list) {
+        for (auto& obj_ptr : obj_list) {
             update_object_material_grid(*obj_ptr);
             update_object_polarization_grid(*obj_ptr);
         }
-    }
-
-    void Field2D::add_object(object &new_object) {
-        material_variant m = new_object.get_material();
-
-        visit([this,&new_object](auto&& arg) {
-
-            using T = decay_t<decltype(arg)>;
-            this->add_object(new_object, arg);
-
-            if constexpr (is_same<T, debye>::value) {
-                add_polarization(P_debye, arg, new_object, grid);
-                if (!prevE)
-                    prevE = Ez;
-            }
-            else if constexpr (is_same<T, drude>::value) {
-                add_polarization(P_drude, arg, new_object, grid);
-                if (!prevE)
-                    prevE = Ez;
-            }
-            else if constexpr (is_same<T, lorentz>::value) {
-                add_polarization(P_lorentz, arg, new_object, grid);
-                if (!prevE)
-                    prevE = Ez;
-                if (!prev2E)
-                    prevE = Ez;
-            }
-            else if constexpr (is_same<T, simple_material>::value) {
-                // Do nothing?
-            }
-        }, m);
-    }
-
-    void Field2D::add_source(source &new_source) {
-        new_source.set_F(this);
-        source_list.push_back(&new_source);
-    }
-
-    void Field2D::add_monitor(monitor &new_monitor) {
-        new_monitor.set_F(this);
-        monitor_list.push_back(&new_monitor);
-    } 
-
-    void Field2D::add_monitor(time_monitor &new_monitor) {
-        new_monitor.set_F(this);
     }
 
     void Field2D::remove_monitors() {
@@ -357,16 +312,44 @@ namespace qbox {
         h5cpp::write_tensor(get_field_ref(field), gFields, field_names.at(field), h5cpp::append::True);
     }
 
-    void Field2D::add_object(object &new_object, const material& mat) {
+    void Field2D::insert_object(object &new_object) {
+        material_variant m = new_object.get_material();
+
+        visit([this,&new_object](auto&& arg) {
+
+            using T = decay_t<decltype(arg)>;
+            this->insert_object_helper(new_object, arg);
+
+            if constexpr (is_same<T, debye>::value) {
+                add_polarization(P_debye, arg, new_object, grid);
+                if (!prevE)
+                    prevE = Ez;
+            }
+            else if constexpr (is_same<T, drude>::value) {
+                add_polarization(P_drude, arg, new_object, grid);
+                if (!prevE)
+                    prevE = Ez;
+            }
+            else if constexpr (is_same<T, lorentz>::value) {
+                add_polarization(P_lorentz, arg, new_object, grid);
+                if (!prevE)
+                    prevE = Ez;
+                if (!prev2E)
+                    prevE = Ez;
+            }
+            else if constexpr (is_same<T, simple_material>::value) {
+                // Do nothing?
+            }
+        }, m);
+    }
+
+    void Field2D::insert_object_helper(object &new_object, const material& mat) {
         auto mat_name = mat.get_name();
         if (find(materials_added.begin(), materials_added.end(), mat_name) == materials_added.end()) {
             materials_added.push_back(mat_name);
             mat.write(*outFile);
         }
         
-        obj_list.push_back(&new_object);
-        new_object.set_owner(this);
-
         update_object_material_grid(new_object);
     }
 
