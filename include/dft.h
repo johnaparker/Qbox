@@ -92,7 +92,12 @@ namespace qbox {
         const complex_dft_tensor<RANK>& get(const std::string &name) const {return fourier.at(name);}
 
         void operator-=(const dft& other) {
-            // subtract fourier's only if the following are equal: RANK, freq, fourier's keys
+            //*** subtract fourier's only if the following are equal: RANK, freq, fourier's keys
+            for (auto& p: fourier) {
+                std::string name = p.first;
+                p.second.real -= other.fourier.at(name).real;
+                p.second.imag -= other.fourier.at(name).imag;
+            }
         }
 
     private:

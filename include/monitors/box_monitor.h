@@ -94,6 +94,12 @@ namespace qbox {
             return Torque(S, *outFile, get_group());
         }
 
+
+        void operator-=(const box_monitor& other) {
+            for (int i = 0; i < 4; i++)
+                monitors[i] -= other.monitors[i];
+        }
+
         // void write() const {
         // }
 
