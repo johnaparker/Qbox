@@ -31,6 +31,13 @@ namespace qbox {
         Array conduc = Array::Zero(Nx);
         ca = 1/(eps + conduc*dt);
         cb = conduc*dt;
+
+
+        if (tp.get_dft()) {
+            fourier = dft<0>(tp.get_dft()->get_freq());
+            fourier->add("E", {});
+            fourier->add("H", {});
+        }
     }
 
     void tfsf::pulse() {
@@ -53,11 +60,20 @@ namespace qbox {
         pml.right[0] = Ez[Nx-2];
         
 
-        // if (dft) {
-        //     freq.update(t);
-        //     double E = (Ez[2] + prevE)/2.0;
-        //     double H = (Hx[2] + Hx[1])/2.0;
-        // }
+        if (fourier) {
+            double E = (Ez[2] + prevE)/2.0;
+            double H = (Hx[2] + Hx[1])/2.0;
+
+            function<double()> fE = [E](){return E;};
+            function<double()> fH = [H](){return H;};
+            function<function<double()>(string)> g = [fE,fH](string name) { 
+                if (name == "E")
+                    return fE;
+                if (name == "H")
+                    return fH;
+            };
+            fourier->update<double()>(g, t);
+        }
 
         for (int k=0; k<Nx-1; k++) {
             Hx[k] = Hx[k] + 0.5*(Ez[k] - Ez[k+1]);
@@ -101,12 +117,13 @@ namespace qbox {
     }
 
     Flux tfsf::flux() const {
-        auto fourier = tp->get_dft();
+        // auto fourier = tp->get_dft();
         if (fourier) {
             Array S = Array::Zero(fourier->Nfreq());
-            const auto E = fourier->get("dft");
+            const auto E = fourier->get("E");
+            const auto H = fourier->get("H");
             for (int j = 0; j < fourier->Nfreq(); j++) {
-                S[j] += pow(E.real(j),2) + pow(E.imag(j),2);
+                S[j] += E.real(j)*H.real(j) + E.imag(j)*H.imag(j);
             }
             return Flux(S, filename, "/sources/tfsf");
         }

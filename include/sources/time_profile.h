@@ -17,7 +17,7 @@ namespace qbox {
         virtual void write(const h5cpp::h5group &group) const = 0;
         virtual std::unique_ptr<time_profile> clone() const = 0;
 
-        std::optional<dft<0>> get_dft() {return fourier;}
+        std::optional<dft<0>> get_dft() const {return fourier;}
 
     protected:
         std::optional<dft<0>> fourier;

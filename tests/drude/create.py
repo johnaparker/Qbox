@@ -12,8 +12,8 @@ gamma = 0.1*2*np.pi
 omega_0 = 5/30.0
 gamma = .1
 
-# eps = eps_inf - omega_0**2/(omega**2 - 1j*omega*gamma)
-eps = eps_inf - omega_0**2/(omega**2 - 1j*omega*gamma)- (7/30.0)**2/(omega**2 - 1j*omega*gamma)
+eps = eps_inf - omega_0**2/(omega**2 - 1j*omega*gamma)
+# eps = eps_inf - omega_0**2/(omega**2 - 1j*omega*gamma)- (7/30.0)**2/(omega**2 - 1j*omega*gamma)
 
 plt.plot(wav, eps.real)
 plt.plot(wav, -eps.imag)

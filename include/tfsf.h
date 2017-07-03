@@ -51,6 +51,7 @@ namespace qbox {
         volume vol;
         int ia,ib,ja,jb;    ///< position of 4 corners
         std::unique_ptr<time_profile> tp;       ///< A 1D field simulation to produce perfect plane wave
+        std::optional<dft<0>> fourier;
 
         int Nx;
         double dx;
