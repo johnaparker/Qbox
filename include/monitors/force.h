@@ -39,7 +39,10 @@ namespace qbox {
     tensor compute_force(const complex_dft_tensor<1> &Ez, const complex_dft_tensor<1> &Ht,
                          const complex_dft_tensor<1> &Hn, const std::function<vec(int)>& tangent, 
                          const std::function<vec(int)>& normal, double da, sign Sign);
-    tensor compute_torque(const complex_dft_tensor<1> &E, const complex_dft_tensor<1> &H, double da, sign Sign);
+    Array compute_torque(const complex_dft_tensor<1> &Ez, const complex_dft_tensor<1> &Ht,
+                         const complex_dft_tensor<1> &Hn, const std::function<vec(int)>& pos,
+                         const std::function<vec(int)>& tangent, const std::function<vec(int)>& normal, 
+                         double da, sign Sign);
     // compute both??? (for efficiency)
 
 }
