@@ -216,32 +216,14 @@ namespace qbox {
 
         Force partial_force() const {
             static_assert(std::is_same<DFT::all,T>::value, "DFT::all required for partial force calculation");
-
-            const int Nfreq = fourier.Nfreq();
-            const auto E = fourier("Ez");
-            const auto Hx = fourier("Hx");
-            const auto Hy = fourier("Hy");
-            const vec normal = surf.normal;
-
+            
+            const auto Ez = fourier("Ez");
+            const auto Ht = surf.dim[0] == 0 ? fourier("Hy") : fourier("Hx");
+            const auto Hn = surf.dim[0] == 0 ? fourier("Hx") : fourier("Hy");
             double da = F->dx;
-            tensor S(2, Nfreq); S.setZero();
-
-            for (int i = 0; i < length; i++) {
-                for (int j = 0; j < Nfreq; j++) {
-                    auto Ezc = E.real(i,j) +  1i*E.imag(i,j);
-                    auto Hxc = Hx.real(i,j) + 1i*Hx.imag(i,j);
-                    auto Hyc = Hy.real(i,j) + 1i*Hy.imag(i,j);
-                    auto Hsq = std::norm(Hxc) + std::norm(Hyc);
-                    auto Esq = std::norm(Ezc);
-                    Eigen::Matrix2d sigma;
-                    
-                    sigma << std::norm(Hxc) - 0.5*Hsq-0.5*Esq     , real(std::conj(Hxc)*Hyc),
-                             real(Hxc*std::conj(Hyc)), std::norm(Hyc) - 0.5*Hsq-0.5*Esq;   // Maxwell Stress Tensor for 2D TM
-                    vec dF = sigma*normal*da;
-                    S(0,j) += dF(0);
-                    S(1,j) += dF(1);
-                }
-            }
+            
+            tensor S = compute_force(Ez, Ht, Hn, [this](int i){return Eigen::abs(surf.tangent.array());}, 
+                                     [this](int i){return Eigen::abs(surf.normal.array());}, da, surf.Sign);
 
             return Force(S, *outFile, get_group());
         }

@@ -120,6 +120,28 @@ namespace qbox {
 
             return ntff_point(factor*integral, *outFile, get_group());
         }
+        
+        Force force() const {
+            static_assert(std::is_same<DFT::all,T>::value, "DFT::all required for partial force calculation");
+            
+            const auto Ez = fourier("Ez");
+            const auto Ht = fourier("Hp");
+            const auto Hn = fourier("Hr");
+            double da = 2*M_PI*surf.radius/length;
+            
+            tensor S = compute_force(Ez, Ht, Hn, 
+                            [this](int i) {
+                                double theta = 2*M_PI*(i + 0.5)/length;
+                                return surf.tangent(theta);
+                            },
+                            [this](int i) {
+                                double theta = 2*M_PI*(i + 0.5)/length;
+                                return surf.normal(theta);
+                            }, 
+                            da, sign::Positive);
+
+            return Force(S, *outFile, get_group());
+        }
 
         ntff_sphere ntff(double radius, int N) const {
             const int Nfreq = fourier.Nfreq();
