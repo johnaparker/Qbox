@@ -73,7 +73,7 @@ namespace qbox {
         double radius;             ///< cylinder radius
     };
 
-    template<class T, h5cpp::dtype M>
+    template<class T>
     struct surface_template {
         surface_template() = default;
         surface_template(Eigen::Matrix<T,2,1> a, Eigen::Matrix<T,2,1> b, sign Sign = sign::Positive): a(a), b(b), Sign(Sign) {
@@ -109,7 +109,7 @@ namespace qbox {
         Eigen::Matrix<T,2,1> tangent;   ///< unit vector that points from a to b
     };
 
-    template<class T, h5cpp::dtype M>
+    template<class T>
     struct volume_template {
         volume_template() = default;
         volume_template(Eigen::Matrix<T,2,1> a, Eigen::Matrix<T,2,1> b): a(a), b(b) {
@@ -132,16 +132,27 @@ namespace qbox {
             return (a + b)/2;
         }
 
-        surface_template<T,M> get_surface(box_side side) const {
+        volume_template<T> pad(T size) {
+            auto shift = Eigen::Matrix<T,2,1>(size,size);
+            volume_template<T> box(a - shift, b + shift);
+            return box;
+        }
+        
+        volume_template<T> translate(const Eigen::Matrix<T,2,1> p) {
+            volume_template<T> box(a + p, b + p);
+            return box;
+        }
+
+        surface_template<T> get_surface(box_side side) const {
             switch(side) {
                 case box_side::y_bottom:
-                    return surface_template<T,M>(a, vec(b[0], a[1]), sign::Negative); break;
+                    return surface_template<T>(a, vec(b[0], a[1]), sign::Negative); break;
                 case box_side::y_top:
-                    return surface_template<T,M>(b, vec(a[0], b[1]), sign::Positive); break;
+                    return surface_template<T>(b, vec(a[0], b[1]), sign::Positive); break;
                 case box_side::x_bottom:
-                    return surface_template<T,M>(vec(a[0], b[1]), a, sign::Negative); break;
+                    return surface_template<T>(vec(a[0], b[1]), a, sign::Negative); break;
                 case box_side::x_top:
-                    return surface_template<T,M>(vec(b[0], a[1]), b, sign::Positive); break;
+                    return surface_template<T>(vec(b[0], a[1]), b, sign::Positive); break;
                 default: throw std::invalid_argument("not a valid box_side");
             }
         }
@@ -151,10 +162,10 @@ namespace qbox {
         Eigen::Matrix<T,2,1> dim;
     };
 
-    using surface = surface_template<double, h5cpp::dtype::Double>;
-    using isurface = surface_template<int, h5cpp::dtype::Int>;
-    using volume = volume_template<double, h5cpp::dtype::Double>;
-    using ivolume = volume_template<int, h5cpp::dtype::Int>;
+    using surface = surface_template<double>;
+    using isurface = surface_template<int>;
+    using volume = volume_template<double>;
+    using ivolume = volume_template<int>;
 
 }
 

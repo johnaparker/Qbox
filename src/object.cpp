@@ -59,8 +59,7 @@ namespace qbox {
         //*** name monitor 'object_name'_monitor?
         //*** write a h5ref in object to monitor (requires set_owner to be called first...)
         auto tight_box = get_bounding_box().value();
-        double a = buffer*F->dx;
-        volume box(tight_box.a - vec(a,a), tight_box.b + vec(a,a));
+        auto box = tight_box.pad(buffer);
         return F->add<box_monitor<DFT::all>>(box, freq); 
     }
 
@@ -71,10 +70,8 @@ namespace qbox {
 
     std::optional<volume> object::get_bounding_box() const {
         auto box = geometryType->get_bounding_box(theta);
-        if (box) {
-            vec dim = box->dim;
-            box = volume(position - dim/2, position + dim/2);
-        }
+        if (box)
+            box = box->translate(position);
 
         return box;
     }
