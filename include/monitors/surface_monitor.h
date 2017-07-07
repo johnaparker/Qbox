@@ -231,7 +231,6 @@ namespace qbox {
         Torque partial_torque(const vec &center) const {
             static_assert(std::is_same<DFT::all,T>::value, "DFT::all required for partial force calculation");
 
-            const int Nfreq = fourier.Nfreq();
             const auto Ez = fourier("Ez");
             const auto Ht = surf.dim[0] == 0 ? fourier("Hy") : fourier("Hx");
             const auto Hn = surf.dim[0] == 0 ? fourier("Hx") : fourier("Hy");

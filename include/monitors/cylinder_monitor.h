@@ -143,6 +143,32 @@ namespace qbox {
             return Force(S, *outFile, get_group());
         }
 
+        Torque torque() const {
+            static_assert(std::is_same<DFT::all,T>::value, "DFT::all required for partial force calculation");
+            
+            const auto Ez = fourier("Ez");
+            const auto Ht = fourier("Hp");
+            const auto Hn = fourier("Hr");
+            double da = 2*M_PI*surf.radius/length;
+            
+            Array S = compute_torque(Ez, Ht, Hn, 
+                            [this](int i) {
+                                double theta = 2*M_PI*(i + 0.5)/length;
+                                return surf.position(theta) - surf.center;
+                            },
+                            [this](int i) {
+                                double theta = 2*M_PI*(i + 0.5)/length;
+                                return surf.tangent(theta);
+                            },
+                            [this](int i) {
+                                double theta = 2*M_PI*(i + 0.5)/length;
+                                return surf.normal(theta);
+                            }, 
+                            da, sign::Positive);
+
+            return Torque(S, *outFile, get_group());
+        }
+
         ntff_sphere ntff(double radius, int N) const {
             const int Nfreq = fourier.Nfreq();
 
