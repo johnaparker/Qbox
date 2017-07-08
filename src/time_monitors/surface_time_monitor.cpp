@@ -3,10 +3,10 @@
 
 namespace qbox {
 
-    surface_time_monitor::surface_time_monitor(std::string name, const surface &surf):
-        time_monitor(name), surf(surf) {};
-    surface_time_monitor::surface_time_monitor(const surface &surf): 
-        surface_time_monitor("monitor_" + std::to_string(_num_created), surf) {_num_created++;}
+    surface_time_monitor::surface_time_monitor(std::string name, const surface &surf, const fields& Fields, const every& out_freq ):
+        time_monitor(name, Fields, out_freq), surf(surf) {};
+    surface_time_monitor::surface_time_monitor(const surface &surf, const fields& Fields, const every& out_freq): 
+        surface_time_monitor("monitor_" + std::to_string(_num_created), surf, Fields, out_freq) {_num_created++;}
 
     void surface_time_monitor::set_F(Field2D *newF) {
         time_monitor::set_F(newF);

@@ -187,7 +187,12 @@ namespace qbox {
         if (total) 
             total->updateH(this);
 
+
         clocks.stop(clock_name::looping);
+
+        for (const auto &m : time_monitor_list) {
+            m->write_if_ready();
+        }
         
     }
 

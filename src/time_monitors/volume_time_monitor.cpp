@@ -3,10 +3,10 @@
 
 namespace qbox {
 
-    volume_time_monitor::volume_time_monitor(std::string name, const volume &vol):
-        time_monitor(name), vol(vol) {};
-    volume_time_monitor::volume_time_monitor(const volume &vol): 
-        volume_time_monitor("monitor_" + std::to_string(_num_created), vol) {_num_created++;}
+    volume_time_monitor::volume_time_monitor(std::string name, const volume &vol, const fields& Fields, const every& out_freq):
+        time_monitor(name, Fields, out_freq), vol(vol) {};
+    volume_time_monitor::volume_time_monitor(const volume &vol, const fields& Fields, const every& out_freq): 
+        volume_time_monitor("monitor_" + std::to_string(_num_created), vol, Fields, out_freq) {_num_created++;}
 
     void volume_time_monitor::set_F(Field2D *newF) {
         time_monitor::set_F(newF);

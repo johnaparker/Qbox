@@ -17,6 +17,15 @@ namespace qbox {
         return my_group;
     }
 
+    void time_monitor::write_if_ready() {
+        if (out_freq.check_repeat())
+            write();
+    }
+
+    void time_monitor::write() {
+        write(Fields);
+    }
+
     void time_monitor::write(const fields& A) {
         switch(A) {
             case fields::E:    write(fields::Ez); break;

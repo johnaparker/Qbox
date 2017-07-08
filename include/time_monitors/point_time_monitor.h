@@ -9,8 +9,8 @@ namespace qbox {
     class point_time_monitor : public time_monitor {
 
     public:
-        point_time_monitor(std::string name, const vec &pos);
-        point_time_monitor(const vec &pos);
+        point_time_monitor(std::string name, const vec &pos, const fields& Fields, const every& out_freq = every(0));
+        point_time_monitor(const vec &pos, const fields& Fields, const every& out_freq = every(0));
 
         void set_F(Field2D *newF) override;
 

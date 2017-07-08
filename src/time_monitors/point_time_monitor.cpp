@@ -3,10 +3,10 @@
 
 namespace qbox {
 
-    point_time_monitor::point_time_monitor(std::string name, const vec &pos):
-        time_monitor(name), pos(pos) {};
-    point_time_monitor::point_time_monitor(const vec &pos): 
-        point_time_monitor("monitor_" + std::to_string(_num_created), pos) {_num_created++;}
+    point_time_monitor::point_time_monitor(std::string name, const vec &pos, const fields& Fields, const every& out_freq):
+        time_monitor(name, Fields, out_freq), pos(pos) {};
+    point_time_monitor::point_time_monitor(const vec &pos, const fields& Fields, const every& out_freq): 
+        point_time_monitor("monitor_" + std::to_string(_num_created), pos, Fields, out_freq) {_num_created++;}
 
     void point_time_monitor::set_F(Field2D *newF) {
         time_monitor::set_F(newF);

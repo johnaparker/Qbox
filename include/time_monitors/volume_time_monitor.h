@@ -9,8 +9,8 @@ namespace qbox {
     class volume_time_monitor : public time_monitor {
 
     public:
-        volume_time_monitor(std::string name, const volume &vol);
-        volume_time_monitor(const volume &vol);
+        volume_time_monitor(std::string name, const volume &vol, const fields& Fields, const every& out_freq = every(0));
+        volume_time_monitor(const volume &vol, const fields& Fields, const every& out_freq = every(0));
 
         void set_F(Field2D *newF) override;
 

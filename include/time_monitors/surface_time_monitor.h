@@ -9,8 +9,8 @@ namespace qbox {
     class surface_time_monitor : public time_monitor {
 
     public:
-        surface_time_monitor(std::string name, const surface &surf);
-        surface_time_monitor(const surface &surf);
+        surface_time_monitor(std::string name, const surface &surf, const fields& Fields, const every& out_freq = every(0));
+        surface_time_monitor(const surface &surf, const fields& Fields, const every& out_freq = every(0));
 
         void set_F(Field2D *newF) override;
 
