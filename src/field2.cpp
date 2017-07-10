@@ -340,7 +340,7 @@ namespace qbox {
                 if (!prevE)
                     prevE = Ez;
                 if (!prev2E)
-                    prevE = Ez;
+                    prev2E = Ez;
             }
             else if constexpr (is_same<T, simple_material>::value) {
                 // Do nothing?
