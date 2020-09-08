@@ -42,21 +42,21 @@ namespace qbox {
             auto ivol = F->grid.to_grid(vol);
 
             if (comp == "Ez") {
-                return [this, &ivol](int i, int j) {
+                return [this, ivol](int i, int j) {
                     ivec p = ivol.a + ivec(i,j);
                     return F->Ez(p);
                 };
             }
 
             else if (comp == "Hx") {
-                return [this, &ivol](int i, int j) {
+                return [this, ivol](int i, int j) {
                     ivec p = ivol.a + ivec(i,j);
                     return F->Hx(p);
                 };
             }
 
             else if (comp == "Hy") {
-                return [this, &ivol](int i, int j) {
+                return [this, ivol](int i, int j) {
                     ivec p = ivol.a + ivec(i,j);
                     return F->Hy(p);
                 };
