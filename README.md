@@ -25,5 +25,27 @@ g++ -O3 main.cpp -lhdf5 -lh5cpp -lqbox
 ## Python post-processing library and command-line utility
 [QPost](https://github.com/johnaparker/qpost) is a Python library for processing the output of Qbox.
 
+For example, to create an animation of the z-component of the electric field
+```
+qbox video out.h5 fields/Ez
+```
+
+Other options provided by the CLI
+```
+usage: qbox [-h] {flux,video,layout,material,cross-section} ...
+
+positional arguments:
+  {flux,video,layout,material,cross-section}
+                        sub-command help
+    flux                flux help
+    video               video help
+    layout              layout help
+    material            material help
+    cross-section       cross-section help
+
+optional arguments:
+  -h, --help            show this help message and exit
+```
+
 ## License
 Qbox is licensed under the terms of the MIT license.
