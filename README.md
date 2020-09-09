@@ -1,4 +1,5 @@
 # Qbox
+![](https://github.com/johnaparker/qbox/blob/master/img/dynamics.gif)
 
 ## Install
 Install the required dependencies
@@ -19,6 +20,7 @@ Example scripts in the tests folder can be compiled, e.g.
 ```
 g++ -O3 main.cpp -lhdf5 -lh5cpp -lqbox
 ```
+
 
 ## Python post-processing library and command-line utility
 [QPost](https://github.com/johnaparker/qpost) is a Python library for processing the output of Qbox.
